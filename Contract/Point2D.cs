@@ -70,5 +70,10 @@ namespace Contract
         {
             throw new NotImplementedException();
         }
+
+        public void ChangeStrokeDash(List<double> strokeDash)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

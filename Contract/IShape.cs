@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 
@@ -18,6 +19,8 @@ namespace Contract
         IShape Clone();
 
         void ChangePenWidth(int witdh);
+
+        void ChangeStrokeDash(List<double> strokeDash);
 
     }
 }

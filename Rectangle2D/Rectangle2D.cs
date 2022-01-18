@@ -3,64 +3,67 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Line2D
+namespace Rectangle2D
 {
-    public class Line2D : IShape, INotifyPropertyChanged
+    public class Rectangle2D : IShape, INotifyPropertyChanged
     {
-        private Point2D _start = new Point2D();
-        private Point2D _end = new Point2D();
+        private Point2D _leftTop = new Point2D();
+        private Point2D _rightBottom = new Point2D();
         private int _penWidth = 1;
-        private List<double> _strokeDash = new List<double>() { 0};
+        private List<double> _strokeDash = new List<double>() { 0 };
         public event PropertyChangedEventHandler PropertyChanged;
 
         public SolidColorBrush Color { get; set; }
-        public string Name => "Line";
+        public string Name => "Rectangle";
 
         public string Image { get; set; }
-        public Line2D()
+        public Rectangle2D()
         {
             Color = new SolidColorBrush(Colors.Black);
-            Image = "/Line2D;Component/images/line.png";
+            Image = "/Rectangle2D;Component/images/rectangle.png";
         }
         public void HandleStart(double x, double y)
         {
-            _start = new Point2D() { X = x, Y = y };
+            _leftTop = new Point2D() { X = x, Y = y };
         }
 
         public void HandleEnd(double x, double y)
         {
-            _end = new Point2D() { X = x, Y = y };
+            _rightBottom = new Point2D() { X = x, Y = y };
         }
 
         public UIElement Draw()
         {
-            Line l = new Line()
+            double left = (_rightBottom.X > _leftTop.X) ? _leftTop.X : _rightBottom.X;
+            double top = (_rightBottom.Y > _leftTop.Y) ? _leftTop.Y : _rightBottom.Y;
+            Rectangle rect = new Rectangle()
             {
-                X1 = _start.X,
-                Y1 = _start.Y,
-                X2 = _end.X,
-                Y2 = _end.Y,
+                Width = Math.Abs(_rightBottom.X - _leftTop.X),
+                Height = Math.Abs(_rightBottom.Y - _leftTop.Y),
                 StrokeDashArray = new DoubleCollection(_strokeDash),
                 StrokeThickness = _penWidth,
                 Stroke = Color,
             };
-
-            return l;
+            Canvas.SetLeft(rect, left);
+            Canvas.SetTop(rect, top);
+            return rect;
         }
 
         public IShape NextShape()
         {
-            return new Line2D();
+            return new Rectangle2D();
         }
 
         public IShape Clone()
         {
-            return new Line2D() {
-                _start = (Point2D)this._start.Clone(),
-                _end = (Point2D)this._end.Clone(),
+            return new Rectangle2D()
+            {
+                _leftTop = (Point2D)this._leftTop.Clone(),
+                _rightBottom = (Point2D)this._rightBottom.Clone(),
                 Color = this.Color,
                 _penWidth = this._penWidth,
                 _strokeDash = new List<double>(this._strokeDash)

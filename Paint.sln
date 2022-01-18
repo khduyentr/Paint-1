@@ -3,11 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paint", "Paint\Paint.csproj", "{00268006-8440-4EDF-ADE6-BF1B7058A5F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paint", "Paint\Paint.csproj", "{00268006-8440-4EDF-ADE6-BF1B7058A5F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "Contract\Contract.csproj", "{CCC35D83-7B65-483E-A2D3-3BE0EE783C6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contract", "Contract\Contract.csproj", "{CCC35D83-7B65-483E-A2D3-3BE0EE783C6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Line2D", "Line2D\Line2D.csproj", "{546F656C-73A1-4A2F-8DC2-44A165161E76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Line2D", "Line2D\Line2D.csproj", "{546F656C-73A1-4A2F-8DC2-44A165161E76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rectangle2D", "Rectangle2D\Rectangle2D.csproj", "{A86380AB-6197-4F5C-942E-4941EE9C9FE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ellipse2D", "Ellipse2D\Ellipse2D.csproj", "{551ACC8A-F896-4F12-A41A-8EBFF19F9D30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Square2D", "Square2D\Square2D.csproj", "{8118478B-C1F0-4BAF-97D0-2DF0B5C9ECD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Circle2D", "Circle2D\Circle2D.csproj", "{6927663B-53C7-4CA4-85E8-07679E2C4935}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +35,22 @@ Global
 		{546F656C-73A1-4A2F-8DC2-44A165161E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{546F656C-73A1-4A2F-8DC2-44A165161E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{546F656C-73A1-4A2F-8DC2-44A165161E76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A86380AB-6197-4F5C-942E-4941EE9C9FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A86380AB-6197-4F5C-942E-4941EE9C9FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A86380AB-6197-4F5C-942E-4941EE9C9FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A86380AB-6197-4F5C-942E-4941EE9C9FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{551ACC8A-F896-4F12-A41A-8EBFF19F9D30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{551ACC8A-F896-4F12-A41A-8EBFF19F9D30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{551ACC8A-F896-4F12-A41A-8EBFF19F9D30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{551ACC8A-F896-4F12-A41A-8EBFF19F9D30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8118478B-C1F0-4BAF-97D0-2DF0B5C9ECD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8118478B-C1F0-4BAF-97D0-2DF0B5C9ECD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8118478B-C1F0-4BAF-97D0-2DF0B5C9ECD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8118478B-C1F0-4BAF-97D0-2DF0B5C9ECD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6927663B-53C7-4CA4-85E8-07679E2C4935}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6927663B-53C7-4CA4-85E8-07679E2C4935}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6927663B-53C7-4CA4-85E8-07679E2C4935}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6927663B-53C7-4CA4-85E8-07679E2C4935}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,6 +10,9 @@
         Background="Gray"
         WindowStartupLocation="CenterScreen"
         Title="Paint" Height="700" Width="1000">
+    <!--<Window.Resources>
+        <local:DashStrokeConverter x:Key="dashStrokeConverter" />
+    </Window.Resources>-->
     <DockPanel LastChildFill="True" Margin="5,5,5,5">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Height="130" Name="prototypesStackPanel">
             <StackPanel Orientation="Vertical" Background="#FFF5F6F7" >
@@ -160,12 +163,62 @@
                 <TextBlock TextAlignment="Center"><Run Text="Shapes"/></TextBlock>
             </StackPanel>
             <StackPanel Background="#FFF5F6F7" Orientation="Vertical">
-                <hc:ComboBox Width="100" SelectionChanged="Pen_Width_Combo_Box_SelectionChanged" SelectedIndex="0" Name="Pen_Width_Combo_Box" Margin="5" Height="100" VerticalAlignment="Stretch">
-                </hc:ComboBox>
-                <TextBlock TextAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5">Size</TextBlock>
+                <DockPanel  Height="100" Margin="5">
+                    <!--<TextBlock DockPanel.Dock="Top" VerticalAlignment="Bottom" Margin="5,0,0,0">Size</TextBlock>-->
+                    <hc:ComboBox DockPanel.Dock="Top" Width="100" SelectionChanged="Pen_Width_Combo_Box_SelectionChanged" SelectedIndex="0" Name="Pen_Width_Combo_Box" Margin="5"  VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                        <!--<ComboBoxItem>
+                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="1"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0"  StrokeThickness="2"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0"  StrokeThickness="4"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="6"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="8"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="10"/>
+                        </ComboBoxItem>-->
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="{Binding}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </hc:ComboBox>
+                    <!--<TextBlock DockPanel.Dock="Top" VerticalAlignment="Bottom" Margin="5,0,0,0">Dash Style</TextBlock>-->
+                    <hc:ComboBox Width="100" SelectionChanged="Dash_Style_Combo_Box_SelectionChanged" SelectedIndex="0" Name="Dash_Style_Combo_Box" Margin="5" VerticalAlignment="Center">
+                        <ComboBoxItem>
+                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="2"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1" StrokeThickness="2"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="6 2" StrokeThickness="2"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="3 3 1 3" StrokeThickness="2"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="4 1 4" StrokeThickness="2"/>
+                        </ComboBoxItem>
+                        <!--<ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="{Binding this, Converter={StaticResource dashStrokeConverter}}" StrokeThickness="2"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>-->
+                    </hc:ComboBox>
+
+                </DockPanel>
+               
+                <TextBlock TextAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5">Style</TextBlock>
             </StackPanel>
             <StackPanel Background="#FFF5F6F7" Orientation="Vertical">
-
                 <Button Cursor="Hand" Height="100" Margin="5" Name="Open_ColorPicker" Click="Open_ColorPicker_Click">
                     <StackPanel Orientation="Vertical">
                         <Rectangle Name="Color_Preview" Height="50" Width="50"  Fill="Black"/>

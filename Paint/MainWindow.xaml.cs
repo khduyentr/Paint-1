@@ -29,11 +29,12 @@ namespace Paint
         int selectedShape = -1;
         bool isDrawing = false;
         SolidColorBrush currentColor = new SolidColorBrush(Colors.Black);
-        int currentPenWidth = 1;
+        int currentPenWidthIndex = -1;
+        int currentStrokeDashIndex = -1;
         IShape preview;
         List<IShape> userShapes = new List<IShape>();
         BindingList<int> ComboboxPenWidth = new BindingList<int>();
-       
+        BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
         public MainWindow()
         {
             InitializeComponent();
@@ -46,20 +47,26 @@ namespace Paint
             totalShape = ShapeFactory.GetInstance().ShapeAmount();
             for(int i = 0; i < totalShape; i++)
             {
-                for(int j = 0; j < 15; j++)
-                {
-                    allShapes.Add(ShapeFactory.GetInstance().Create(i));
-                }
+                allShapes.Add(ShapeFactory.GetInstance().Create(i));
             }
 
             //Combobox for penwidth
-            for(int i = 0; i < 10; i++)
-            {
-                ComboboxPenWidth.Add(i + 1);
-            }
-            Pen_Width_Combo_Box.ItemsSource = ComboboxPenWidth;
-            ShapeList.ItemsSource = allShapes;
             
+            ShapeList.ItemsSource = allShapes;
+            ComboboxPenWidth.Add(1);
+            ComboboxPenWidth.Add(2);
+            ComboboxPenWidth.Add(4);
+            ComboboxPenWidth.Add(6);
+            ComboboxPenWidth.Add(8);
+            ComboboxPenWidth.Add(10);
+            strokeDashArray.Add(new List<double>() { 1,0 });
+            strokeDashArray.Add(new List<double>() { 1 });
+            strokeDashArray.Add(new List<double>() { 6,2});
+            strokeDashArray.Add(new List<double>() { 3,3,1,3});
+            strokeDashArray.Add(new List<double>() { 4,1,4 });
+            Pen_Width_Combo_Box.ItemsSource = ComboboxPenWidth;
+            //Dash_Style_Combo_Box.ItemsSource = strokeDashArray;
+
         }
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
@@ -72,7 +79,23 @@ namespace Paint
 
                 preview.HandleStart(pos.X, pos.Y);
                 preview.Color = currentColor;
-                preview.ChangePenWidth(currentPenWidth);
+                if(currentPenWidthIndex >= 0)
+                {
+                    preview.ChangePenWidth(ComboboxPenWidth[currentPenWidthIndex]);
+                }
+                else
+                {
+                    preview.ChangePenWidth(ComboboxPenWidth[0]);
+                }
+               
+                if(currentStrokeDashIndex >= 0)
+                {
+                    preview.ChangeStrokeDash(strokeDashArray[currentStrokeDashIndex]);
+                }
+                else
+                {
+                    preview.ChangeStrokeDash(strokeDashArray[0]);
+                }
             }
         }
 
@@ -221,7 +244,12 @@ namespace Paint
 
         private void Pen_Width_Combo_Box_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            currentPenWidth = (int)Pen_Width_Combo_Box.SelectedItem;
+            currentPenWidthIndex = Pen_Width_Combo_Box.SelectedIndex;
+        }
+
+        private void Dash_Style_Combo_Box_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            currentStrokeDashIndex = Dash_Style_Combo_Box.SelectedIndex;
         }
     }
 }
