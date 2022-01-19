@@ -44,6 +44,16 @@ namespace Paint
             canvas.Children.Clear();
             Title = "Paint - " + project.GetName();
         }
+
+        public List<FontFamily> GetAllFonts()
+        {
+            List<FontFamily> fontList = new List<FontFamily>();
+            foreach (var f in Fonts.SystemFontFamilies)
+            {
+                fontList.Add(f);
+            }
+            return fontList;
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -74,6 +84,7 @@ namespace Paint
             strokeDashArray.Add(new List<double>() { 4,1,4 });
             Pen_Width_Combo_Box.ItemsSource = ComboboxPenWidth;
             StartNewProject();
+            
             //Dash_Style_Combo_Box.ItemsSource = strokeDashArray;
         }
 
