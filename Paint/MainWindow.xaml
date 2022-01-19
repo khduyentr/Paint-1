@@ -1,233 +1,183 @@
-﻿<Window x:Class="Paint.MainWindow"
+﻿<Fluent:RibbonWindow x:Class="Paint.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Paint"
+        xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
         mc:Ignorable="d"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         Loaded="Window_Loaded"
         Background="Gray"
         WindowStartupLocation="CenterScreen"
-        Title="Paint" Height="700" Width="1000">
-    <!--<Window.Resources>
-        <local:DashStrokeConverter x:Key="dashStrokeConverter" />
-    </Window.Resources>-->
-    <DockPanel LastChildFill="True" Margin="5,5,5,5">
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Height="130" Name="prototypesStackPanel">
-            <StackPanel Orientation="Vertical" Background="#FFF5F6F7" >
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <StackPanel>
-                        <Button Name="New_File_Btn" Click="New_File_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" >
-                                <Image Width="20" Height="20" Source="images/new.png"></Image>
-                                <TextBlock TextAlignment="Center">New</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="Open_File_Btn" Click="Open_File_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/open.png"></Image>
-                                <TextBlock TextAlignment="Center">Open</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel>
-                        <Button Name="Save_File_Btn" Click="Save_File_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/save.png"></Image>
-                                <TextBlock TextAlignment="Center">Save</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="Save_As_Btn" Click="Save_As_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/save-as.png"></Image>
-                                <TextBlock TextAlignment="Center">Save as</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
-                <TextBlock  TextAlignment="Center" Margin="0,0,0,5">Files</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Vertical" Background="#FFF5F6F7" >
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <StackPanel>
-                        <Button Name="Select_Area_Btn" Click="Select_Area_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" >
-                                <Image Width="20" Height="20" Source="images/select.png"></Image>
-                                <TextBlock TextAlignment="Center">Select</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="Crop_Area_Btn" Click="Crop_Area_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/crop.png"></Image>
-                                <TextBlock TextAlignment="Center">Crop</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel>
-                        <Button Name="Resize_Area_Btn" Click="Resize_Area_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/resize.png"></Image>
-                                <TextBlock TextAlignment="Center">Resize</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="Rotate_Area_Btn" Click="Rotate_Area_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/rotate.png"></Image>
-                                <TextBlock TextAlignment="Center">Rotate</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
-                <TextBlock  TextAlignment="Center" Margin="0,0,0,5">Image</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Vertical" Background="#FFF5F6F7" >
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Name="Cut_Btn" Click="Cut_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" >
-                                <Image Width="20" Height="20" Source="images/cut.png"></Image>
-                                <TextBlock TextAlignment="Center">Cut</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="Copy_Btn" Click="Copy_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/copy.png"></Image>
-                                <TextBlock TextAlignment="Center">Copy</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="Paste_Btn" Click="Paste_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/paste.png"></Image>
-                                <TextBlock TextAlignment="Center">Paste</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Name="Undo_Btn" Click="Undo_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/Undo.png"></Image>
-                                <TextBlock TextAlignment="Center">Undo</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="Redo_Btn" Click="Redo_Btn_Click" Height="50" Width="50" HorizontalAlignment="Stretch" Padding="0">
-                            <StackPanel Orientation="Vertical">
-                                <Image Width="20" Height="20" Source="images/redo.png"></Image>
-                                <TextBlock TextAlignment="Center">Redo</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
-                <TextBlock  TextAlignment="Center" Margin="0,0,0,5">Actions</TextBlock>
-            </StackPanel>
-            <StackPanel Background="#FFF5F6F7" Orientation="Vertical">
-                <ListView 
-                SelectionMode="Single"
-                SelectionChanged="ShapeList_SelectionChanged" 
-                Name="ShapeList"
-                Width="200"
-                Height="100"
-                Margin="5"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0">
-                    <!--<ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Image Source="{Binding Image}" Width="30" Height="30"></Image>
-                    </DataTemplate>
-                </ListView.ItemTemplate>-->
-                    <ListView.Resources>
-                        <Style TargetType="GridViewColumnHeader">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </Style>
-                        <!--Layout for Default Item-->
-                        <DataTemplate x:Key="DefaultItemTemplate">
-                            <Image Source="{Binding Image}" Width="20" Height="20" Margin="5,5,5,5"></Image>
-                        </DataTemplate>
-                    </ListView.Resources>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="Padding" Value="0,0,0,0"/>
-                            <Setter Property="Margin" Value="0,0,0,0"/>
-                            <Setter Property="VerticalContentAlignment" Value="Top"/>
-                            <Setter Property="ContentTemplate" Value="{StaticResource DefaultItemTemplate}" />
-                            <Setter Property="Background" Value="White"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                </ListView>
-                <TextBlock TextAlignment="Center"><Run Text="Shapes"/></TextBlock>
-            </StackPanel>
-            <StackPanel Background="#FFF5F6F7" Orientation="Vertical">
-                <DockPanel  Height="100" Margin="5">
-                    <!--<TextBlock DockPanel.Dock="Top" VerticalAlignment="Bottom" Margin="5,0,0,0">Size</TextBlock>-->
-                    <hc:ComboBox DockPanel.Dock="Top" Width="100" SelectionChanged="Pen_Width_Combo_Box_SelectionChanged" SelectedIndex="0" Name="Pen_Width_Combo_Box" Margin="5"  VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
-                        <!--<ComboBoxItem>
-                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="1"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0"  StrokeThickness="2"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0"  StrokeThickness="4"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="6"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="8"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="10"/>
-                        </ComboBoxItem>-->
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="{Binding}"/>
+        Title="Paint" MinHeight="700" MinWidth="1000" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
+    <DockPanel>
+        <Fluent:Ribbon DockPanel.Dock="Top">
+            <Fluent:Ribbon.Menu>
+                <Fluent:ApplicationMenu Header="File">
+                    <Fluent:MenuItem Header="New" Icon="images/new.png" Click="New_File_Btn_Click"/>
+                    <Fluent:MenuItem Header="Open" Icon="images/open.png" Click="Open_File_Btn_Click"/>
+                    <Fluent:MenuItem Header="Save" Icon="images/save.png" Click="Save_File_Btn_Click"/>
+                    <Fluent:MenuItem Header="Save as..." Icon="images/save-as.png">
+                        <Fluent:MenuItem Header="Save as..." Icon="images/save-as.png" Click="Save_As_Btn_Click"/>
+                        <Fluent:MenuItem Header="Save as bmp" Icon="images/save-as-bmp.png" Click="Save_As_Bmp_Btn_Click"/>
+                        <Fluent:MenuItem Header="Save as jpg" Icon="images/save-as-jpg.png" Click="Save_As_Jpg_Btn_Click"/>
+                        <Fluent:MenuItem Header="Save as png" Icon="images/save-as-png.png" Click="Save_As_Png_Btn_Click"/>
+                    </Fluent:MenuItem>
+                    <Fluent:MenuItem Header="About us" Icon="images/about.png">
+                        <StackPanel>
+                            <TextBlock Text="Hi, I'm Mo Junior." Foreground="Black"></TextBlock>
+                            <Image Source="images/Mo.png" Width="190" Height="190"></Image>
+                        </StackPanel>
+                    </Fluent:MenuItem>
+                    <Fluent:ApplicationMenu.RightPaneContent>
+                        <StackPanel>
+                            <TextBlock Text="Recent File" FontWeight="Bold" Foreground="Black"></TextBlock>
+                            <RibbonButton Label="Mo.png" Foreground="Black" Click="OpenFileButton_Click" HorizontalAlignment="Left"></RibbonButton>
+                        </StackPanel>
+                    </Fluent:ApplicationMenu.RightPaneContent>
+                    <Fluent:ApplicationMenu.FooterPaneContent>
+                        <RibbonButton Label="Exit" Foreground="Black" SmallImageSource="images/exit.png"
+                                      HorizontalAlignment="Right"
+                                      Click="ExitButton_Click"/>
+                    </Fluent:ApplicationMenu.FooterPaneContent>
+                </Fluent:ApplicationMenu>
+            </Fluent:Ribbon.Menu>
+            <Fluent:RibbonTabItem Header="Home">
+                <Fluent:RibbonGroupBox Header="Clipboard">
+                    <Fluent:Button Header="Cut" Icon="images/cut.png" Click="Cut_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/cut.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button Header="Copy" Icon="images/copy.png" Click="Copy_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/copy.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button Header="Paste" Icon="images/paste.png" Click="Paste_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/paste.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Images">
+                    <Fluent:Button Header="Select" Icon="images/select.png" Click="Select_Area_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/select.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button Header="Crop" Icon="images/crop.png" Click="Crop_Area_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/crop.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button Header="Resize" Icon="images/resize.png" Click="Resize_Area_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/resize.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button Header="Rotate" Icon="images/rotate.png" Click="Rotate_Area_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/rotate.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Actions">
+                    <Fluent:Button Header="Undo" Icon="images/Undo.png" Click="Undo_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/Undo.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button Header="Redo" Icon="images/redo.png" Click="Redo_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/redo.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Shape">
+                    <ListView
+                    SelectionChanged="ShapeList_SelectionChanged" 
+                    Name="ShapeList"
+                    Width="200"
+                    Height="64"
+                    Background="White"
+                    Margin="5"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0">
+                        <ListView.Resources>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </Style>
+                            <!--Layout for Default Item-->
+                            <DataTemplate x:Key="DefaultItemTemplate">
+                                <Image Source="{Binding Image}" Width="20" Height="20" Margin="5,5,5,5"></Image>
                             </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </hc:ComboBox>
-                    <!--<TextBlock DockPanel.Dock="Top" VerticalAlignment="Bottom" Margin="5,0,0,0">Dash Style</TextBlock>-->
-                    <hc:ComboBox Width="100" SelectionChanged="Dash_Style_Combo_Box_SelectionChanged" SelectedIndex="0" Name="Dash_Style_Combo_Box" Margin="5" VerticalAlignment="Center">
-                        <ComboBoxItem>
-                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="2"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1" StrokeThickness="2"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="6 2" StrokeThickness="2"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="3 3 1 3" StrokeThickness="2"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="4 1 4" StrokeThickness="2"/>
-                        </ComboBoxItem>
-                        <!--<ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="{Binding this, Converter={StaticResource dashStrokeConverter}}" StrokeThickness="2"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>-->
-                    </hc:ComboBox>
-
-                </DockPanel>
-               
-                <TextBlock TextAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5">Style</TextBlock>
-            </StackPanel>
-            <StackPanel Background="#FFF5F6F7" Orientation="Vertical">
-                <Button Cursor="Hand" Height="100" Margin="5" Name="Open_ColorPicker" Click="Open_ColorPicker_Click">
-                    <StackPanel Orientation="Vertical">
-                        <Rectangle Name="Color_Preview" Height="50" Width="50"  Fill="Black"/>
+                        </ListView.Resources>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0,0,0,0"/>
+                                <Setter Property="Margin" Value="0,0,0,0"/>
+                                <Setter Property="VerticalContentAlignment" Value="Top"/>
+                                <Setter Property="ContentTemplate" Value="{StaticResource DefaultItemTemplate}" />
+                                <Setter Property="Background" Value="White"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Style">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Size" Padding="0 0 5 0" VerticalAlignment="Center"></TextBlock>
+                            <ComboBox Width="120" Name="Pen_Width_Combo_Box" SelectionChanged="Pen_Width_Combo_Box_SelectionChanged" SelectedIndex="0" Margin="5">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="{Binding}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Type" VerticalAlignment="Center"></TextBlock>
+                            <ComboBox Width="120" Name="Dash_Style_Combo_Box" SelectionChanged="Dash_Style_Combo_Box_SelectionChanged"
+                                      SelectedIndex="0" Margin="5">
+                                <ComboBoxItem>
+                                    <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1 0" StrokeThickness="2"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="1" StrokeThickness="2"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="6 2" StrokeThickness="2"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <Line  X1="0" X2="80" Stroke="Black" StrokeDashArray="3 3 1 3" StrokeThickness="2"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <Line X1="0" X2="80" Stroke="Black" StrokeDashArray="4 1 4" StrokeThickness="2"/>
+                                </ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
                     </StackPanel>
-                </Button>
-                <TextBlock TextAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5">Color</TextBlock>
-            </StackPanel>
-        </StackPanel>
-        <Grid Margin="0,5,0,0">
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Color">
+                    <Button Cursor="Hand" Height="65" Width="65" Margin="5" Name="Open_ColorPicker" Click="Open_ColorPicker_Click">
+                        <StackPanel>
+                            <Rectangle Name="Color_Preview" Height="45" Width="45"  Fill="Black"/>
+                        </StackPanel>
+                    </Button>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Header="View">
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
+        <Grid Margin="0">
             <Canvas x:Name="canvas" Background="White">
 
             </Canvas>
@@ -238,4 +188,4 @@
             </Border>
         </Grid>
     </DockPanel>
-</Window>
+</Fluent:RibbonWindow>

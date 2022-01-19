@@ -8,16 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="images\about.png" />
     <None Remove="images\colorpicker.png" />
     <None Remove="images\copy.png" />
     <None Remove="images\crop.png" />
     <None Remove="images\cut.png" />
+    <None Remove="images\exit.png" />
+    <None Remove="images\Mo.png" />
     <None Remove="images\new.png" />
     <None Remove="images\open.png" />
     <None Remove="images\paste.png" />
     <None Remove="images\redo.png" />
     <None Remove="images\resize.png" />
     <None Remove="images\rotate.png" />
+    <None Remove="images\save-as-bmp.png" />
+    <None Remove="images\save-as-jpg.png" />
+    <None Remove="images\save-as-png.png" />
     <None Remove="images\save-as.png" />
     <None Remove="images\save.png" />
     <None Remove="images\select.png" />
@@ -25,6 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="images\about.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="images\colorpicker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -35,6 +44,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\cut.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\exit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\Mo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\new.png">
@@ -55,6 +70,15 @@
     <Content Include="images\rotate.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="images\save-as-bmp.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\save-as-jpg.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\save-as-png.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="images\save-as.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -70,6 +94,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ControlzEx" Version="5.0.1" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Fluent.Ribbon" Version="9.0.1" />
     <PackageReference Include="HandyControl" Version="3.3.0" />
     <PackageReference Include="HandyControl.Lang.en" Version="3.3.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
