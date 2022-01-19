@@ -10,17 +10,21 @@ namespace Contract
         public SolidColorBrush Color { get; set; }
         public string Image { get; set; }
         string Name { get; }
-        void HandleStart(double x, double y);
-        void HandleEnd(double x, double y);
+        public void HandleStart(double x, double y);
+        public void HandleEnd(double x, double y);
 
-        UIElement Draw();
-        IShape NextShape();
+        public UIElement Draw();
+        public IShape NextShape();
 
-        IShape Clone();
+        public IShape Clone();
 
-        void ChangePenWidth(int witdh);
+        public void ChangePenWidth(int witdh);
 
-        void ChangeStrokeDash(List<double> strokeDash);
+        public void ChangeStrokeDash(List<double> strokeDash);
+
+        public string ToJson();
+
+        public IShape Parse(string json);
 
     }
 }

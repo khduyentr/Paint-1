@@ -1,6 +1,8 @@
 ﻿using Contract;
 using HandyControl.Controls;
+using HandyControl.Data;
 using HandyControl.Tools;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,9 +34,15 @@ namespace Paint
         int currentPenWidthIndex = -1;
         int currentStrokeDashIndex = -1;
         IShape preview;
-        List<IShape> userShapes = new List<IShape>();
         BindingList<int> ComboboxPenWidth = new BindingList<int>();
         BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
+        Project project = new Project();
+        public void StartNewProject()
+        {
+            project = new Project();
+            canvas.Children.Clear();
+            Title = "Paint - " + project.GetName();
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -65,8 +73,8 @@ namespace Paint
             strokeDashArray.Add(new List<double>() { 3,3,1,3});
             strokeDashArray.Add(new List<double>() { 4,1,4 });
             Pen_Width_Combo_Box.ItemsSource = ComboboxPenWidth;
+            StartNewProject();
             //Dash_Style_Combo_Box.ItemsSource = strokeDashArray;
-
         }
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
@@ -111,7 +119,7 @@ namespace Paint
                 canvas.Children.Clear();
 
                 // Vẽ lại các hình trước đó
-                foreach (var shape in userShapes)
+                foreach (var shape in project.UserShapes)
                 {
                     UIElement element = shape.Draw();
                     canvas.Children.Add(element);
@@ -131,7 +139,9 @@ namespace Paint
                 // Thêm đối tượng cuối cùng vào mảng quản lí
                 Point pos = e.GetPosition(canvas);
                 preview.HandleEnd(pos.X, pos.Y);
-                userShapes.Add(preview.Clone());
+                project.UserShapes.Add(preview.Clone());
+                project.IsSaved = false;
+                Title = "Paint - " + project.GetName() + "*";
 
                 // Sinh ra đối tượng mẫu kế
                 preview = allShapes[selectedShape].NextShape();
@@ -140,7 +150,7 @@ namespace Paint
                 canvas.Children.Clear();
 
                 // Ve lai tat ca cac hinh
-                foreach (var shape in userShapes)
+                foreach (var shape in project.UserShapes)
                 {
                     var element = shape.Draw();
                     canvas.Children.Add(element);
@@ -179,17 +189,128 @@ namespace Paint
 
         private void New_File_Btn_Click(object sender, RoutedEventArgs e)
         {
-
+            if (!project.IsSaved)
+            {
+                MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Do you want to save changes to " + project.GetName(),
+                    Caption = "Paint",
+                    Button = MessageBoxButton.YesNoCancel,
+                    IconBrushKey = ResourceToken.AccentBrush,
+                    IconKey = ResourceToken.ErrorGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+                if (msgResult == MessageBoxResult.Yes)
+                {
+                    if (project.Address.Length == 0)
+                    {
+                        SaveFileDialog saveFileDialog = new SaveFileDialog();
+                        saveFileDialog.FileName = project.GetName();
+                        saveFileDialog.DefaultExt = ".dat";
+                        saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                        if (saveFileDialog.ShowDialog() == true)
+                        {
+                            string path = saveFileDialog.FileName;
+                            project.Address = path;
+                        }
+                    }
+                    project.SaveToFile();
+                }
+                else if (msgResult == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+            StartNewProject();
         }
 
         private void Save_File_Btn_Click(object sender, RoutedEventArgs e)
         {
-
+            if(project.Address.Length == 0)
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.FileName = project.GetName();
+                saveFileDialog.DefaultExt = ".dat";
+                saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string path = saveFileDialog.FileName;
+                    project.Address = path;
+                    
+                }
+            }
+            project.SaveToFile();
+            Title = "Paint - " + project.GetName();
         }
 
         private void Open_File_Btn_Click(object sender, RoutedEventArgs e)
         {
+            if (!project.IsSaved)
+            {
+                MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Do you want to save changes to " + project.GetName(),
+                    Caption = "Paint",
+                    Button = MessageBoxButton.YesNoCancel,
+                    IconBrushKey = ResourceToken.AccentBrush,
+                    IconKey = ResourceToken.ErrorGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+                if(msgResult == MessageBoxResult.Yes)
+                {
+                    if (project.Address.Length == 0)
+                    {
+                        SaveFileDialog saveFileDialog = new SaveFileDialog();
+                        saveFileDialog.FileName = project.GetName();
+                        saveFileDialog.DefaultExt = ".dat";
+                        saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                        if (saveFileDialog.ShowDialog() == true)
+                        {
+                            string path = saveFileDialog.FileName;
+                            project.Address = path;
+                        }
+                    }
+                    project.SaveToFile();
+                }
+                else if(msgResult == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "DAT files only (*.dat)|*.dat";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string path = openFileDialog.FileName;
+                Project temProject = Project.Parse(path);
+                if(temProject == null)
+                {
+                    HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                    {
+                        Message = "Invalid file",
+                        Caption = "Open File Error",
+                        Button = MessageBoxButton.OK,
+                        IconBrushKey = ResourceToken.AccentBrush,
+                        IconKey = ResourceToken.ErrorGeometry,
+                        StyleKey = "MessageBoxCustom"
+                    });
+                }
+                else
+                {
+                    project = temProject.Clone();
+                    Title = "Paint - " + project.GetName();
 
+                    // Ve lai Xoa toan bo
+                    canvas.Children.Clear();
+
+                    // Ve lai tat ca cac hinh
+                    foreach (var shape in project.UserShapes)
+                    {
+                        var element = shape.Draw();
+                        canvas.Children.Add(element);
+                    }
+                }
+            }
         }
 
         private void Save_As_Btn_Click(object sender, RoutedEventArgs e)

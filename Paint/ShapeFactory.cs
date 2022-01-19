@@ -47,20 +47,20 @@ namespace Paint
             return _prototypes[type].NextShape();
         }
 
-        //public IShape Create(ShapeContainer ShapeContainer)
-        //{
-        //    int totalShape = _prototypes.Count();
-        //    IShape result = null;
-        //    for (int i = 0; i < totalShape; i++)
-        //    {
-        //        if (_prototypes[i].GetName() == ShapeContainer.Name)
-        //        {
-        //            result = _prototypes[i].NextShape(ShapeContainer.Data);
-        //            break;
-        //        }
-        //    }
-        //    return result;
-        //}
+        public IShape Create(ShapeData data)
+        {
+            int totalShape = _prototypes.Count();
+            IShape result = null;
+            for (int i = 0; i < totalShape; i++)
+            {
+                if (_prototypes[i].Name == data.Name)
+                {
+                    result = _prototypes[i].Parse(data.Data);
+                    break;
+                }
+            }
+            return result;
+        }
 
         public int ShapeAmount()
         {

@@ -2,6 +2,7 @@ using Contract;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -9,6 +10,14 @@ using System.Windows.Shapes;
 
 namespace Circle2D
 {
+    public class Circle2DData
+    {
+        public string LeftTop { get; set; }
+        public string RightBottom { get; set; }
+        public int PenWidth { get; set; }
+        public List<double> StrokeDash { get; set; }
+        public string Color { get; set; }
+    }
     public class Circle2D : IShape, INotifyPropertyChanged
     {
         private Point2D _leftTop = new Point2D();
@@ -88,6 +97,34 @@ namespace Circle2D
         public void ChangeStrokeDash(List<double> strokeDash)
         {
             _strokeDash = new List<double>(strokeDash);
+        }
+
+        public string ToJson()
+        {
+            Circle2DData data = new Circle2DData()
+            {
+                LeftTop = _leftTop.ToJson(),
+                RightBottom = _rightBottom.ToJson(),
+                PenWidth = _penWidth,
+                StrokeDash = new List<double>(_strokeDash),
+                Color = this.Color.ToString()
+            };
+            return JsonSerializer.Serialize(data);
+        }
+
+        public IShape Parse(string json)
+        {
+            Circle2DData data = (Circle2DData)JsonSerializer.Deserialize(json, typeof(Circle2DData));
+            Color c = (Color)ColorConverter.ConvertFromString(data.Color);
+            Circle2D result = new Circle2D()
+            {
+                _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
+                _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),
+                _penWidth = data.PenWidth,
+                _strokeDash = new List<double>(data.StrokeDash),
+                Color = new SolidColorBrush(c)
+            };
+            return result;
         }
     }
 }
