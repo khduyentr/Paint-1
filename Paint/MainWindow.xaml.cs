@@ -46,6 +46,16 @@ namespace Paint
             canvas.Children.Clear();
             Title = "Paint - " + project.GetName();
         }
+
+        public List<FontFamily> GetAllFonts()
+        {
+            List<FontFamily> fontList = new List<FontFamily>();
+            foreach (var f in Fonts.SystemFontFamilies)
+            {
+                fontList.Add(f);
+            }
+            return fontList;
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -93,20 +103,13 @@ namespace Paint
             strokeDashArray.Add(new List<double>() { 3, 3, 1, 3 });
             strokeDashArray.Add(new List<double>() { 4, 1, 4 });
             StartNewProject();
+            
             //Dash_Style_Combo_Box.ItemsSource = strokeDashArray;
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
-            {
-                Message = "Code Exit here",
-                Caption = "Exit",
-                Button = MessageBoxButton.OK,
-                IconBrushKey = ResourceToken.SuccessBrush,
-                IconKey = ResourceToken.SuccessGeometry,
-                StyleKey = "MessageBoxCustom"
-            });
+            this.Close();
         }
 
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
@@ -265,35 +268,37 @@ namespace Paint
                         {
                             string path = saveFileDialog.FileName;
                             project.Address = path;
+                            project.SaveToFile();
+                            StartNewProject();
                         }
                     }
-                    project.SaveToFile();
                 }
                 else if (msgResult == MessageBoxResult.Cancel)
                 {
                     return;
                 }
+                else
+                {
+                    StartNewProject();
+                }
             }
-            StartNewProject();
         }
 
         private void Save_File_Btn_Click(object sender, RoutedEventArgs e)
         {
-            if(project.Address.Length == 0)
+           
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = project.GetName();
+            saveFileDialog.DefaultExt = ".dat";
+            saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+            if (saveFileDialog.ShowDialog() == true)
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.FileName = project.GetName();
-                saveFileDialog.DefaultExt = ".dat";
-                saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
-                if (saveFileDialog.ShowDialog() == true)
-                {
-                    string path = saveFileDialog.FileName;
-                    project.Address = path;
-                    
-                }
+                string path = saveFileDialog.FileName;
+                project.Address = path;
+                project.IsSaved = true;
+                Title = "Paint - " + project.GetName();
             }
-            project.SaveToFile();
-            Title = "Paint - " + project.GetName();
+            
         }
 
         private void Open_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -368,38 +373,80 @@ namespace Paint
 
         private void Save_As_Btn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = project.GetName();
+            saveFileDialog.DefaultExt = ".dat";
+            saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+            if (saveFileDialog.ShowDialog() == true)
             {
-                Message = "Save as...",
-                Caption = "Code save as here",
-                Button = MessageBoxButton.OK,
-                IconBrushKey = ResourceToken.SuccessBrush,
-                IconKey = ResourceToken.SuccessGeometry,
-                StyleKey = "MessageBoxCustom"
-            });
+                string path = saveFileDialog.FileName;
+                project.Address = path;
+                project.IsSaved = true;
+                Title = "Paint - " + project.GetName();
+            }
         }
 
         private void Save_As_Bmp_Btn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = project.GetName();
+            saveFileDialog.DefaultExt = ".bmp";
+            saveFileDialog.Filter = "BMP files(*.bmp)|*.bmp";
+            if (saveFileDialog.ShowDialog() == true)
             {
-                Message = "Save as bmp...",
-                Caption = "Code save as bmp here",
-                Button = MessageBoxButton.OK,
-                IconBrushKey = ResourceToken.SuccessBrush,
-                IconKey = ResourceToken.SuccessGeometry,
-                StyleKey = "MessageBoxCustom"
-            });
+                Helper.SaveCanvasToFile((int)canvas.ActualWidth, (int)canvas.ActualHeight, canvas, saveFileDialog.FileName);
+                HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Export as BMP file successfully!",
+                    Caption = "Paint",
+                    Button = MessageBoxButton.OK,
+                    IconBrushKey = ResourceToken.SuccessBrush,
+                    IconKey = ResourceToken.SuccessGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+            }
         }
 
         private void Save_As_Jpg_Btn_Click(object sender, RoutedEventArgs e)
         {
-
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = project.GetName();
+            saveFileDialog.DefaultExt = ".jpg";
+            saveFileDialog.Filter = "JPG files(*.jpg)|*.jpg";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Helper.SaveCanvasToFile((int)canvas.ActualWidth, (int)canvas.ActualHeight, canvas, saveFileDialog.FileName);
+                HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Export as JPG file successfully!",
+                    Caption = "Paint",
+                    Button = MessageBoxButton.OK,
+                    IconBrushKey = ResourceToken.SuccessBrush,
+                    IconKey = ResourceToken.SuccessGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+            }
         }
 
         private void Save_As_Png_Btn_Click(object sender, RoutedEventArgs e)
         {
-
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = project.GetName();
+            saveFileDialog.DefaultExt = ".png";
+            saveFileDialog.Filter = "PNG files(*.png)|*.png";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Helper.SaveCanvasToFile((int)canvas.ActualWidth, (int)canvas.ActualHeight, canvas, saveFileDialog.FileName);
+                HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Export as PNG file successfully!",
+                    Caption = "Paint",
+                    Button = MessageBoxButton.OK,
+                    IconBrushKey = ResourceToken.SuccessBrush,
+                    IconKey = ResourceToken.SuccessGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+            }
         }
 
         private void Cut_Btn_Click(object sender, RoutedEventArgs e)
@@ -461,6 +508,42 @@ namespace Paint
         private void Dash_Style_Combo_Box_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             currentStrokeDashIndex = Dash_Style_Combo_Box.SelectedIndex;
+        }
+
+        private void RibbonWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (!project.IsSaved)
+            {
+                MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Do you want to save changes to " + project.GetName(),
+                    Caption = "Paint",
+                    Button = MessageBoxButton.YesNoCancel,
+                    IconBrushKey = ResourceToken.AccentBrush,
+                    IconKey = ResourceToken.ErrorGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+                if (msgResult == MessageBoxResult.Yes)
+                {
+                    if (project.Address.Length == 0)
+                    {
+                        SaveFileDialog saveFileDialog = new SaveFileDialog();
+                        saveFileDialog.FileName = project.GetName();
+                        saveFileDialog.DefaultExt = ".dat";
+                        saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                        if (saveFileDialog.ShowDialog() == true)
+                        {
+                            string path = saveFileDialog.FileName;
+                            project.Address = path;
+                            project.SaveToFile();
+                        }
+                    }
+                }
+                else if (msgResult == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
         }
     }
 }

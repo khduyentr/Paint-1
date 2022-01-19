@@ -9,6 +9,7 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         Loaded="Window_Loaded"
         Background="Gray"
+        Closing="RibbonWindow_Closing"
         WindowStartupLocation="CenterScreen"
         Title="Paint" MinHeight="700" MinWidth="1000" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
     <DockPanel>
