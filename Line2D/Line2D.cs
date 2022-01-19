@@ -2,12 +2,21 @@ using Contract;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace Line2D
 {
+    public class Line2DData
+    {
+        public string Start {get;set;}
+        public string End { get; set; }
+        public int PenWidth { get; set; }
+        public List<double> StrokeDash { get; set; }
+        public string Color { get; set; }
+    }
     public class Line2D : IShape, INotifyPropertyChanged
     {
         private Point2D _start = new Point2D();
@@ -75,6 +84,34 @@ namespace Line2D
         public void ChangeStrokeDash(List<double> strokeDash)
         {
             _strokeDash = new List<double>(strokeDash);
+        }
+
+        public string ToJson()
+        {
+            Line2DData data = new Line2DData()
+            {
+                Start = _start.ToJson(),
+                End = _end.ToJson(),
+                PenWidth = _penWidth,
+                StrokeDash = new List<double>(_strokeDash),
+                Color = this.Color.ToString()
+            };
+            return JsonSerializer.Serialize(data);
+        }
+
+        public IShape Parse(string json)
+        {
+            Line2DData data = (Line2DData)JsonSerializer.Deserialize(json, typeof(Line2DData));
+            Color c = (Color)ColorConverter.ConvertFromString(data.Color);
+            Line2D result = new Line2D()
+            {
+                _start = (Point2D)_start.Parse(data.Start),
+                _end = (Point2D)_start.Parse(data.End),
+                _penWidth = data.PenWidth,
+                _strokeDash = new List<double>(data.StrokeDash),
+                Color = new SolidColorBrush(c)
+            };
+            return result;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -9,6 +10,11 @@ using System.Windows.Shapes;
 
 namespace Contract
 {
+    public class Point2DData {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public string Color { get; set; }
+    }
     public class Point2D : IShape
     {
         public double X { get; set; }
@@ -74,6 +80,29 @@ namespace Contract
         public void ChangeStrokeDash(List<double> strokeDash)
         {
             throw new NotImplementedException();
+        }
+
+        public string ToJson()
+        {
+            Point2DData data = new Point2DData();
+            data.X = this.X;
+            data.Y = this.Y;
+            data.Color = this.Color.ToString();
+            string json = JsonSerializer.Serialize(data);
+            return json;
+        }
+
+        public IShape Parse(string json)
+        {
+            Point2DData pointData = (Point2DData)JsonSerializer.Deserialize(json, typeof(Point2DData));
+            Color c = (Color)ColorConverter.ConvertFromString(pointData.Color);
+            Point2D result = new Point2D()
+            {
+                X = pointData.X,
+                Y = pointData.Y,
+                Color = new SolidColorBrush(c)
+            };
+            return result;
         }
     }
 }
