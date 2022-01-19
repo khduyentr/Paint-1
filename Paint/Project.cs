@@ -12,6 +12,7 @@ namespace Paint
     public class ProjectData
     {
         public List<ShapeData> Data { get; set; }
+        
         public string Address { get; set; }
     }
     
@@ -103,7 +104,16 @@ namespace Paint
             {
                 FileInfo file = new FileInfo(Address);
                 string[] tokens = file.Name.Split(".");
-                return tokens[tokens.Length - 2];
+                string name = "";
+                int n = tokens.Length;
+                for(int i = 0; i < n - 1; i++){
+                    name += tokens[i];
+                    if(i != n - 2)
+                    {
+                       name += ".";
+                    }
+                }
+                return name;
             }
             return "Untitled";
         }
@@ -117,6 +127,17 @@ namespace Paint
             }
             result.Address = this.Address;
             return result;
+        }
+
+        public string GetProjectType()
+        {
+            if (Address != null && Address.Length > 0)
+            {
+                FileInfo file = new FileInfo(Address);
+                string[] tokens = file.Name.Split(".");
+                return tokens[tokens.Length - 1];
+            }
+            return "dat";
         }
     }
 }

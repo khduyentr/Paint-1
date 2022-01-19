@@ -37,6 +37,7 @@ namespace Paint
         BindingList<int> ComboboxPenWidth = new BindingList<int>();
         BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
         Project project = new Project();
+        bool isSelectRegion = false;
         public void StartNewProject()
         {
             project = new Project();
@@ -59,7 +60,6 @@ namespace Paint
             }
 
             //Combobox for penwidth
-            
             ShapeList.ItemsSource = allShapes;
             ComboboxPenWidth.Add(1);
             ComboboxPenWidth.Add(2);
@@ -109,6 +109,14 @@ namespace Paint
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
+            if (selectedShape >= 0)
+            {
+                Canvas_Border.Cursor = Cursors.Cross;
+            }
+            if (isSelectRegion)
+            {
+                Canvas_Border.Cursor = Cursors.Cross;
+            }
             if (isDrawing)
             {
                 Point pos = e.GetPosition(canvas);
@@ -345,7 +353,8 @@ namespace Paint
 
         private void Select_Area_Btn_Click(object sender, RoutedEventArgs e)
         {
-
+            isSelectRegion = !isSelectRegion;
+            ShapeList.SelectedIndex = -1;
         }
 
         private void Crop_Area_Btn_Click(object sender, RoutedEventArgs e)

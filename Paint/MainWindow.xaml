@@ -231,7 +231,7 @@
             <Canvas x:Name="canvas" Background="White">
 
             </Canvas>
-            <Border Background="Transparent" MouseDown="canvas_MouseDown" 
+            <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
                 MouseMove="canvas_MouseMove" 
                 MouseUp="canvas_MouseUp">
 
