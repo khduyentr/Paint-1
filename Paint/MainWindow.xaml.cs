@@ -6,7 +6,9 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,7 +26,7 @@ namespace Paint
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : System.Windows.Window, INotifyPropertyChanged
+    public partial class MainWindow : Fluent.RibbonWindow, INotifyPropertyChanged
     {
         int totalShape = 0;
         BindingList<IShape> allShapes = new BindingList<IShape>();
@@ -51,35 +53,78 @@ namespace Paint
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private void CreateDLLFolder()
+        {
+            string exePath = Assembly.GetExecutingAssembly().Location;
+            string folderPath = System.IO.Path.GetDirectoryName(exePath);
+            folderPath += @"\DLL";
+            DirectoryInfo folder = new DirectoryInfo(folderPath);
+            if (!folder.Exists)
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            CreateDLLFolder();
             totalShape = ShapeFactory.GetInstance().ShapeAmount();
             for(int i = 0; i < totalShape; i++)
             {
                 allShapes.Add(ShapeFactory.GetInstance().Create(i));
             }
 
-            //Combobox for penwidth
             ShapeList.ItemsSource = allShapes;
+            
+            //Combobox for penwidth
             ComboboxPenWidth.Add(1);
             ComboboxPenWidth.Add(2);
             ComboboxPenWidth.Add(4);
             ComboboxPenWidth.Add(6);
             ComboboxPenWidth.Add(8);
             ComboboxPenWidth.Add(10);
-            strokeDashArray.Add(new List<double>() { 1,0 });
-            strokeDashArray.Add(new List<double>() { 1 });
-            strokeDashArray.Add(new List<double>() { 6,2});
-            strokeDashArray.Add(new List<double>() { 3,3,1,3});
-            strokeDashArray.Add(new List<double>() { 4,1,4 });
             Pen_Width_Combo_Box.ItemsSource = ComboboxPenWidth;
+
+            //Combobox for stroketype
+            strokeDashArray.Add(new List<double>() { 1, 0 });
+            strokeDashArray.Add(new List<double>() { 1 });
+            strokeDashArray.Add(new List<double>() { 6, 2 });
+            strokeDashArray.Add(new List<double>() { 3, 3, 1, 3 });
+            strokeDashArray.Add(new List<double>() { 4, 1, 4 });
             StartNewProject();
             //Dash_Style_Combo_Box.ItemsSource = strokeDashArray;
         }
 
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+            {
+                Message = "Code Exit here",
+                Caption = "Exit",
+                Button = MessageBoxButton.OK,
+                IconBrushKey = ResourceToken.SuccessBrush,
+                IconKey = ResourceToken.SuccessGeometry,
+                StyleKey = "MessageBoxCustom"
+            });
+        }
+
+        private void OpenFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+            {
+                Message = "Open sth...",
+                Caption = "Code open sth here",
+                Button = MessageBoxButton.OK,
+                IconBrushKey = ResourceToken.SuccessBrush,
+                IconKey = ResourceToken.SuccessGeometry,
+                StyleKey = "MessageBoxCustom"
+            });
+        }
+
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(selectedShape >= 0)
+            if (selectedShape >= 0)
             {
                 isDrawing = true;
 
@@ -87,7 +132,7 @@ namespace Paint
 
                 preview.HandleStart(pos.X, pos.Y);
                 preview.Color = currentColor;
-                if(currentPenWidthIndex >= 0)
+                if (currentPenWidthIndex >= 0)
                 {
                     preview.ChangePenWidth(ComboboxPenWidth[currentPenWidthIndex]);
                 }
@@ -95,8 +140,8 @@ namespace Paint
                 {
                     preview.ChangePenWidth(ComboboxPenWidth[0]);
                 }
-               
-                if(currentStrokeDashIndex >= 0)
+
+                if (currentStrokeDashIndex >= 0)
                 {
                     preview.ChangeStrokeDash(strokeDashArray[currentStrokeDashIndex]);
                 }
@@ -121,7 +166,7 @@ namespace Paint
             {
                 Point pos = e.GetPosition(canvas);
                 preview.HandleEnd(pos.X, pos.Y);
-                
+
 
                 // Xoá hết các hình vẽ cũ
                 canvas.Children.Clear();
@@ -142,7 +187,7 @@ namespace Paint
         {
             isDrawing = false;
 
-            if(selectedShape >= 0)
+            if (selectedShape >= 0)
             {
                 // Thêm đối tượng cuối cùng vào mảng quản lí
                 Point pos = e.GetPosition(canvas);
@@ -169,11 +214,11 @@ namespace Paint
         private void ShapeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             selectedShape = ShapeList.SelectedIndex;
-            if(selectedShape >= 0)
+            if (selectedShape >= 0)
             {
                 preview = allShapes[selectedShape].Clone();
             }
-           
+
         }
 
         private void Open_ColorPicker_Click(object sender, RoutedEventArgs e)
@@ -184,7 +229,7 @@ namespace Paint
                 PopupElement = picker
             };
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            picker.SelectedColorChanged += delegate {};
+            picker.SelectedColorChanged += delegate { };
             picker.Confirmed += delegate
             {
                 currentColor = picker.SelectedBrush;
@@ -323,6 +368,37 @@ namespace Paint
 
         private void Save_As_Btn_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+            {
+                Message = "Save as...",
+                Caption = "Code save as here",
+                Button = MessageBoxButton.OK,
+                IconBrushKey = ResourceToken.SuccessBrush,
+                IconKey = ResourceToken.SuccessGeometry,
+                StyleKey = "MessageBoxCustom"
+            });
+        }
+
+        private void Save_As_Bmp_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+            {
+                Message = "Save as bmp...",
+                Caption = "Code save as bmp here",
+                Button = MessageBoxButton.OK,
+                IconBrushKey = ResourceToken.SuccessBrush,
+                IconKey = ResourceToken.SuccessGeometry,
+                StyleKey = "MessageBoxCustom"
+            });
+        }
+
+        private void Save_As_Jpg_Btn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Save_As_Png_Btn_Click(object sender, RoutedEventArgs e)
+        {
 
         }
 
@@ -368,6 +444,11 @@ namespace Paint
         }
 
         private void Rotate_Area_Btn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void RibbonWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
 
         }
