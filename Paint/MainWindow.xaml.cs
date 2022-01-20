@@ -47,15 +47,7 @@ namespace Paint
             Title = "Paint - " + project.GetName();
         }
 
-        public List<FontFamily> GetAllFonts()
-        {
-            List<FontFamily> fontList = new List<FontFamily>();
-            foreach (var f in Fonts.SystemFontFamilies)
-            {
-                fontList.Add(f);
-            }
-            return fontList;
-        }
+       
         public MainWindow()
         {
             InitializeComponent();
