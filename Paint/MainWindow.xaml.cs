@@ -35,11 +35,13 @@ namespace Paint
         SolidColorBrush currentColor = new SolidColorBrush(Colors.Black);
         int currentPenWidthIndex = -1;
         int currentStrokeDashIndex = -1;
+        ScaleTransform st = new ScaleTransform(); 
         IShape preview;
         BindingList<int> ComboboxPenWidth = new BindingList<int>();
         BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
         Project project = new Project();
         bool isSelectRegion = false;
+        public double ZoomValue { get; set; }
         public void StartNewProject()
         {
             project = new Project();
@@ -65,12 +67,14 @@ namespace Paint
             {
                 Directory.CreateDirectory(folderPath);
             }
+            
 
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CreateDLLFolder();
+            ZoomValue = 100;
             totalShape = ShapeFactory.GetInstance().ShapeAmount();
             for(int i = 0; i < totalShape; i++)
             {
@@ -94,7 +98,10 @@ namespace Paint
             strokeDashArray.Add(new List<double>() { 3, 3, 1, 3 });
             strokeDashArray.Add(new List<double>() { 4, 1, 4 });
             StartNewProject();
+            Canvas_Container.LayoutTransform = st;
             
+            DataContext = this;
+            Zoom_Slider.Value = 100;
             //Dash_Style_Combo_Box.ItemsSource = strokeDashArray;
         }
 
@@ -536,6 +543,43 @@ namespace Paint
                     return;
                 }
             }
+        }
+
+        private void Zoom_In_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            if(st.ScaleX <= 5 && st.ScaleY <= 5)
+            {
+                st.ScaleX *= 1.25;
+                st.ScaleY *= 1.25;
+                Zoom_Slider.Value = st.ScaleX * 100;
+                ZoomValue = Zoom_Slider.Value;
+            }
+        }
+
+        private void Zoom_100_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            st.ScaleX = 1;
+            st.ScaleY = 1;
+            Zoom_Slider.Value = st.ScaleX * 100;
+            ZoomValue = Zoom_Slider.Value;
+        }
+
+        private void Zoom_Out_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            if(st.ScaleX >= 0.25 && st.ScaleY >= 0.25)
+            {
+                st.ScaleX *= 0.8;
+                st.ScaleY *= 0.8;
+                Zoom_Slider.Value = st.ScaleX * 100;
+                ZoomValue = Zoom_Slider.Value;
+            }
+        }
+
+        private void Zoom_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ZoomValue = Zoom_Slider.Value;
+            st.ScaleX = ZoomValue / 100;
+            st.ScaleY = ZoomValue / 100;
         }
     }
 }
