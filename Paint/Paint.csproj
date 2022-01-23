@@ -28,6 +28,9 @@
     <None Remove="images\save.png" />
     <None Remove="images\select.png" />
     <None Remove="images\undo.png" />
+    <None Remove="images\zoom100.png" />
+    <None Remove="images\zoomin.png" />
+    <None Remove="images\zoomout.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -89,6 +92,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\undo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\zoom100.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\zoomin.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\zoomout.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
