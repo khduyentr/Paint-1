@@ -42,11 +42,14 @@ namespace Paint
         bool isSelectRegion = false;
 
         List<IShape> undo = new List<IShape>();
+
         public void StartNewProject()
         {
+            undo.Clear();
             project = new Project();
             canvas.Children.Clear();
             Title = "Paint - " + project.GetName();
+            
         }
 
        
@@ -265,6 +268,7 @@ namespace Paint
                             StartNewProject();
                         }
                     }
+                   
                 }
                 else if (msgResult == MessageBoxResult.Cancel)
                 {
@@ -465,6 +469,8 @@ namespace Paint
             {
                 undo.Add(project.UserShapes[count - 1]);
                 project.UserShapes.RemoveAt(count - 1);
+                project.IsSaved = false;
+
                 // Ve lai Xoa toan bo
                 canvas.Children.Clear();
 
@@ -485,6 +491,8 @@ namespace Paint
             {
                 project.UserShapes.Add(undo[count - 1]);
                 undo.RemoveAt(count - 1);
+                project.IsSaved = false;
+
                 // Ve lai Xoa toan bo
                 canvas.Children.Clear();
 
@@ -568,6 +576,11 @@ namespace Paint
                     return;
                 }
             }
+        }
+
+        private void Open_Fill_ColorPicker_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
