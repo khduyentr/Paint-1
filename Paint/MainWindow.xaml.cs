@@ -78,7 +78,6 @@ namespace Paint
             }
 
             ShapeList.ItemsSource = allShapes;
-            
             //Combobox for penwidth
             ComboboxPenWidth.Add(1);
             ComboboxPenWidth.Add(2);

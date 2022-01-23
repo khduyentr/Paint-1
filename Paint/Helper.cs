@@ -32,8 +32,8 @@ namespace Paint
             var rtb = new RenderTargetBitmap(
                 w, //width
                 h, //height
-                100, //dpi x
-                100, //dpi y
+                96, //dpi x
+                96, //dpi y
                 PixelFormats.Pbgra32 // pixelformat
                 );
             rtb.Render(canvas);

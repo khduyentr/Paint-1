@@ -178,7 +178,7 @@
             <Fluent:RibbonTabItem Header="View">
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
-        <Grid Margin="0">
+        <Grid Margin="5">
             <Canvas x:Name="canvas" Background="White">
 
             </Canvas>
