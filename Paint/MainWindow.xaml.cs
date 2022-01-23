@@ -40,6 +40,8 @@ namespace Paint
         BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
         Project project = new Project();
         bool isSelectRegion = false;
+
+        List<IShape> undo = new List<IShape>();
         public void StartNewProject()
         {
             project = new Project();
@@ -458,12 +460,42 @@ namespace Paint
 
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
         {
+            int count = project.UserShapes.Count;
+            if(count > 0)
+            {
+                undo.Add(project.UserShapes[count - 1]);
+                project.UserShapes.RemoveAt(count - 1);
+                // Ve lai Xoa toan bo
+                canvas.Children.Clear();
 
+                // Ve lai tat ca cac hinh
+                foreach (var shape in project.UserShapes)
+                {
+                    var element = shape.Draw();
+                    canvas.Children.Add(element);
+                }
+            }    
+            
         }
 
         private void Redo_Btn_Click(object sender, RoutedEventArgs e)
         {
+            int count = undo.Count;
+            if(count > 0)
+            {
+                project.UserShapes.Add(undo[count - 1]);
+                undo.RemoveAt(count - 1);
+                // Ve lai Xoa toan bo
+                canvas.Children.Clear();
 
+                // Ve lai tat ca cac hinh
+                foreach (var shape in project.UserShapes)
+                {
+                    var element = shape.Draw();
+                    canvas.Children.Add(element);
+                }
+            }    
+            
         }
 
         private void Select_Area_Btn_Click(object sender, RoutedEventArgs e)
