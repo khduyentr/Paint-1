@@ -205,26 +205,50 @@ namespace Paint
                 // Xoá hết các hình vẽ cũ
                 canvas.Children.Clear();
 
-                // Vẽ lại các hình trước đó
-                for (int i=0; i< project.UserLayer.Count; i++)
+                if (selectedLayer >= 0)
                 {
-                    if (project.UserLayer[i].isVisible)
+
+                    // Vẽ lại các hình trước đó
+                    for (int i = 0; i < project.UserLayer.Count; i++)
                     {
-                       
-
-                        foreach (var shape in project.UserLayer[i].UserShapes)
+                        if (project.UserLayer[i].isVisible)
                         {
-                            var element = shape.Draw();
-                            canvas.Children.Add(element);
-                        }
 
-                        if (selectedLayer == i)
-                        {
-                            // Vẽ hình preview đè lên
-                            canvas.Children.Add(preview.Draw());
-                        }
 
+                            foreach (var shape in project.UserLayer[i].UserShapes)
+                            {
+                                var element = shape.Draw();
+                                canvas.Children.Add(element);
+                            }
+
+                            if (selectedLayer == i)
+                            {
+                                // Vẽ hình preview đè lên
+                                canvas.Children.Add(preview.Draw());
+                            }
+
+                        }
                     }
+                }
+                else
+                {
+                    for (int i = 0; i < project.UserLayer.Count; i++)
+                    {
+                        if (project.UserLayer[i].isVisible)
+                        {
+
+
+                            foreach (var shape in project.UserLayer[i].UserShapes)
+                            {
+                                var element = shape.Draw();
+                                canvas.Children.Add(element);
+                            }
+                        }
+                    }
+                 
+                     // Vẽ hình preview đè lên
+                    canvas.Children.Add(preview.Draw());
+
                 }
                 
             }
