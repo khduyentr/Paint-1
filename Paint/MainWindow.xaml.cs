@@ -121,19 +121,6 @@ namespace Paint
             this.Close();
         }
 
-        private void OpenFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
-            {
-                Message = "Open sth...",
-                Caption = "Code open sth here",
-                Button = MessageBoxButton.OK,
-                IconBrushKey = ResourceToken.SuccessBrush,
-                IconKey = ResourceToken.SuccessGeometry,
-                StyleKey = "MessageBoxCustom"
-            });
-        }
-
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (selectedShape >= 0)
@@ -798,6 +785,19 @@ namespace Paint
                     }
                 }
             }
+        }
+
+        private void Open_Recent_File_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+            {
+                Message = "Open recent file...",
+                Caption = "Code open recent file here",
+                Button = MessageBoxButton.OK,
+                IconBrushKey = ResourceToken.SuccessBrush,
+                IconKey = ResourceToken.SuccessGeometry,
+                StyleKey = "MessageBoxCustom"
+            });
         }
     }
 }

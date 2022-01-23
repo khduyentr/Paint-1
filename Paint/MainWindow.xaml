@@ -38,7 +38,7 @@
                     <Fluent:ApplicationMenu.RightPaneContent>
                         <StackPanel>
                             <TextBlock Text="Recent File" FontWeight="Bold" Foreground="Black"></TextBlock>
-                            <RibbonButton Label="Mo.png" Foreground="Black" Click="OpenFileButton_Click" HorizontalAlignment="Left"></RibbonButton>
+                            <RibbonButton Label="Mo.png" Foreground="Black" Click="Open_Recent_File_Btn_Click" HorizontalAlignment="Left"></RibbonButton>
                         </StackPanel>
                     </Fluent:ApplicationMenu.RightPaneContent>
                     <Fluent:ApplicationMenu.FooterPaneContent>
