@@ -17,6 +17,7 @@ namespace Diamond2D
         public int PenWidth { get; set; }
         public List<double> StrokeDash { get; set; }
         public string Color { get; set; }
+        public string FillColor { get; set; }
     }
     public class Diamond2D : IShape, INotifyPropertyChanged
     {
@@ -26,7 +27,7 @@ namespace Diamond2D
         private List<double> _strokeDash = new List<double>() { 0 };
         public SolidColorBrush Color { get; set; }
         public string Name => "Diamond";
-
+        public SolidColorBrush FillColor { get; set; }
         public string Image { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -34,6 +35,7 @@ namespace Diamond2D
         public Diamond2D()
         {
             Color = new SolidColorBrush(Colors.Black);
+            FillColor = new SolidColorBrush(Colors.Transparent);
             Image = "/Diamond2D;Component/images/diamond.png";
         }
         public void HandleStart(double x, double y)
@@ -61,6 +63,7 @@ namespace Diamond2D
                 StrokeDashArray = new DoubleCollection(_strokeDash),
                 StrokeThickness = _penWidth,
                 Stroke = Color,
+                Fill = FillColor,
             };
             PointCollection polygonPoints = new PointCollection();
             polygonPoints.Add(p1);
@@ -85,6 +88,7 @@ namespace Diamond2D
                 _leftTop = (Point2D)this._leftTop.Clone(),
                 _rightBottom = (Point2D)this._rightBottom.Clone(),
                 Color = this.Color,
+                FillColor = this.FillColor,
                 _penWidth = this._penWidth,
                 _strokeDash = new List<double>(this._strokeDash)
             };
@@ -108,7 +112,8 @@ namespace Diamond2D
                 RightBottom = _rightBottom.ToJson(),
                 PenWidth = _penWidth,
                 StrokeDash = new List<double>(_strokeDash),
-                Color = this.Color.ToString()
+                Color = this.Color.ToString(),
+                FillColor = this.FillColor.ToString()
             };
             return JsonSerializer.Serialize(data);
         }
@@ -117,13 +122,15 @@ namespace Diamond2D
         {
             Diamond2DData data = (Diamond2DData)JsonSerializer.Deserialize(json, typeof(Diamond2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
+            Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
             Diamond2D result = new Diamond2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
                 _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),
                 _penWidth = data.PenWidth,
                 _strokeDash = new List<double>(data.StrokeDash),
-                Color = new SolidColorBrush(c)
+                Color = new SolidColorBrush(c),
+                FillColor = new SolidColorBrush(fc)
             };
             return result;
         }
