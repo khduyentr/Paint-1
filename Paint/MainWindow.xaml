@@ -8,10 +8,14 @@
         mc:Ignorable="d"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         Loaded="Window_Loaded"
-        Background="Gray"
+        Background="#FFCAD4E3"
         Closing="RibbonWindow_Closing"
         WindowStartupLocation="CenterScreen"
+        KeyDown="CutContractKeyDown"
         Title="Paint" MinHeight="700" MinWidth="1000" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
+    <Fluent:RibbonWindow.Resources>
+        <local:ZoomValuePercentageConverter x:Key="zoomValuePercentageConverter"></local:ZoomValuePercentageConverter>
+    </Fluent:RibbonWindow.Resources>
     <DockPanel>
         <Fluent:Ribbon DockPanel.Dock="Top">
             <Fluent:Ribbon.Menu>
@@ -110,7 +114,6 @@
                             <Style TargetType="GridViewColumnHeader">
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </Style>
-                            <!--Layout for Default Item-->
                             <DataTemplate x:Key="DefaultItemTemplate">
                                 <Image Source="{Binding Image}" Width="20" Height="20" Margin="5,5,5,5"></Image>
                             </DataTemplate>
@@ -176,17 +179,50 @@
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
             <Fluent:RibbonTabItem Header="View">
+                <Fluent:RibbonGroupBox Header="Zoom">
+                    <Fluent:Button Header="Zoom in" Icon="images/zoomin.png" Click="Zoom_In_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/zoomin.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button Header="Zoom out" Icon="images/zoomout.png" Click="Zoom_Out_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/zoomout.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    <Fluent:Button Header="100%" Icon="images/zoom100.png" Click="Zoom_100_Btn_Click">
+                        <Fluent:Button.LargeIcon>
+                            <Image Source="images/zoom100.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:Button.LargeIcon>
+                    </Fluent:Button>
+                    
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Zoom Slider" >
+                    <Grid Height="68">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Width="30" Text="{Binding ZoomValue, Converter={StaticResource zoomValuePercentageConverter}}"></TextBlock>
+                            <Slider Maximum="500" Minimum="25" Width="150" Value="100" TickFrequency="25" IsSnapToTickEnabled="True" Name="Zoom_Slider" ValueChanged="Zoom_Slider_ValueChanged"></Slider>
+                        </StackPanel>
+                    </Grid>
+                </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
-        <Grid Margin="0">
-            <Canvas x:Name="canvas" Background="White">
-
-            </Canvas>
-            <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid Margin="10" Name="Canvas_Container" Width="900" Height="500" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="0" Direction="-45"
+                              RenderingBias="Quality" ShadowDepth="8" Opacity="0.1" />
+                </Grid.Effect>
+                <Canvas x:Name="canvas" Background="White">
+                    
+                </Canvas>
+                <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
                 MouseMove="canvas_MouseMove" 
                 MouseUp="canvas_MouseUp">
 
-            </Border>
-        </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
     </DockPanel>
+    
 </Fluent:RibbonWindow>

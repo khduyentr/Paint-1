@@ -35,11 +35,13 @@ namespace Paint
         SolidColorBrush currentColor = new SolidColorBrush(Colors.Black);
         int currentPenWidthIndex = -1;
         int currentStrokeDashIndex = -1;
+        ScaleTransform st = new ScaleTransform(); 
         IShape preview;
         BindingList<int> ComboboxPenWidth = new BindingList<int>();
         BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
         Project project = new Project();
         bool isSelectRegion = false;
+        public double ZoomValue { get; set; }
         public void StartNewProject()
         {
             project = new Project();
@@ -65,12 +67,14 @@ namespace Paint
             {
                 Directory.CreateDirectory(folderPath);
             }
+            
 
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CreateDLLFolder();
+            ZoomValue = 100;
             totalShape = ShapeFactory.GetInstance().ShapeAmount();
             for(int i = 0; i < totalShape; i++)
             {
@@ -78,7 +82,6 @@ namespace Paint
             }
 
             ShapeList.ItemsSource = allShapes;
-            
             //Combobox for penwidth
             ComboboxPenWidth.Add(1);
             ComboboxPenWidth.Add(2);
@@ -95,7 +98,10 @@ namespace Paint
             strokeDashArray.Add(new List<double>() { 3, 3, 1, 3 });
             strokeDashArray.Add(new List<double>() { 4, 1, 4 });
             StartNewProject();
+            Canvas_Container.LayoutTransform = st;
             
+            DataContext = this;
+            Zoom_Slider.Value = 100;
             //Dash_Style_Combo_Box.ItemsSource = strokeDashArray;
         }
 
@@ -266,7 +272,11 @@ namespace Paint
 
         private void Save_File_Btn_Click(object sender, RoutedEventArgs e)
         {
-           
+            if(project.Address.Length > 0)
+            {
+                project.SaveToFile();
+                return;
+            }
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.FileName = project.GetName();
             saveFileDialog.DefaultExt = ".dat";
@@ -278,7 +288,6 @@ namespace Paint
                 project.SaveToFile();
                 Title = "Paint - " + project.GetName();
             }
-            
         }
 
         private void Open_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -522,6 +531,176 @@ namespace Paint
                 else if (msgResult == MessageBoxResult.Cancel)
                 {
                     return;
+                }
+            }
+        }
+
+        private void Zoom_In_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            if(st.ScaleX <= 5 && st.ScaleY <= 5)
+            {
+                st.ScaleX *= 1.25;
+                st.ScaleY *= 1.25;
+                Zoom_Slider.Value = st.ScaleX * 100;
+                ZoomValue = Zoom_Slider.Value;
+            }
+        }
+
+        private void Zoom_100_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            st.ScaleX = 1;
+            st.ScaleY = 1;
+            Zoom_Slider.Value = st.ScaleX * 100;
+            ZoomValue = Zoom_Slider.Value;
+        }
+
+        private void Zoom_Out_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            if(st.ScaleX >= 0.25 && st.ScaleY >= 0.25)
+            {
+                st.ScaleX *= 0.8;
+                st.ScaleY *= 0.8;
+                Zoom_Slider.Value = st.ScaleX * 100;
+                ZoomValue = Zoom_Slider.Value;
+            }
+        }
+
+        private void Zoom_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ZoomValue = Zoom_Slider.Value;
+            st.ScaleX = ZoomValue / 100;
+            st.ScaleY = ZoomValue / 100;
+        }
+
+        private void CutContractKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (project.Address.Length > 0)
+                {
+                    project.SaveToFile();
+                    return;
+                }
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.FileName = project.GetName();
+                saveFileDialog.DefaultExt = ".dat";
+                saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string path = saveFileDialog.FileName;
+                    project.Address = path;
+                    project.SaveToFile();
+                    Title = "Paint - " + project.GetName();
+                }
+            }
+            else if (e.Key == Key.N && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (!project.IsSaved)
+                {
+                    MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                    {
+                        Message = "Do you want to save changes to " + project.GetName(),
+                        Caption = "Paint",
+                        Button = MessageBoxButton.YesNoCancel,
+                        IconBrushKey = ResourceToken.AccentBrush,
+                        IconKey = ResourceToken.ErrorGeometry,
+                        StyleKey = "MessageBoxCustom"
+                    });
+                    if (msgResult == MessageBoxResult.Yes)
+                    {
+                        if (project.Address.Length == 0)
+                        {
+                            SaveFileDialog saveFileDialog = new SaveFileDialog();
+                            saveFileDialog.FileName = project.GetName();
+                            saveFileDialog.DefaultExt = ".dat";
+                            saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                            if (saveFileDialog.ShowDialog() == true)
+                            {
+                                string path = saveFileDialog.FileName;
+                                project.Address = path;
+                                project.SaveToFile();
+                                StartNewProject();
+                            }
+                        }
+                    }
+                    else if (msgResult == MessageBoxResult.Cancel)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        StartNewProject();
+                    }
+                }
+                StartNewProject();
+            }
+            else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (!project.IsSaved)
+                {
+                    MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                    {
+                        Message = "Do you want to save changes to " + project.GetName(),
+                        Caption = "Paint",
+                        Button = MessageBoxButton.YesNoCancel,
+                        IconBrushKey = ResourceToken.AccentBrush,
+                        IconKey = ResourceToken.ErrorGeometry,
+                        StyleKey = "MessageBoxCustom"
+                    });
+                    if (msgResult == MessageBoxResult.Yes)
+                    {
+                        if (project.Address.Length == 0)
+                        {
+                            SaveFileDialog saveFileDialog = new SaveFileDialog();
+                            saveFileDialog.FileName = project.GetName();
+                            saveFileDialog.DefaultExt = ".dat";
+                            saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                            if (saveFileDialog.ShowDialog() == true)
+                            {
+                                string path = saveFileDialog.FileName;
+                                project.Address = path;
+                            }
+                        }
+                        project.SaveToFile();
+                    }
+                    else if (msgResult == MessageBoxResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "DAT files only (*.dat)|*.dat";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    string path = openFileDialog.FileName;
+                    Project temProject = Project.Parse(path);
+                    if (temProject == null)
+                    {
+                        HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                        {
+                            Message = "Invalid file",
+                            Caption = "Open File Error",
+                            Button = MessageBoxButton.OK,
+                            IconBrushKey = ResourceToken.AccentBrush,
+                            IconKey = ResourceToken.ErrorGeometry,
+                            StyleKey = "MessageBoxCustom"
+                        });
+                    }
+                    else
+                    {
+                        project = temProject.Clone();
+                        Title = "Paint - " + project.GetName();
+
+                        // Ve lai Xoa toan bo
+                        canvas.Children.Clear();
+
+                        // Ve lai tat ca cac hinh
+                        foreach (var shape in project.UserShapes)
+                        {
+                            var element = shape.Draw();
+                            canvas.Children.Add(element);
+                        }
+                    }
                 }
             }
         }
