@@ -17,6 +17,7 @@ namespace Square2D
         public int PenWidth { get; set; }
         public List<double> StrokeDash { get; set; }
         public string Color { get; set; }
+        public string FillColor { get; set; }
     }
     public class Square2D : IShape, INotifyPropertyChanged
     {
@@ -27,12 +28,14 @@ namespace Square2D
         public event PropertyChangedEventHandler PropertyChanged;
 
         public SolidColorBrush Color { get; set; }
+        public SolidColorBrush FillColor { get; set; }
         public string Name => "Square";
 
         public string Image { get; set; }
         public Square2D()
         {
             Color = new SolidColorBrush(Colors.Black);
+            FillColor = new SolidColorBrush(Colors.Transparent);
             Image = "/Square2D;Component/images/square.png";
         }
         public void HandleStart(double x, double y)
@@ -66,6 +69,7 @@ namespace Square2D
                 StrokeDashArray = new DoubleCollection(_strokeDash),
                 StrokeThickness = _penWidth,
                 Stroke = Color,
+                Fill = FillColor
             };
             Canvas.SetLeft(rect, left);
             Canvas.SetTop(rect, top);
@@ -84,6 +88,7 @@ namespace Square2D
                 _leftTop = (Point2D)this._leftTop.Clone(),
                 _rightBottom = (Point2D)this._rightBottom.Clone(),
                 Color = this.Color,
+                FillColor = this.FillColor,
                 _penWidth = this._penWidth,
                 _strokeDash = new List<double>(this._strokeDash)
             };
@@ -107,7 +112,8 @@ namespace Square2D
                 RightBottom = _rightBottom.ToJson(),
                 PenWidth = _penWidth,
                 StrokeDash = new List<double>(_strokeDash),
-                Color = this.Color.ToString()
+                Color = this.Color.ToString(),
+                FillColor = this.FillColor.ToString()
             };
             return JsonSerializer.Serialize(data);
         }
@@ -116,13 +122,15 @@ namespace Square2D
         {
             Square2DData data = (Square2DData)JsonSerializer.Deserialize(json, typeof(Square2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
+            Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
             Square2D result = new Square2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
                 _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),
                 _penWidth = data.PenWidth,
                 _strokeDash = new List<double>(data.StrokeDash),
-                Color = new SolidColorBrush(c)
+                Color = new SolidColorBrush(c),
+                FillColor = new SolidColorBrush(fc)
             };
             return result;
         }

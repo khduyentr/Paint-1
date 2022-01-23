@@ -16,6 +16,7 @@ namespace Circle2D
         public string RightBottom { get; set; }
         public int PenWidth { get; set; }
         public List<double> StrokeDash { get; set; }
+        public string FillColor { get; set; }
         public string Color { get; set; }
     }
     public class Circle2D : IShape, INotifyPropertyChanged
@@ -26,6 +27,7 @@ namespace Circle2D
         private List<double> _strokeDash = new List<double>() { 0 };
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public SolidColorBrush FillColor { get; set; }
         public SolidColorBrush Color { get; set; }
         public string Name => "Circle";
 
@@ -33,6 +35,7 @@ namespace Circle2D
         public Circle2D()
         {
             Color = new SolidColorBrush(Colors.Black);
+            FillColor = new SolidColorBrush(Colors.Transparent);
             Image = "/Circle2D;Component/images/circle.png";
         }
         public void HandleStart(double x, double y)
@@ -66,6 +69,7 @@ namespace Circle2D
                 StrokeDashArray = new DoubleCollection(_strokeDash),
                 StrokeThickness = _penWidth,
                 Stroke = Color,
+                Fill = FillColor
             };
             Canvas.SetLeft(e, left);
             Canvas.SetTop(e, top);
@@ -84,6 +88,7 @@ namespace Circle2D
                 _leftTop = (Point2D)this._leftTop.Clone(),
                 _rightBottom = (Point2D)this._rightBottom.Clone(),
                 Color = this.Color,
+                FillColor = this.FillColor,
                 _penWidth = this._penWidth,
                 _strokeDash = new List<double>(this._strokeDash)
             };
@@ -107,7 +112,8 @@ namespace Circle2D
                 RightBottom = _rightBottom.ToJson(),
                 PenWidth = _penWidth,
                 StrokeDash = new List<double>(_strokeDash),
-                Color = this.Color.ToString()
+                Color = this.Color.ToString(),
+                FillColor = this.FillColor.ToString()
             };
             return JsonSerializer.Serialize(data);
         }
@@ -116,13 +122,15 @@ namespace Circle2D
         {
             Circle2DData data = (Circle2DData)JsonSerializer.Deserialize(json, typeof(Circle2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
+            Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
             Circle2D result = new Circle2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
                 _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),
                 _penWidth = data.PenWidth,
                 _strokeDash = new List<double>(data.StrokeDash),
-                Color = new SolidColorBrush(c)
+                Color = new SolidColorBrush(c),
+                FillColor = new SolidColorBrush(fc)
             };
             return result;
         }
