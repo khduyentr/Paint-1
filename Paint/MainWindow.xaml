@@ -214,7 +214,10 @@
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+
+        <StackPanel Orientation="Horizontal">
+          
+           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid Margin="10" Name="Canvas_Container" Width="900" Height="500" HorizontalAlignment="Left" VerticalAlignment="Top" >
                 <Grid.Effect>
                     <DropShadowEffect BlurRadius="0" Direction="-45"
@@ -230,6 +233,28 @@
                 </Border>
             </Grid>
         </ScrollViewer>
+
+            <StackPanel Orientation="Vertical">
+                <Button Content="Add new layer" Click="AddNewLayer_Click">
+                    
+                </Button>
+                  <ListView x:Name="LayerList" Width="200" Height="500px" Margin="30px" SelectionChanged="LayerList_SelectionChanged"  AllowDrop="True" DragOver="DragOverLayerList" Drop="DropLayerList">
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}" >
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="LayerList_PreviewMouseLeftButtonDown"/>
+                        <EventSetter Event="Drop" Handler="LayerList_Drop"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView x:Name="FileGrid" >
+                        <GridViewColumn Width="150" Header="Name"  DisplayMemberBinding="{Binding name}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            </StackPanel>
+        </StackPanel>
+
     </DockPanel>
     
 </Fluent:RibbonWindow>
