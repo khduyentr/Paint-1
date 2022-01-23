@@ -46,6 +46,8 @@ namespace Paint
 
         public void StartNewProject()
         {
+            Undo_Btn.IsEnabled = false;
+            Redo_Btn.IsEnabled = false;
             undo.Clear();
             project = new Project();
             canvas.Children.Clear();
@@ -210,6 +212,10 @@ namespace Paint
                     canvas.Children.Add(element);
                 }
             }
+            Undo_Btn.IsEnabled = true;
+            Redo_Btn.IsEnabled = false;
+            undo.Clear();
+
         }
 
         private void ShapeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -489,6 +495,7 @@ namespace Paint
             int count = project.UserShapes.Count;
             if(count > 0)
             {
+                Redo_Btn.IsEnabled = true;
                 undo.Add(project.UserShapes[count - 1]);
                 project.UserShapes.RemoveAt(count - 1);
                 project.IsSaved = false;
@@ -515,6 +522,7 @@ namespace Paint
             int count = undo.Count;
             if(count > 0)
             {
+                Undo_Btn.IsEnabled = true;
                 project.UserShapes.Add(undo[count - 1]);
                 undo.RemoveAt(count - 1);
                 project.IsSaved = false;
