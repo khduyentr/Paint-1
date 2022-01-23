@@ -26,14 +26,14 @@ namespace Paint
         {
             Size size = new Size(w, h);
             canvas.Measure(size);
-            Matrix m = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice;
-            double dx = m.M11;
-            double dy = m.M22;
+            //Matrix m = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice;
+            //double dx = m.M11;
+            //double dy = m.M22;
             var rtb = new RenderTargetBitmap(
                 w, //width
                 h, //height
-                dx*100, //dpi x
-                dy*100, //dpi y
+                100, //dpi x
+                100, //dpi y
                 PixelFormats.Pbgra32 // pixelformat
                 );
             rtb.Render(canvas);

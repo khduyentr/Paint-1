@@ -261,6 +261,7 @@ namespace Paint
                     StartNewProject();
                 }
             }
+            StartNewProject();
         }
 
         private void Save_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -274,7 +275,7 @@ namespace Paint
             {
                 string path = saveFileDialog.FileName;
                 project.Address = path;
-                project.IsSaved = true;
+                project.SaveToFile();
                 Title = "Paint - " + project.GetName();
             }
             
@@ -360,7 +361,7 @@ namespace Paint
             {
                 string path = saveFileDialog.FileName;
                 project.Address = path;
-                project.IsSaved = true;
+                project.SaveToFile();
                 Title = "Paint - " + project.GetName();
             }
         }
@@ -373,7 +374,7 @@ namespace Paint
             saveFileDialog.Filter = "BMP files(*.bmp)|*.bmp";
             if (saveFileDialog.ShowDialog() == true)
             {
-                Helper.SaveCanvasToFile((int)canvas.ActualWidth, (int)canvas.ActualHeight, canvas, saveFileDialog.FileName);
+                Helper.SaveCanvasToFile((int)Canvas_Border.ActualWidth, (int)Canvas_Border.ActualHeight, canvas, saveFileDialog.FileName);
                 HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
                 {
                     Message = "Export as BMP file successfully!",
@@ -394,7 +395,7 @@ namespace Paint
             saveFileDialog.Filter = "JPG files(*.jpg)|*.jpg";
             if (saveFileDialog.ShowDialog() == true)
             {
-                Helper.SaveCanvasToFile((int)canvas.ActualWidth, (int)canvas.ActualHeight, canvas, saveFileDialog.FileName);
+                Helper.SaveCanvasToFile((int)Canvas_Border.ActualWidth, (int)Canvas_Border.ActualHeight, canvas, saveFileDialog.FileName);
                 HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
                 {
                     Message = "Export as JPG file successfully!",
@@ -415,7 +416,7 @@ namespace Paint
             saveFileDialog.Filter = "PNG files(*.png)|*.png";
             if (saveFileDialog.ShowDialog() == true)
             {
-                Helper.SaveCanvasToFile((int)canvas.ActualWidth, (int)canvas.ActualHeight, canvas, saveFileDialog.FileName);
+                Helper.SaveCanvasToFile((int)Canvas_Border.ActualWidth, (int)Canvas_Border.ActualHeight, canvas, saveFileDialog.FileName);
                 HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
                 {
                     Message = "Export as PNG file successfully!",
