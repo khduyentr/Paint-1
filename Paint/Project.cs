@@ -19,14 +19,32 @@ namespace Paint
     public class Project
     {
         public List<IShape> UserShapes { get; set; }
+
+        public List<Layer> UserLayer { get; set; }
+        public int currentCount { get; set; }
+
         public string Address { get; set; }
 
         public bool IsSaved { get; set; }
+
+    
         public Project()
         {
             UserShapes = new List<IShape>();
+            currentCount = 0;
+            UserLayer = new List<Layer>();
             Address = "";
             IsSaved = true;
+        }
+
+        public string addNewLayer()
+        {
+            string layerName = "Layer " + currentCount.ToString();
+            List<IShape> temptList = new List<IShape>();
+            Layer temptLayer = new Layer(layerName, temptList, true);
+            this.UserLayer.Add(temptLayer);
+            currentCount++;
+            return layerName;
         }
 
         public void SaveToFile()

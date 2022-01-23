@@ -26,20 +26,54 @@ namespace Paint
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    
+    public class layerView: INotifyPropertyChanged
+    {
+
+        public layerView(string name, bool isVisible)
+        {
+            this.name = name;
+            this.isVisible = isVisible;
+        }
+
+        public string name { get; set; }
+        public bool isVisible { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+    }
+
     public partial class MainWindow : Fluent.RibbonWindow, INotifyPropertyChanged
     {
+        // project management
+        Project project = new Project();
+
+        //layer management
+        int totalLayer = 0;
+        int selectedLayer = -1;
+
+        BindingList<layerView> allLayers = new BindingList<layerView>();
+
+        // shape management
         int totalShape = 0;
-        BindingList<IShape> allShapes = new BindingList<IShape>();
         int selectedShape = -1;
-        bool isDrawing = false;
-        SolidColorBrush currentColor = new SolidColorBrush(Colors.Black);
+        IShape preview;
+        BindingList<IShape> allShapes = new BindingList<IShape>();
+
+        // penwidth management
         int currentPenWidthIndex = -1;
         int currentStrokeDashIndex = -1;
-        IShape preview;
         BindingList<int> ComboboxPenWidth = new BindingList<int>();
+
+        // color brush
+        SolidColorBrush currentColor = new SolidColorBrush(Colors.Black);
         BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
-        Project project = new Project();
+
+        // drawing variable
+        bool isDrawing = false;
         bool isSelectRegion = false;
+
+
+
         public void StartNewProject()
         {
             project = new Project();
@@ -78,6 +112,11 @@ namespace Paint
             }
 
             ShapeList.ItemsSource = allShapes;
+            
+            
+            LayerList.ItemsSource = allLayers;
+
+
             //Combobox for penwidth
             ComboboxPenWidth.Add(1);
             ComboboxPenWidth.Add(2);
@@ -166,14 +205,27 @@ namespace Paint
                 canvas.Children.Clear();
 
                 // Vẽ lại các hình trước đó
-                foreach (var shape in project.UserShapes)
+                for (int i=0; i< project.UserLayer.Count; i++)
                 {
-                    UIElement element = shape.Draw();
-                    canvas.Children.Add(element);
-                }
+                    if (project.UserLayer[i].isVisible)
+                    {
+                       
 
-                // Vẽ hình preview đè lên
-                canvas.Children.Add(preview.Draw());
+                        foreach (var shape in project.UserLayer[i].UserShapes)
+                        {
+                            var element = shape.Draw();
+                            canvas.Children.Add(element);
+                        }
+
+                        if (selectedLayer == i)
+                        {
+                            // Vẽ hình preview đè lên
+                            canvas.Children.Add(preview.Draw());
+                        }
+
+                    }
+                }
+                
             }
         }
 
@@ -181,14 +233,34 @@ namespace Paint
         {
             isDrawing = false;
 
+
             if (selectedShape >= 0)
             {
-                // Thêm đối tượng cuối cùng vào mảng quản lí
-                Point pos = e.GetPosition(canvas);
-                preview.HandleEnd(pos.X, pos.Y);
-                project.UserShapes.Add(preview.Clone());
-                project.IsSaved = false;
-                Title = "Paint - " + project.GetName() + "*";
+                if (selectedLayer >= 0)
+                {
+                    // Thêm đối tượng cuối cùng vào mảng quản lí
+                    Point pos = e.GetPosition(canvas);
+                    preview.HandleEnd(pos.X, pos.Y);
+                    project.UserLayer[selectedLayer].UserShapes.Add(preview.Clone());
+                  
+
+                    project.IsSaved = false;
+                    Title = "Paint - " + project.GetName() + "*";
+                }
+                else
+                {
+                    // Thêm đối tượng cuối cùng vào mảng quản lí
+                    Point pos = e.GetPosition(canvas);
+                    preview.HandleEnd(pos.X, pos.Y);
+
+                    allLayers.Insert(0, new layerView(project.addNewLayer(), true));
+
+                    project.UserLayer[project.currentCount - 1].UserShapes.Add(preview.Clone());
+                    
+
+                    project.IsSaved = false;
+                    Title = "Paint - " + project.GetName() + "*";
+                }
 
                 // Sinh ra đối tượng mẫu kế
                 preview = allShapes[selectedShape].NextShape();
@@ -197,11 +269,20 @@ namespace Paint
                 canvas.Children.Clear();
 
                 // Ve lai tat ca cac hinh
-                foreach (var shape in project.UserShapes)
+
+                foreach (var layer in project.UserLayer)
                 {
-                    var element = shape.Draw();
-                    canvas.Children.Add(element);
+                    if (layer.isVisible)
+                    {
+                        foreach (var shape in layer.UserShapes)
+                        {
+                            var element = shape.Draw();
+                            canvas.Children.Add(element);
+                        }
+                    }
+                  
                 }
+                
             }
         }
 
@@ -536,6 +617,37 @@ namespace Paint
                     return;
                 }
             }
+        }
+
+        private void DragOverLayerList(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void DropLayerList(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void LayerList_Drop(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void LayerList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void LayerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedLayer = allLayers.Count - 1 - LayerList.SelectedIndex; 
+        }
+
+        private void AddNewLayer_Click(object sender, RoutedEventArgs e)
+        {
+            allLayers.Insert(0,new layerView(project.addNewLayer(), true));
+ 
         }
     }
 }

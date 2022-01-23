@@ -178,7 +178,10 @@
             <Fluent:RibbonTabItem Header="View">
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
-        <Grid Margin="5">
+        <StackPanel Orientation="Horizontal">
+          
+
+            <Grid  Height="500" Width="800">
             <Canvas x:Name="canvas" Background="White">
 
             </Canvas>
@@ -187,6 +190,27 @@
                 MouseUp="canvas_MouseUp">
 
             </Border>
-        </Grid>
+          </Grid>
+
+            <StackPanel Orientation="Vertical">
+                <Button Content="Add new layer" Click="AddNewLayer_Click">
+                    
+                </Button>
+                  <ListView x:Name="LayerList" Width="200" Height="500px" Margin="30px" SelectionChanged="LayerList_SelectionChanged"  AllowDrop="True" DragOver="DragOverLayerList" Drop="DropLayerList">
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}" >
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="LayerList_PreviewMouseLeftButtonDown"/>
+                        <EventSetter Event="Drop" Handler="LayerList_Drop"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView x:Name="FileGrid" >
+                        <GridViewColumn Width="150" Header="Name"  DisplayMemberBinding="{Binding name}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            </StackPanel>
+        </StackPanel>
     </DockPanel>
 </Fluent:RibbonWindow>
