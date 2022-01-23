@@ -285,7 +285,11 @@ namespace Paint
 
         private void Save_File_Btn_Click(object sender, RoutedEventArgs e)
         {
-           
+            if(project.Address.Length > 0)
+            {
+                project.SaveToFile();
+                return;
+            }
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.FileName = project.GetName();
             saveFileDialog.DefaultExt = ".dat";
@@ -297,7 +301,6 @@ namespace Paint
                 project.SaveToFile();
                 Title = "Paint - " + project.GetName();
             }
-            
         }
 
         private void Open_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -580,6 +583,139 @@ namespace Paint
             ZoomValue = Zoom_Slider.Value;
             st.ScaleX = ZoomValue / 100;
             st.ScaleY = ZoomValue / 100;
+        }
+
+        private void CutContractKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (project.Address.Length > 0)
+                {
+                    project.SaveToFile();
+                    return;
+                }
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.FileName = project.GetName();
+                saveFileDialog.DefaultExt = ".dat";
+                saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string path = saveFileDialog.FileName;
+                    project.Address = path;
+                    project.SaveToFile();
+                    Title = "Paint - " + project.GetName();
+                }
+            }
+            else if (e.Key == Key.N && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (!project.IsSaved)
+                {
+                    MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                    {
+                        Message = "Do you want to save changes to " + project.GetName(),
+                        Caption = "Paint",
+                        Button = MessageBoxButton.YesNoCancel,
+                        IconBrushKey = ResourceToken.AccentBrush,
+                        IconKey = ResourceToken.ErrorGeometry,
+                        StyleKey = "MessageBoxCustom"
+                    });
+                    if (msgResult == MessageBoxResult.Yes)
+                    {
+                        if (project.Address.Length == 0)
+                        {
+                            SaveFileDialog saveFileDialog = new SaveFileDialog();
+                            saveFileDialog.FileName = project.GetName();
+                            saveFileDialog.DefaultExt = ".dat";
+                            saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                            if (saveFileDialog.ShowDialog() == true)
+                            {
+                                string path = saveFileDialog.FileName;
+                                project.Address = path;
+                                project.SaveToFile();
+                                StartNewProject();
+                            }
+                        }
+                    }
+                    else if (msgResult == MessageBoxResult.Cancel)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        StartNewProject();
+                    }
+                }
+                StartNewProject();
+            }
+            else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (!project.IsSaved)
+                {
+                    MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                    {
+                        Message = "Do you want to save changes to " + project.GetName(),
+                        Caption = "Paint",
+                        Button = MessageBoxButton.YesNoCancel,
+                        IconBrushKey = ResourceToken.AccentBrush,
+                        IconKey = ResourceToken.ErrorGeometry,
+                        StyleKey = "MessageBoxCustom"
+                    });
+                    if (msgResult == MessageBoxResult.Yes)
+                    {
+                        if (project.Address.Length == 0)
+                        {
+                            SaveFileDialog saveFileDialog = new SaveFileDialog();
+                            saveFileDialog.FileName = project.GetName();
+                            saveFileDialog.DefaultExt = ".dat";
+                            saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                            if (saveFileDialog.ShowDialog() == true)
+                            {
+                                string path = saveFileDialog.FileName;
+                                project.Address = path;
+                            }
+                        }
+                        project.SaveToFile();
+                    }
+                    else if (msgResult == MessageBoxResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "DAT files only (*.dat)|*.dat";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    string path = openFileDialog.FileName;
+                    Project temProject = Project.Parse(path);
+                    if (temProject == null)
+                    {
+                        HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                        {
+                            Message = "Invalid file",
+                            Caption = "Open File Error",
+                            Button = MessageBoxButton.OK,
+                            IconBrushKey = ResourceToken.AccentBrush,
+                            IconKey = ResourceToken.ErrorGeometry,
+                            StyleKey = "MessageBoxCustom"
+                        });
+                    }
+                    else
+                    {
+                        project = temProject.Clone();
+                        Title = "Paint - " + project.GetName();
+
+                        // Ve lai Xoa toan bo
+                        canvas.Children.Clear();
+
+                        // Ve lai tat ca cac hinh
+                        foreach (var shape in project.UserShapes)
+                        {
+                            var element = shape.Draw();
+                            canvas.Children.Add(element);
+                        }
+                    }
+                }
+            }
         }
     }
 }
