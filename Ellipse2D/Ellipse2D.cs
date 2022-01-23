@@ -16,6 +16,8 @@ namespace Ellipse2D
         public int PenWidth { get; set; }
         public List<double> StrokeDash { get; set; }
         public string Color { get; set; }
+        public string FillColor { get; set; }
+        
     }
     public class Ellipse2D : IShape, INotifyPropertyChanged
     {
@@ -26,12 +28,14 @@ namespace Ellipse2D
         public event PropertyChangedEventHandler PropertyChanged;
 
         public SolidColorBrush Color { get; set; }
+        public SolidColorBrush FillColor { get; set; }
         public string Name => "Ellipse";
 
         public string Image { get; set; }
         public Ellipse2D()
         {
             Color = new SolidColorBrush(Colors.Black);
+            FillColor = new SolidColorBrush(Colors.Transparent);
             Image = "/Ellipse2D;Component/images/ellipse.png";
         }
         public void HandleStart(double x, double y)
@@ -55,6 +59,7 @@ namespace Ellipse2D
                 StrokeDashArray = new DoubleCollection(_strokeDash),
                 StrokeThickness = _penWidth,
                 Stroke = Color,
+                Fill = FillColor,
             };
             Canvas.SetLeft(ellipse, left);
             Canvas.SetTop(ellipse, top);
@@ -73,6 +78,7 @@ namespace Ellipse2D
                 _leftTop = (Point2D)this._leftTop.Clone(),
                 _rightBottom = (Point2D)this._rightBottom.Clone(),
                 Color = this.Color,
+                FillColor = this.FillColor,
                 _penWidth = this._penWidth,
                 _strokeDash = new List<double>(this._strokeDash)
             };
@@ -96,7 +102,8 @@ namespace Ellipse2D
                 RightBottom = _rightBottom.ToJson(),
                 PenWidth = _penWidth,
                 StrokeDash = new List<double>(_strokeDash),
-                Color = this.Color.ToString()
+                Color = this.Color.ToString(),
+                FillColor = this.FillColor.ToString()
             };
             return JsonSerializer.Serialize(data);
         }
@@ -105,13 +112,15 @@ namespace Ellipse2D
         {
             Ellipse2DData data = (Ellipse2DData)JsonSerializer.Deserialize(json, typeof(Ellipse2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
+            Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
             Ellipse2D result = new Ellipse2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
                 _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),
                 _penWidth = data.PenWidth,
                 _strokeDash = new List<double>(data.StrokeDash),
-                Color = new SolidColorBrush(c)
+                Color = new SolidColorBrush(c),
+                FillColor = new SolidColorBrush(fc)
             };
             return result;
         }

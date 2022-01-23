@@ -33,6 +33,7 @@ namespace Paint
         int selectedShape = -1;
         bool isDrawing = false;
         SolidColorBrush currentColor = new SolidColorBrush(Colors.Black);
+        SolidColorBrush currentFillColor = new SolidColorBrush(Colors.Transparent);
         int currentPenWidthIndex = -1;
         int currentStrokeDashIndex = -1;
         IShape preview;
@@ -131,6 +132,7 @@ namespace Paint
 
                 preview.HandleStart(pos.X, pos.Y);
                 preview.Color = currentColor;
+                preview.FillColor = currentFillColor;
                 if (currentPenWidthIndex >= 0)
                 {
                     preview.ChangePenWidth(ComboboxPenWidth[currentPenWidthIndex]);
@@ -239,6 +241,25 @@ namespace Paint
             window.Show(Open_ColorPicker, false);
         }
 
+        private void Open_Fill_ColorPicker_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = SingleOpenHelper.CreateControl<ColorPicker>();
+            var window = new PopupWindow
+            {
+                PopupElement = picker
+            };
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            picker.SelectedColorChanged += delegate { };
+            picker.Confirmed += delegate
+            {
+                currentFillColor = picker.SelectedBrush;
+                Color_Fill_Preview.Fill = currentFillColor;
+                window.Close();
+            };
+            picker.Canceled += delegate { window.Close(); };
+            window.Show(Open_Fill_ColorPicker, false);
+        }
+
         private void New_File_Btn_Click(object sender, RoutedEventArgs e)
         {
             if (!project.IsSaved)
@@ -296,7 +317,8 @@ namespace Paint
                 project.SaveToFile();
                 Title = "Paint - " + project.GetName();
             }
-            
+            undo.Clear();
+
         }
 
         private void Open_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -480,6 +502,10 @@ namespace Paint
                     var element = shape.Draw();
                     canvas.Children.Add(element);
                 }
+                if (project.UserShapes.Count == 0)
+                {
+                    Undo_Btn.IsEnabled = false;
+                }    
             }    
             
         }
@@ -502,6 +528,10 @@ namespace Paint
                     var element = shape.Draw();
                     canvas.Children.Add(element);
                 }
+                if(undo.Count == 0)
+                {
+                    Redo_Btn.IsEnabled = false;
+                }    
             }    
             
         }
@@ -578,9 +608,6 @@ namespace Paint
             }
         }
 
-        private void Open_Fill_ColorPicker_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+        
     }
 }
