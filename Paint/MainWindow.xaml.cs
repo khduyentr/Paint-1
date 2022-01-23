@@ -33,6 +33,7 @@ namespace Paint
         int selectedShape = -1;
         bool isDrawing = false;
         SolidColorBrush currentColor = new SolidColorBrush(Colors.Black);
+        SolidColorBrush currentFillColor = new SolidColorBrush(Colors.Transparent);
         int currentPenWidthIndex = -1;
         int currentStrokeDashIndex = -1;
         ScaleTransform st = new ScaleTransform(); 
@@ -41,12 +42,22 @@ namespace Paint
         BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
         Project project = new Project();
         bool isSelectRegion = false;
+
+
+        List<IShape> undo = new List<IShape>();
+
+
         public double ZoomValue { get; set; }
+
         public void StartNewProject()
         {
+            Undo_Btn.IsEnabled = false;
+            Redo_Btn.IsEnabled = false;
+            undo.Clear();
             project = new Project();
             canvas.Children.Clear();
             Title = "Paint - " + project.GetName();
+            
         }
 
        
@@ -133,6 +144,7 @@ namespace Paint
 
                 preview.HandleStart(pos.X, pos.Y);
                 preview.Color = currentColor;
+                preview.FillColor = currentFillColor;
                 if (currentPenWidthIndex >= 0)
                 {
                     preview.ChangePenWidth(ComboboxPenWidth[currentPenWidthIndex]);
@@ -210,6 +222,10 @@ namespace Paint
                     canvas.Children.Add(element);
                 }
             }
+            Undo_Btn.IsEnabled = true;
+            Redo_Btn.IsEnabled = false;
+            undo.Clear();
+
         }
 
         private void ShapeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -241,6 +257,25 @@ namespace Paint
             window.Show(Open_ColorPicker, false);
         }
 
+        private void Open_Fill_ColorPicker_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = SingleOpenHelper.CreateControl<ColorPicker>();
+            var window = new PopupWindow
+            {
+                PopupElement = picker
+            };
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            picker.SelectedColorChanged += delegate { };
+            picker.Confirmed += delegate
+            {
+                currentFillColor = picker.SelectedBrush;
+                Color_Fill_Preview.Fill = currentFillColor;
+                window.Close();
+            };
+            picker.Canceled += delegate { window.Close(); };
+            window.Show(Open_Fill_ColorPicker, false);
+        }
+
         private void New_File_Btn_Click(object sender, RoutedEventArgs e)
         {
             if (!project.IsSaved)
@@ -270,6 +305,7 @@ namespace Paint
                             StartNewProject();
                         }
                     }
+                   
                 }
                 else if (msgResult == MessageBoxResult.Cancel)
                 {
@@ -301,6 +337,8 @@ namespace Paint
                 project.SaveToFile();
                 Title = "Paint - " + project.GetName();
             }
+            undo.Clear();
+
         }
 
         private void Open_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -468,12 +506,56 @@ namespace Paint
 
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
         {
+            int count = project.UserShapes.Count;
+            if(count > 0)
+            {
+                Redo_Btn.IsEnabled = true;
+                undo.Add(project.UserShapes[count - 1]);
+                project.UserShapes.RemoveAt(count - 1);
+                project.IsSaved = false;
 
+                // Ve lai Xoa toan bo
+                canvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in project.UserShapes)
+                {
+                    var element = shape.Draw();
+                    canvas.Children.Add(element);
+                }
+                if (project.UserShapes.Count == 0)
+                {
+                    Undo_Btn.IsEnabled = false;
+                }    
+            }    
+            
         }
 
         private void Redo_Btn_Click(object sender, RoutedEventArgs e)
         {
+            int count = undo.Count;
+            if(count > 0)
+            {
+                Undo_Btn.IsEnabled = true;
+                project.UserShapes.Add(undo[count - 1]);
+                undo.RemoveAt(count - 1);
+                project.IsSaved = false;
 
+                // Ve lai Xoa toan bo
+                canvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in project.UserShapes)
+                {
+                    var element = shape.Draw();
+                    canvas.Children.Add(element);
+                }
+                if(undo.Count == 0)
+                {
+                    Redo_Btn.IsEnabled = false;
+                }    
+            }    
+            
         }
 
         private void Select_Area_Btn_Click(object sender, RoutedEventArgs e)

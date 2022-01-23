@@ -17,6 +17,7 @@ namespace Rectangle2D
         public int PenWidth { get; set; }
         public List<double> StrokeDash { get; set; }
         public string Color { get; set; }
+        public string FillColor { get; set; }
     }
     public class Rectangle2D : IShape, INotifyPropertyChanged
     {
@@ -27,12 +28,14 @@ namespace Rectangle2D
         public event PropertyChangedEventHandler PropertyChanged;
 
         public SolidColorBrush Color { get; set; }
+        public SolidColorBrush FillColor { get; set; }
         public string Name => "Rectangle";
 
         public string Image { get; set; }
         public Rectangle2D()
         {
             Color = new SolidColorBrush(Colors.Black);
+            FillColor = new SolidColorBrush(Colors.Transparent);
             Image = "/Rectangle2D;Component/images/rectangle.png";
         }
         public void HandleStart(double x, double y)
@@ -56,6 +59,7 @@ namespace Rectangle2D
                 StrokeDashArray = new DoubleCollection(_strokeDash),
                 StrokeThickness = _penWidth,
                 Stroke = Color,
+                Fill = FillColor
             };
             Canvas.SetLeft(rect, left);
             Canvas.SetTop(rect, top);
@@ -74,6 +78,7 @@ namespace Rectangle2D
                 _leftTop = (Point2D)this._leftTop.Clone(),
                 _rightBottom = (Point2D)this._rightBottom.Clone(),
                 Color = this.Color,
+                FillColor = this.FillColor,
                 _penWidth = this._penWidth,
                 _strokeDash = new List<double>(this._strokeDash)
             };
@@ -97,7 +102,8 @@ namespace Rectangle2D
                 RightBottom = _rightBottom.ToJson(),
                 PenWidth = _penWidth,
                 StrokeDash = new List<double>(_strokeDash),
-                Color = this.Color.ToString()
+                Color = this.Color.ToString(),
+                FillColor = this.FillColor.ToString()
             };
             return JsonSerializer.Serialize(data);
         }
@@ -106,13 +112,15 @@ namespace Rectangle2D
         {
             Rectangle2DData data = (Rectangle2DData)JsonSerializer.Deserialize(json, typeof(Rectangle2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
+            Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
             Rectangle2D result = new Rectangle2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
                 _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),
                 _penWidth = data.PenWidth,
                 _strokeDash = new List<double>(data.StrokeDash),
-                Color = new SolidColorBrush(c)
+                Color = new SolidColorBrush(c),
+                FillColor = new SolidColorBrush(fc)
             };
             return result;
         }

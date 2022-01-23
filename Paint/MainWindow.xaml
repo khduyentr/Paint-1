@@ -89,12 +89,12 @@
                     </Fluent:Button>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Actions">
-                    <Fluent:Button Header="Undo" Icon="images/Undo.png" Click="Undo_Btn_Click">
+                    <Fluent:Button Header="Undo" Name="Undo_Btn" Icon="images/Undo.png" Click="Undo_Btn_Click">
                         <Fluent:Button.LargeIcon>
                             <Image Source="images/Undo.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
-                    <Fluent:Button Header="Redo" Icon="images/redo.png" Click="Redo_Btn_Click">
+                    <Fluent:Button Header="Redo" Name="Redo_Btn" Icon="images/redo.png" Click="Redo_Btn_Click">
                         <Fluent:Button.LargeIcon>
                             <Image Source="images/redo.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Fluent:Button.LargeIcon>
@@ -170,10 +170,17 @@
                         </StackPanel>
                     </StackPanel>
                 </Fluent:RibbonGroupBox>
-                <Fluent:RibbonGroupBox Header="Color">
+                <Fluent:RibbonGroupBox Header="Border">
                     <Button Cursor="Hand" Height="65" Width="65" Margin="5" Name="Open_ColorPicker" Click="Open_ColorPicker_Click">
                         <StackPanel>
                             <Rectangle Name="Color_Preview" Height="45" Width="45"  Fill="Black"/>
+                        </StackPanel>
+                    </Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Fill">
+                    <Button Cursor="Hand" Height="65" Width="65" Margin="5" Name="Open_Fill_ColorPicker" Click="Open_Fill_ColorPicker_Click">
+                        <StackPanel>
+                            <Rectangle Name="Color_Fill_Preview" Height="45" Width="45"  Fill="Transparent"/>
                         </StackPanel>
                     </Button>
                 </Fluent:RibbonGroupBox>
