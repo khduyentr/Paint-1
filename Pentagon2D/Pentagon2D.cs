@@ -7,10 +7,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
-namespace Rectangle2D
+namespace Pentagon2D
 {
-    public class Rectangle2DData
+    public class Pentagon2DData
     {
         public string LeftTop { get; set; }
         public string RightBottom { get; set; }
@@ -19,24 +18,24 @@ namespace Rectangle2D
         public string Color { get; set; }
         public string FillColor { get; set; }
     }
-    public class Rectangle2D : IShape, INotifyPropertyChanged
+    public class Pentagon2D : IShape, INotifyPropertyChanged
     {
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
         private int _penWidth = 1;
         private List<double> _strokeDash = new List<double>() { 0 };
+        public SolidColorBrush Color { get; set; }
+        public string Name => "Pentagon";
+        public SolidColorBrush FillColor { get; set; }
+        public string Image { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SolidColorBrush Color { get; set; }
-        public SolidColorBrush FillColor { get; set; }
-        public string Name => "Rectangle";
-
-        public string Image { get; set; }
-        public Rectangle2D()
+        public Pentagon2D()
         {
             Color = new SolidColorBrush(Colors.Black);
             FillColor = new SolidColorBrush(Colors.Transparent);
-            Image = "/Rectangle2D;Component/images/rectangle.png";
+            Image = "/Pentagon2D;Component/images/pentagon.png";
         }
         public void HandleStart(double x, double y)
         {
@@ -52,28 +51,41 @@ namespace Rectangle2D
         {
             double left = (_rightBottom.X > _leftTop.X) ? _leftTop.X : _rightBottom.X;
             double top = (_rightBottom.Y > _leftTop.Y) ? _leftTop.Y : _rightBottom.Y;
-            Rectangle rect = new Rectangle()
+            double w = Math.Abs(_rightBottom.X - _leftTop.X);
+            double h = Math.Abs(_rightBottom.Y - _leftTop.Y);
+           
+            Point p1 = new Point(0, 2*h/5);
+            Point p2 = new Point(w / 2, 0);
+            Point p3 = new Point(w, 2*h / 5);
+            Point p4 = new Point(5 * w / 6, h);
+            Point p5 = new Point(w / 6, h);
+            Polygon poly = new Polygon()
             {
-                Width = Math.Abs(_rightBottom.X - _leftTop.X),
-                Height = Math.Abs(_rightBottom.Y - _leftTop.Y),
                 StrokeDashArray = new DoubleCollection(_strokeDash),
                 StrokeThickness = _penWidth,
                 Stroke = Color,
-                Fill = FillColor
+                Fill = FillColor,
             };
-            Canvas.SetLeft(rect, left);
-            Canvas.SetTop(rect, top);
-            return rect;
+            PointCollection polygonPoints = new PointCollection();
+            polygonPoints.Add(p1);
+            polygonPoints.Add(p2);
+            polygonPoints.Add(p3);
+            polygonPoints.Add(p4);
+            polygonPoints.Add(p5);
+            poly.Points = polygonPoints;
+            Canvas.SetLeft(poly, left);
+            Canvas.SetTop(poly, top);
+            return poly;
         }
 
         public IShape NextShape()
         {
-            return new Rectangle2D();
+            return new Pentagon2D();
         }
 
         public IShape Clone()
         {
-            return new Rectangle2D()
+            return new Pentagon2D()
             {
                 _leftTop = (Point2D)this._leftTop.Clone(),
                 _rightBottom = (Point2D)this._rightBottom.Clone(),
@@ -96,7 +108,7 @@ namespace Rectangle2D
 
         public string ToJson()
         {
-            Rectangle2DData data = new Rectangle2DData()
+            Pentagon2DData data = new Pentagon2DData()
             {
                 LeftTop = _leftTop.ToJson(),
                 RightBottom = _rightBottom.ToJson(),
@@ -110,10 +122,10 @@ namespace Rectangle2D
 
         public IShape Parse(string json)
         {
-            Rectangle2DData data = (Rectangle2DData)JsonSerializer.Deserialize(json, typeof(Rectangle2DData));
+            Pentagon2DData data = (Pentagon2DData)JsonSerializer.Deserialize(json, typeof(Pentagon2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
             Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
-            Rectangle2D result = new Rectangle2D()
+            Pentagon2D result = new Pentagon2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
                 _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),

@@ -16,6 +16,7 @@ namespace Line2D
         public int PenWidth { get; set; }
         public List<double> StrokeDash { get; set; }
         public string Color { get; set; }
+        public string FillColor { get; set; }
     }
     public class Line2D : IShape, INotifyPropertyChanged
     {
@@ -26,12 +27,14 @@ namespace Line2D
         public event PropertyChangedEventHandler PropertyChanged;
 
         public SolidColorBrush Color { get; set; }
+        public SolidColorBrush FillColor { get; set; }
         public string Name => "Line";
 
         public string Image { get; set; }
         public Line2D()
         {
             Color = new SolidColorBrush(Colors.Black);
+            FillColor = new SolidColorBrush(Colors.Transparent);
             Image = "/Line2D;Component/images/line.png";
         }
         public void HandleStart(double x, double y)
@@ -55,6 +58,7 @@ namespace Line2D
                 StrokeDashArray = new DoubleCollection(_strokeDash),
                 StrokeThickness = _penWidth,
                 Stroke = Color,
+                Fill = FillColor,
             };
 
             return l;
@@ -71,6 +75,7 @@ namespace Line2D
                 _start = (Point2D)this._start.Clone(),
                 _end = (Point2D)this._end.Clone(),
                 Color = this.Color,
+                FillColor = this.FillColor,
                 _penWidth = this._penWidth,
                 _strokeDash = new List<double>(this._strokeDash)
             };
@@ -94,7 +99,8 @@ namespace Line2D
                 End = _end.ToJson(),
                 PenWidth = _penWidth,
                 StrokeDash = new List<double>(_strokeDash),
-                Color = this.Color.ToString()
+                Color = this.Color.ToString(),
+                FillColor = this.FillColor.ToString()
             };
             return JsonSerializer.Serialize(data);
         }
@@ -103,13 +109,15 @@ namespace Line2D
         {
             Line2DData data = (Line2DData)JsonSerializer.Deserialize(json, typeof(Line2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
+            Color fc = (Color)ColorConverter.ConvertFromString(data.Color);
             Line2D result = new Line2D()
             {
                 _start = (Point2D)_start.Parse(data.Start),
                 _end = (Point2D)_start.Parse(data.End),
                 _penWidth = data.PenWidth,
                 _strokeDash = new List<double>(data.StrokeDash),
-                Color = new SolidColorBrush(c)
+                Color = new SolidColorBrush(c),
+                FillColor = new SolidColorBrush(fc)
             };
             return result;
         }

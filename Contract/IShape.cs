@@ -8,6 +8,7 @@ namespace Contract
     public interface IShape
     {
         public SolidColorBrush Color { get; set; }
+        public SolidColorBrush FillColor { get; set; }
         public string Image { get; set; }
         string Name { get; }
         public void HandleStart(double x, double y);

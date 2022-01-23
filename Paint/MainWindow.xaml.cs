@@ -56,29 +56,37 @@ namespace Paint
         // shape management
         int totalShape = 0;
         int selectedShape = -1;
+
         IShape preview;
         BindingList<IShape> allShapes = new BindingList<IShape>();
 
         // penwidth management
         int currentPenWidthIndex = -1;
         int currentStrokeDashIndex = -1;
+        ScaleTransform st = new ScaleTransform(); 
         BindingList<int> ComboboxPenWidth = new BindingList<int>();
 
         // color brush
         SolidColorBrush currentColor = new SolidColorBrush(Colors.Black);
+        SolidColorBrush currentFillColor = new SolidColorBrush(Colors.Transparent);
         BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
 
         // drawing variable
         bool isDrawing = false;
         bool isSelectRegion = false;
 
-
+        List<IShape> undo = new List<IShape>();
+        public double ZoomValue { get; set; }
 
         public void StartNewProject()
         {
+            Undo_Btn.IsEnabled = false;
+            Redo_Btn.IsEnabled = false;
+            undo.Clear();
             project = new Project();
             canvas.Children.Clear();
             Title = "Paint - " + project.GetName();
+            
         }
 
        
@@ -99,12 +107,14 @@ namespace Paint
             {
                 Directory.CreateDirectory(folderPath);
             }
+            
 
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CreateDLLFolder();
+            ZoomValue = 100;
             totalShape = ShapeFactory.GetInstance().ShapeAmount();
             for(int i = 0; i < totalShape; i++)
             {
@@ -133,26 +143,16 @@ namespace Paint
             strokeDashArray.Add(new List<double>() { 3, 3, 1, 3 });
             strokeDashArray.Add(new List<double>() { 4, 1, 4 });
             StartNewProject();
+            Canvas_Container.LayoutTransform = st;
             
+            DataContext = this;
+            Zoom_Slider.Value = 100;
             //Dash_Style_Combo_Box.ItemsSource = strokeDashArray;
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-        private void OpenFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
-            {
-                Message = "Open sth...",
-                Caption = "Code open sth here",
-                Button = MessageBoxButton.OK,
-                IconBrushKey = ResourceToken.SuccessBrush,
-                IconKey = ResourceToken.SuccessGeometry,
-                StyleKey = "MessageBoxCustom"
-            });
         }
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
@@ -165,6 +165,7 @@ namespace Paint
 
                 preview.HandleStart(pos.X, pos.Y);
                 preview.Color = currentColor;
+                preview.FillColor = currentFillColor;
                 if (currentPenWidthIndex >= 0)
                 {
                     preview.ChangePenWidth(ComboboxPenWidth[currentPenWidthIndex]);
@@ -284,6 +285,10 @@ namespace Paint
                 }
                 
             }
+            Undo_Btn.IsEnabled = true;
+            Redo_Btn.IsEnabled = false;
+            undo.Clear();
+
         }
 
         private void ShapeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -315,6 +320,25 @@ namespace Paint
             window.Show(Open_ColorPicker, false);
         }
 
+        private void Open_Fill_ColorPicker_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = SingleOpenHelper.CreateControl<ColorPicker>();
+            var window = new PopupWindow
+            {
+                PopupElement = picker
+            };
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            picker.SelectedColorChanged += delegate { };
+            picker.Confirmed += delegate
+            {
+                currentFillColor = picker.SelectedBrush;
+                Color_Fill_Preview.Fill = currentFillColor;
+                window.Close();
+            };
+            picker.Canceled += delegate { window.Close(); };
+            window.Show(Open_Fill_ColorPicker, false);
+        }
+
         private void New_File_Btn_Click(object sender, RoutedEventArgs e)
         {
             if (!project.IsSaved)
@@ -344,6 +368,7 @@ namespace Paint
                             StartNewProject();
                         }
                     }
+                   
                 }
                 else if (msgResult == MessageBoxResult.Cancel)
                 {
@@ -359,7 +384,11 @@ namespace Paint
 
         private void Save_File_Btn_Click(object sender, RoutedEventArgs e)
         {
-           
+            if(project.Address.Length > 0)
+            {
+                project.SaveToFile();
+                return;
+            }
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.FileName = project.GetName();
             saveFileDialog.DefaultExt = ".dat";
@@ -371,7 +400,8 @@ namespace Paint
                 project.SaveToFile();
                 Title = "Paint - " + project.GetName();
             }
-            
+            undo.Clear();
+
         }
 
         private void Open_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -539,12 +569,56 @@ namespace Paint
 
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
         {
+            int count = project.UserShapes.Count;
+            if(count > 0)
+            {
+                Redo_Btn.IsEnabled = true;
+                undo.Add(project.UserShapes[count - 1]);
+                project.UserShapes.RemoveAt(count - 1);
+                project.IsSaved = false;
 
+                // Ve lai Xoa toan bo
+                canvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in project.UserShapes)
+                {
+                    var element = shape.Draw();
+                    canvas.Children.Add(element);
+                }
+                if (project.UserShapes.Count == 0)
+                {
+                    Undo_Btn.IsEnabled = false;
+                }    
+            }    
+            
         }
 
         private void Redo_Btn_Click(object sender, RoutedEventArgs e)
         {
+            int count = undo.Count;
+            if(count > 0)
+            {
+                Undo_Btn.IsEnabled = true;
+                project.UserShapes.Add(undo[count - 1]);
+                undo.RemoveAt(count - 1);
+                project.IsSaved = false;
 
+                // Ve lai Xoa toan bo
+                canvas.Children.Clear();
+
+                // Ve lai tat ca cac hinh
+                foreach (var shape in project.UserShapes)
+                {
+                    var element = shape.Draw();
+                    canvas.Children.Add(element);
+                }
+                if(undo.Count == 0)
+                {
+                    Redo_Btn.IsEnabled = false;
+                }    
+            }    
+            
         }
 
         private void Select_Area_Btn_Click(object sender, RoutedEventArgs e)
@@ -619,6 +693,7 @@ namespace Paint
             }
         }
 
+
         private void DragOverLayerList(object sender, DragEventArgs e)
         {
 
@@ -648,6 +723,190 @@ namespace Paint
         {
             allLayers.Insert(0,new layerView(project.addNewLayer(), true));
  
+        }
+
+        private void Zoom_In_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            if(st.ScaleX <= 5 && st.ScaleY <= 5)
+            {
+                st.ScaleX *= 1.25;
+                st.ScaleY *= 1.25;
+                Zoom_Slider.Value = st.ScaleX * 100;
+                ZoomValue = Zoom_Slider.Value;
+            }
+        }
+
+        private void Zoom_100_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            st.ScaleX = 1;
+            st.ScaleY = 1;
+            Zoom_Slider.Value = st.ScaleX * 100;
+            ZoomValue = Zoom_Slider.Value;
+        }
+
+        private void Zoom_Out_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            if(st.ScaleX >= 0.25 && st.ScaleY >= 0.25)
+            {
+                st.ScaleX *= 0.8;
+                st.ScaleY *= 0.8;
+                Zoom_Slider.Value = st.ScaleX * 100;
+                ZoomValue = Zoom_Slider.Value;
+            }
+        }
+
+        private void Zoom_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ZoomValue = Zoom_Slider.Value;
+            st.ScaleX = ZoomValue / 100;
+            st.ScaleY = ZoomValue / 100;
+        }
+
+        private void CutContractKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (project.Address.Length > 0)
+                {
+                    project.SaveToFile();
+                    return;
+                }
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.FileName = project.GetName();
+                saveFileDialog.DefaultExt = ".dat";
+                saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string path = saveFileDialog.FileName;
+                    project.Address = path;
+                    project.SaveToFile();
+                    Title = "Paint - " + project.GetName();
+                }
+            }
+            else if (e.Key == Key.N && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (!project.IsSaved)
+                {
+                    MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                    {
+                        Message = "Do you want to save changes to " + project.GetName(),
+                        Caption = "Paint",
+                        Button = MessageBoxButton.YesNoCancel,
+                        IconBrushKey = ResourceToken.AccentBrush,
+                        IconKey = ResourceToken.ErrorGeometry,
+                        StyleKey = "MessageBoxCustom"
+                    });
+                    if (msgResult == MessageBoxResult.Yes)
+                    {
+                        if (project.Address.Length == 0)
+                        {
+                            SaveFileDialog saveFileDialog = new SaveFileDialog();
+                            saveFileDialog.FileName = project.GetName();
+                            saveFileDialog.DefaultExt = ".dat";
+                            saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                            if (saveFileDialog.ShowDialog() == true)
+                            {
+                                string path = saveFileDialog.FileName;
+                                project.Address = path;
+                                project.SaveToFile();
+                                StartNewProject();
+                            }
+                        }
+                    }
+                    else if (msgResult == MessageBoxResult.Cancel)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        StartNewProject();
+                    }
+                }
+                StartNewProject();
+            }
+            else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if (!project.IsSaved)
+                {
+                    MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                    {
+                        Message = "Do you want to save changes to " + project.GetName(),
+                        Caption = "Paint",
+                        Button = MessageBoxButton.YesNoCancel,
+                        IconBrushKey = ResourceToken.AccentBrush,
+                        IconKey = ResourceToken.ErrorGeometry,
+                        StyleKey = "MessageBoxCustom"
+                    });
+                    if (msgResult == MessageBoxResult.Yes)
+                    {
+                        if (project.Address.Length == 0)
+                        {
+                            SaveFileDialog saveFileDialog = new SaveFileDialog();
+                            saveFileDialog.FileName = project.GetName();
+                            saveFileDialog.DefaultExt = ".dat";
+                            saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                            if (saveFileDialog.ShowDialog() == true)
+                            {
+                                string path = saveFileDialog.FileName;
+                                project.Address = path;
+                            }
+                        }
+                        project.SaveToFile();
+                    }
+                    else if (msgResult == MessageBoxResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "DAT files only (*.dat)|*.dat";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    string path = openFileDialog.FileName;
+                    Project temProject = Project.Parse(path);
+                    if (temProject == null)
+                    {
+                        HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                        {
+                            Message = "Invalid file",
+                            Caption = "Open File Error",
+                            Button = MessageBoxButton.OK,
+                            IconBrushKey = ResourceToken.AccentBrush,
+                            IconKey = ResourceToken.ErrorGeometry,
+                            StyleKey = "MessageBoxCustom"
+                        });
+                    }
+                    else
+                    {
+                        project = temProject.Clone();
+                        Title = "Paint - " + project.GetName();
+
+                        // Ve lai Xoa toan bo
+                        canvas.Children.Clear();
+
+                        // Ve lai tat ca cac hinh
+                        foreach (var shape in project.UserShapes)
+                        {
+                            var element = shape.Draw();
+                            canvas.Children.Add(element);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void Open_Recent_File_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+            {
+                Message = "Open recent file...",
+                Caption = "Code open recent file here",
+                Button = MessageBoxButton.OK,
+                IconBrushKey = ResourceToken.SuccessBrush,
+                IconKey = ResourceToken.SuccessGeometry,
+                StyleKey = "MessageBoxCustom"
+            });
+
         }
     }
 }

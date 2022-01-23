@@ -62,11 +62,13 @@ namespace Paint
                 });
             }
             string json = JsonSerializer.Serialize(data);
+            var plaintext = Encoding.UTF8.GetBytes(json);
+            var encodedtext = Convert.ToBase64String(plaintext);
             using (var stream = File.Open(Address, FileMode.Create))
             {
                 using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
                 {
-                    writer.Write(json);
+                    writer.Write(encodedtext);
                     IsSaved = true;
                 }
             }
@@ -87,7 +89,9 @@ namespace Paint
                         try
                         {
                             json = reader.ReadString();
-                            data = (ProjectData)JsonSerializer.Deserialize(json, typeof(ProjectData));
+                            var base64EncodedBytes = Convert.FromBase64String(json);
+                            var decodedtext = Encoding.UTF8.GetString(base64EncodedBytes);
+                            data = (ProjectData)JsonSerializer.Deserialize(decodedtext, typeof(ProjectData));
                         }
                         catch (Exception)
                         {
