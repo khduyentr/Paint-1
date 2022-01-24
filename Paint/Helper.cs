@@ -41,7 +41,7 @@ namespace Paint
             SaveRTBAsPNGBMP(rtb, filename);
         }
 
-        public List<FontFamily> GetAllFonts()
+        public static List<FontFamily> GetAllFonts()
         {
             List<FontFamily> fontList = new List<FontFamily>();
             foreach (var f in Fonts.SystemFontFamilies)
