@@ -57,6 +57,7 @@ namespace Paint
         int totalShape = 0;
         int selectedShape = -1;
         bool isBrushStroke = false;
+        bool isAddText = false;
         IShape preview;
         BindingList<IShape> allShapes = new BindingList<IShape>();
         bool isPreview = false;
@@ -65,11 +66,23 @@ namespace Paint
         int currentStrokeDashIndex = -1;
         ScaleTransform st = new ScaleTransform(); 
         BindingList<int> ComboboxPenWidth = new BindingList<int>();
+        BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
 
         // color brush
         SolidColorBrush currentColor = new SolidColorBrush(Colors.Black);
         SolidColorBrush currentFillColor = new SolidColorBrush(Colors.Transparent);
-        BindingList<List<double>> strokeDashArray = new BindingList<List<double>>();
+
+        //font
+        BindingList<FontFamily> FontList = new BindingList<FontFamily>();
+        BindingList<int> FontSizeList = new BindingList<int>();
+        FontFamily currentFontFamily = new FontFamily("Arial");
+        int currentFontSize = 10;
+        SolidColorBrush currentTextForeground = new SolidColorBrush(Colors.Black);
+        SolidColorBrush currentTextBackground = new SolidColorBrush(Colors.Transparent);
+        bool isBold = false;
+        bool isItalic = false;
+        bool isUnderline = false;
+        bool isStrike = false;
 
         // drawing variable
         bool isDrawing = false;
@@ -148,12 +161,43 @@ namespace Paint
             DataContext = this;
             Zoom_Slider.Value = 100;
             //Dash_Style_Combo_Box.ItemsSource = strokeDashArray;
+
+            //Font
+            var fonts = Helper.GetAllFonts();
+            foreach (var font in fonts)
+            {
+                FontList.Add(font);
+            }
+            Font_Combo_Box.ItemsSource = FontList;
+            Font_Combo_Box.SelectedItem = currentFontFamily;
+
+            FontSizeList.Add(8);
+            FontSizeList.Add(9);
+            FontSizeList.Add(10);
+            FontSizeList.Add(11);
+            FontSizeList.Add(12);
+            FontSizeList.Add(14);
+            FontSizeList.Add(16);
+            FontSizeList.Add(18);
+            FontSizeList.Add(20);
+            FontSizeList.Add(22);
+            FontSizeList.Add(24);
+            FontSizeList.Add(26);
+            FontSizeList.Add(28);
+            FontSizeList.Add(36);
+            FontSizeList.Add(48);
+            FontSizeList.Add(72);
+            Font_Size_Combo_Box.ItemsSource = FontSizeList;
+            Font_Size_Combo_Box.SelectedItem = currentFontSize;
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
+        Point textPoint, lastTextPoint;
+        bool flagText = false;
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -184,6 +228,110 @@ namespace Paint
                     preview.ChangeStrokeDash(strokeDashArray[0]);
                 }
             }
+            if (isAddText)
+            {
+                var input = new System.Windows.Controls.TextBox()
+                {
+                    FontFamily = currentFontFamily,
+                    FontSize = currentFontSize,
+                    Foreground = currentTextForeground,
+                    Background = currentTextBackground,
+                    FontWeight = (isBold) ? FontWeights.Bold : FontWeights.Normal,
+                    FontStyle = (isItalic) ? FontStyles.Italic : FontStyles.Normal
+                };
+                if (isUnderline) input.TextDecorations = TextDecorations.Underline;
+                if (isStrike) input.TextDecorations = TextDecorations.Strikethrough;
+                flagText = true;
+                lastTextPoint = textPoint;
+                textPoint = e.GetPosition(canvas);
+                Canvas.SetLeft(input, textPoint.X - 10);
+                Canvas.SetTop(input, textPoint.Y - 10);
+                canvas.Children.Add(input);
+                input.Focus();
+                input.LostFocus += Input_LostFocus;
+            }
+        }
+
+        //tương tự mousemove + mouseup nhưng là cho text (sửa layer, undo, redo thì nhớ sửa ở đây nựa)
+        private void Input_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var input = (System.Windows.Controls.TextBox)sender;
+            if (input.Text != "")
+            {
+                var newText = new Text2D();
+                newText.setContent(input.Text);
+                newText.Color = currentTextForeground;
+                newText.FillColor = currentTextBackground;
+                newText.setFontFamily(currentFontFamily);
+                newText.setFontSize(currentFontSize);
+                newText.setBold(isBold);
+                newText.setItalic(isItalic);
+                newText.setUnderline(isUnderline);
+                newText.setStrike(isStrike);
+                if (!flagText) lastTextPoint = textPoint; 
+                newText.HandleStart(lastTextPoint.X, lastTextPoint.Y);
+
+                //tương tự mousemove
+
+                if (selectedLayer >= 0)
+                {
+
+                    // Vẽ lại các hình trước đó
+                    for (int i = 0; i < project.UserLayer.Count; i++)
+                    {
+                        if (project.UserLayer[i].isVisible)
+                        {
+
+                            //OLD
+                            //foreach (var shape in project.UserLayer[i].UserShapes)
+                            //{
+                            //    var element = shape.Draw();
+                            //    canvas.Children.Add(element);
+                            //}
+
+                            if (selectedLayer == i)
+                            {
+                                canvas.Children.Add(newText.Draw());
+                            }
+
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < project.UserLayer.Count; i++)
+                    {
+                        if (project.UserLayer[i].isVisible)
+                        {
+
+                            //OLD
+                            //foreach (var shape in project.UserLayer[i].UserShapes)
+                            //{
+                            //    var element = shape.Draw(); 
+                            //    canvas.Children.Add(element);
+                            //}
+                        }
+                    }
+
+                    canvas.Children.Add(newText.Draw());
+                }
+
+                // tương tự mouseup
+                // Thêm đối tượng cuối cùng vào mảng quản lí
+                allLayers.Insert(0, new layerView(project.addNewLayer(), true));
+
+                project.UserLayer[project.currentCount - 1].UserShapes.Add(newText.Clone());
+
+                project.IsSaved = false;
+                Title = "Paint - " + project.GetName() + "*";
+
+                Undo_Btn.IsEnabled = true;
+                Redo_Btn.IsEnabled = false;
+                undo.Clear();
+            }
+
+            canvas.Children.Remove(input);
+            flagText = false;
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
@@ -329,6 +477,7 @@ namespace Paint
         private void ShapeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             isBrushStroke = false;
+            isAddText = false;
             selectedShape = ShapeList.SelectedIndex;
             if (selectedShape >= 0)
             {
@@ -729,7 +878,6 @@ namespace Paint
             }
         }
 
-
         private void DragOverLayerList(object sender, DragEventArgs e)
         {
 
@@ -949,7 +1097,110 @@ namespace Paint
         {
             ShapeList.SelectedIndex = -1;
             isBrushStroke = true;
+            isAddText = false;
             preview = new BrushStroke();
+        }
+
+        private void Add_Text_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            Edit_Text_Tab.Visibility = Visibility.Visible;
+            Edit_Text_Tab.IsSelected = true;
+            ShapeList.SelectedIndex = -1;
+            isBrushStroke = false;
+            isAddText = true;
+        }
+
+        private void Open_Foreground_Picker_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = SingleOpenHelper.CreateControl<ColorPicker>();
+            var window = new PopupWindow
+            {
+                PopupElement = picker
+            };
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            picker.SelectedColorChanged += delegate { };
+            picker.Confirmed += delegate
+            {
+                currentTextForeground = picker.SelectedBrush;
+                Foreground_Preview.Fill = currentTextForeground;
+                window.Close();
+            };
+            picker.Canceled += delegate { window.Close(); };
+            window.Show(Open_Foreground_Picker, false);
+        }
+
+        private void Open_Background_Picker_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = SingleOpenHelper.CreateControl<ColorPicker>();
+            var window = new PopupWindow
+            {
+                PopupElement = picker
+            };
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            picker.SelectedColorChanged += delegate { };
+            picker.Confirmed += delegate
+            {
+                currentTextBackground = picker.SelectedBrush;
+                Background_Preview.Fill = currentTextBackground;
+                window.Close();
+            };
+            picker.Canceled += delegate { window.Close(); };
+            window.Show(Open_Background_Picker, false);
+        }
+
+        private void Font_Combo_Box_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            currentFontFamily = (FontFamily)Font_Combo_Box.SelectedItem;
+        }
+
+        private void Font_Size_Combo_Box_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            currentFontSize = (int)Font_Size_Combo_Box.SelectedItem;
+        }
+
+        private void Bold_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            isBold = !isBold;
+        }
+
+        private void Italic_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            isItalic = !isItalic;
+        }
+
+        private void Underline_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            isUnderline = !isUnderline;
+            if (isUnderline)
+            {
+                Strikethrough_Btn.IsChecked = false;
+                isStrike = false;
+            }
+        }
+
+        private void Strikethrough_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            isStrike = !isStrike;
+            if (isStrike)
+            {
+                Underline_Btn.IsChecked = false;
+                isUnderline = false;
+            }
+        }
+
+        private void View_Tab_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Edit_Text_Tab.Visibility = Visibility.Hidden;
+        }
+
+        private void Home_Tab_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Edit_Text_Tab.Visibility = Visibility.Hidden;
+        }
+
+        private void File_Tab_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Edit_Text_Tab.Visibility = Visibility.Hidden;
         }
     }
 }
