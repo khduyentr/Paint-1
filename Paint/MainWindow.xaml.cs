@@ -56,7 +56,7 @@ namespace Paint
         // shape management
         int totalShape = 0;
         int selectedShape = -1;
-
+        bool isBrushStroke = false;
         IShape preview;
         BindingList<IShape> allShapes = new BindingList<IShape>();
 
@@ -157,7 +157,7 @@ namespace Paint
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (selectedShape >= 0)
+            if (selectedShape >= 0 || isBrushStroke)
             {
                 isDrawing = true;
 
@@ -195,6 +195,10 @@ namespace Paint
             if (isSelectRegion)
             {
                 Canvas_Border.Cursor = Cursors.Cross;
+            }
+            if (isBrushStroke)
+            {
+                Canvas_Border.Cursor = Cursors.Pen;
             }
             if (isDrawing)
             {
@@ -259,7 +263,7 @@ namespace Paint
             isDrawing = false;
 
 
-            if (selectedShape >= 0)
+            if (selectedShape >= 0 || isBrushStroke)
             {
                 if (selectedLayer >= 0)
                 {
@@ -288,7 +292,14 @@ namespace Paint
                 }
 
                 // Sinh ra đối tượng mẫu kế
-                preview = allShapes[selectedShape].NextShape();
+                //if (isBrushStroke) {
+
+                //}
+                //else
+                //{
+
+                //}
+                preview = preview.NextShape();
 
                 // Ve lai Xoa toan bo
                 canvas.Children.Clear();
@@ -317,6 +328,7 @@ namespace Paint
 
         private void ShapeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            isBrushStroke = false;
             selectedShape = ShapeList.SelectedIndex;
             if (selectedShape >= 0)
             {
@@ -931,6 +943,13 @@ namespace Paint
                 StyleKey = "MessageBoxCustom"
             });
 
+        }
+
+        private void Brush_Stroke_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            ShapeList.SelectedIndex = -1;
+            isBrushStroke = true;
+            preview = new BrushStroke();
         }
     }
 }
