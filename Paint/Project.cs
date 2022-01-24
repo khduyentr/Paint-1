@@ -21,7 +21,7 @@ namespace Paint
         public List<IShape> UserShapes { get; set; }
 
         public List<Layer> UserLayer { get; set; }
-        public int currentCount { get; set; }
+       
 
         public string Address { get; set; }
 
@@ -31,7 +31,6 @@ namespace Paint
         public Project()
         {
             UserShapes = new List<IShape>();
-            currentCount = 0;
             UserLayer = new List<Layer>();
             Address = "";
             IsSaved = true;
@@ -39,11 +38,12 @@ namespace Paint
 
         public string addNewLayer()
         {
-            string layerName = "Layer " + currentCount.ToString();
+            int current = UserLayer.Count;
+
+            string layerName = "Layer " + current.ToString();
             List<IShape> temptList = new List<IShape>();
             Layer temptLayer = new Layer(layerName, temptList, true);
             this.UserLayer.Add(temptLayer);
-            currentCount++;
             return layerName;
         }
 

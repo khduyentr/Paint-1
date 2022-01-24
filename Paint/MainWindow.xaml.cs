@@ -254,6 +254,28 @@ namespace Paint
             }
         }
 
+
+        private void reDraw()
+        {
+            // Ve lai Xoa toan bo
+            canvas.Children.Clear();
+
+            // Ve lai tat ca cac hinh
+
+            foreach (var layer in project.UserLayer)
+            {
+                if (layer.isVisible)
+                {
+                    foreach (var shape in layer.UserShapes)
+                    {
+                        var element = shape.Draw();
+                        canvas.Children.Add(element);
+                    }
+                }
+
+            }
+        }
+
         private void canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             isDrawing = false;
@@ -280,7 +302,7 @@ namespace Paint
 
                     allLayers.Insert(0, new layerView(project.addNewLayer(), true));
 
-                    project.UserLayer[project.currentCount - 1].UserShapes.Add(preview.Clone());
+                    project.UserLayer[project.UserLayer.Count - 1 ].UserShapes.Add(preview.Clone());
                     
 
                     project.IsSaved = false;
@@ -290,24 +312,9 @@ namespace Paint
                 // Sinh ra đối tượng mẫu kế
                 preview = allShapes[selectedShape].NextShape();
 
-                // Ve lai Xoa toan bo
-                canvas.Children.Clear();
+                reDraw();
 
-                // Ve lai tat ca cac hinh
 
-                foreach (var layer in project.UserLayer)
-                {
-                    if (layer.isVisible)
-                    {
-                        foreach (var shape in layer.UserShapes)
-                        {
-                            var element = shape.Draw();
-                            canvas.Children.Add(element);
-                        }
-                    }
-                  
-                }
-                
             }
             Undo_Btn.IsEnabled = true;
             Redo_Btn.IsEnabled = false;
@@ -931,6 +938,15 @@ namespace Paint
                 StyleKey = "MessageBoxCustom"
             });
 
+        }
+
+        private void DeleteLayer_Click(object sender, RoutedEventArgs e)
+        {
+            project.UserLayer.RemoveAt(allLayers.Count - 1 - LayerList.SelectedIndex);
+            allLayers.RemoveAt(LayerList.SelectedIndex);
+            
+            selectedLayer=-1;
+            reDraw();
         }
     }
 }
