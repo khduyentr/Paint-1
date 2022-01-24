@@ -197,6 +197,7 @@ namespace Paint
         }
 
         Point textPoint, lastTextPoint;
+        bool flagText = false;
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -240,6 +241,7 @@ namespace Paint
                 };
                 if (isUnderline) input.TextDecorations = TextDecorations.Underline;
                 if (isStrike) input.TextDecorations = TextDecorations.Strikethrough;
+                flagText = true;
                 lastTextPoint = textPoint;
                 textPoint = e.GetPosition(canvas);
                 Canvas.SetLeft(input, textPoint.X - 10);
@@ -266,6 +268,7 @@ namespace Paint
                 newText.setItalic(isItalic);
                 newText.setUnderline(isUnderline);
                 newText.setStrike(isStrike);
+                if (!flagText) lastTextPoint = textPoint; 
                 newText.HandleStart(lastTextPoint.X, lastTextPoint.Y);
 
                 //tương tự mousemove
@@ -328,7 +331,7 @@ namespace Paint
             }
 
             canvas.Children.Remove(input);
-            
+            flagText = false;
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
@@ -474,6 +477,7 @@ namespace Paint
         private void ShapeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             isBrushStroke = false;
+            isAddText = false;
             selectedShape = ShapeList.SelectedIndex;
             if (selectedShape >= 0)
             {
@@ -1093,6 +1097,7 @@ namespace Paint
         {
             ShapeList.SelectedIndex = -1;
             isBrushStroke = true;
+            isAddText = false;
             preview = new BrushStroke();
         }
 
@@ -1101,6 +1106,7 @@ namespace Paint
             Edit_Text_Tab.Visibility = Visibility.Visible;
             Edit_Text_Tab.IsSelected = true;
             ShapeList.SelectedIndex = -1;
+            isBrushStroke = false;
             isAddText = true;
         }
 
