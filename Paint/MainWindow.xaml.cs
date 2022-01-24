@@ -250,7 +250,7 @@ namespace Paint
             }
         }
 
-        //tương tự mousemove + mouseup nhưng là cho text
+        //tương tự mousemove + mouseup nhưng là cho text (sửa layer, undo, redo thì nhớ sửa ở đây nựa)
         private void Input_LostFocus(object sender, RoutedEventArgs e)
         {
             var input = (System.Windows.Controls.TextBox)sender;
