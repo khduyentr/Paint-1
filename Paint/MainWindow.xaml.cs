@@ -196,6 +196,8 @@ namespace Paint
             this.Close();
         }
 
+        Point textPoint, lastTextPoint;
+
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (selectedShape >= 0 || isBrushStroke)
@@ -238,19 +240,95 @@ namespace Paint
                 };
                 if (isUnderline) input.TextDecorations = TextDecorations.Underline;
                 if (isStrike) input.TextDecorations = TextDecorations.Strikethrough;
-                Point pos = e.GetPosition(canvas);
-                Canvas.SetLeft(input, pos.X);
-                Canvas.SetTop(input, pos.Y);
+                lastTextPoint = textPoint;
+                textPoint = e.GetPosition(canvas);
+                Canvas.SetLeft(input, textPoint.X - 10);
+                Canvas.SetTop(input, textPoint.Y - 10);
                 canvas.Children.Add(input);
                 input.Focus();
                 input.LostFocus += Input_LostFocus;
             }
         }
 
+        //tương tự mousemove + mouseup nhưng là cho text
         private void Input_LostFocus(object sender, RoutedEventArgs e)
         {
-            canvas.Children.Remove((System.Windows.Controls.TextBox)sender);
+            var input = (System.Windows.Controls.TextBox)sender;
+            if (input.Text != "")
+            {
+                var newText = new Text2D();
+                newText.setContent(input.Text);
+                newText.Color = currentTextForeground;
+                newText.FillColor = currentTextBackground;
+                newText.setFontFamily(currentFontFamily);
+                newText.setFontSize(currentFontSize);
+                newText.setBold(isBold);
+                newText.setItalic(isItalic);
+                newText.setUnderline(isUnderline);
+                newText.setStrike(isStrike);
+                newText.HandleStart(lastTextPoint.X, lastTextPoint.Y);
 
+                //tương tự mousemove
+
+                if (selectedLayer >= 0)
+                {
+
+                    // Vẽ lại các hình trước đó
+                    for (int i = 0; i < project.UserLayer.Count; i++)
+                    {
+                        if (project.UserLayer[i].isVisible)
+                        {
+
+                            //OLD
+                            //foreach (var shape in project.UserLayer[i].UserShapes)
+                            //{
+                            //    var element = shape.Draw();
+                            //    canvas.Children.Add(element);
+                            //}
+
+                            if (selectedLayer == i)
+                            {
+                                canvas.Children.Add(newText.Draw());
+                            }
+
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < project.UserLayer.Count; i++)
+                    {
+                        if (project.UserLayer[i].isVisible)
+                        {
+
+                            //OLD
+                            //foreach (var shape in project.UserLayer[i].UserShapes)
+                            //{
+                            //    var element = shape.Draw(); 
+                            //    canvas.Children.Add(element);
+                            //}
+                        }
+                    }
+
+                    canvas.Children.Add(newText.Draw());
+                }
+
+                // tương tự mouseup
+                // Thêm đối tượng cuối cùng vào mảng quản lí
+                allLayers.Insert(0, new layerView(project.addNewLayer(), true));
+
+                project.UserLayer[project.currentCount - 1].UserShapes.Add(newText.Clone());
+
+                project.IsSaved = false;
+                Title = "Paint - " + project.GetName() + "*";
+
+                Undo_Btn.IsEnabled = true;
+                Redo_Btn.IsEnabled = false;
+                undo.Clear();
+            }
+
+            canvas.Children.Remove(input);
+            
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
@@ -1102,6 +1180,21 @@ namespace Paint
                 Underline_Btn.IsChecked = false;
                 isUnderline = false;
             }
+        }
+
+        private void View_Tab_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Edit_Text_Tab.Visibility = Visibility.Hidden;
+        }
+
+        private void Home_Tab_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Edit_Text_Tab.Visibility = Visibility.Hidden;
+        }
+
+        private void File_Tab_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Edit_Text_Tab.Visibility = Visibility.Hidden;
         }
     }
 }

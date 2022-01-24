@@ -19,7 +19,7 @@
     <DockPanel>
         <Fluent:Ribbon DockPanel.Dock="Top">
             <Fluent:Ribbon.Menu>
-                <Fluent:ApplicationMenu Header="File">
+                <Fluent:ApplicationMenu Header="File" Name="File_Tab" GotFocus="File_Tab_GotFocus">
                     <Fluent:MenuItem Header="New" Icon="images/new.png" Click="New_File_Btn_Click"/>
                     <Fluent:MenuItem Header="Open" Icon="images/open.png" Click="Open_File_Btn_Click"/>
                     <Fluent:MenuItem Header="Save" Icon="images/save.png" Click="Save_File_Btn_Click"/>
@@ -48,7 +48,7 @@
                     </Fluent:ApplicationMenu.FooterPaneContent>
                 </Fluent:ApplicationMenu>
             </Fluent:Ribbon.Menu>
-            <Fluent:RibbonTabItem Header="Home" Name="Home_Tab">
+            <Fluent:RibbonTabItem Header="Home" Name="Home_Tab" GotFocus="Home_Tab_GotFocus">
                 <Fluent:RibbonGroupBox Header="Clipboard">
                     <Fluent:Button Header="Cut" Icon="images/cut.png" Click="Cut_Btn_Click">
                         <Fluent:Button.LargeIcon>
@@ -199,7 +199,7 @@
                     </Button>
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
-            <Fluent:RibbonTabItem Header="View">
+            <Fluent:RibbonTabItem Header="View" Name="View_Tab" GotFocus="View_Tab_GotFocus">
                 <Fluent:RibbonGroupBox Header="Zoom">
                     <Fluent:Button Header="Zoom in" Icon="images/zoomin.png" Click="Zoom_In_Btn_Click">
                         <Fluent:Button.LargeIcon>
