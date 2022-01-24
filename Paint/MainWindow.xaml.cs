@@ -60,7 +60,7 @@ namespace Paint
         bool isAddText = false;
         IShape preview;
         BindingList<IShape> allShapes = new BindingList<IShape>();
-
+        bool isPreview = false;
         // penwidth management
         int currentPenWidthIndex = -1;
         int currentStrokeDashIndex = -1;
@@ -273,8 +273,13 @@ namespace Paint
                 preview.HandleEnd(pos.X, pos.Y);
 
 
-                // Xoá hết các hình vẽ cũ
-                canvas.Children.Clear();
+                // Xoá hết các hình vẽ cũ - OLD
+                //canvas.Children.Clear();
+                if(isPreview)
+                {
+                    canvas.Children.RemoveAt(canvas.Children.Count - 1);
+                }
+                
 
                 if (selectedLayer >= 0)
                 {
@@ -285,16 +290,17 @@ namespace Paint
                         if (project.UserLayer[i].isVisible)
                         {
 
-
-                            foreach (var shape in project.UserLayer[i].UserShapes)
-                            {
-                                var element = shape.Draw();
-                                canvas.Children.Add(element);
-                            }
+                            //OLD
+                            //foreach (var shape in project.UserLayer[i].UserShapes)
+                            //{
+                            //    var element = shape.Draw();
+                            //    canvas.Children.Add(element);
+                            //}
 
                             if (selectedLayer == i)
                             {
                                 // Vẽ hình preview đè lên
+                                isPreview = true;
                                 canvas.Children.Add(preview.Draw());
                             }
 
@@ -308,16 +314,17 @@ namespace Paint
                         if (project.UserLayer[i].isVisible)
                         {
 
-
-                            foreach (var shape in project.UserLayer[i].UserShapes)
-                            {
-                                var element = shape.Draw();
-                                canvas.Children.Add(element);
-                            }
+                            //OLD
+                            //foreach (var shape in project.UserLayer[i].UserShapes)
+                            //{
+                            //    var element = shape.Draw(); 
+                            //    canvas.Children.Add(element);
+                            //}
                         }
                     }
-                 
-                     // Vẽ hình preview đè lên
+
+                    // Vẽ hình preview đè lên
+                    isPreview = true;
                     canvas.Children.Add(preview.Draw());
 
                 }
@@ -328,7 +335,7 @@ namespace Paint
         private void canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             isDrawing = false;
-
+            isPreview = false;
 
             if (selectedShape >= 0 || isBrushStroke)
             {
@@ -359,33 +366,26 @@ namespace Paint
                 }
 
                 // Sinh ra đối tượng mẫu kế
-                //if (isBrushStroke) {
-
-                //}
-                //else
-                //{
-
-                //}
                 preview = preview.NextShape();
 
-                // Ve lai Xoa toan bo
-                canvas.Children.Clear();
+                // Ve lai Xoa toan bo - OLD
+                //canvas.Children.Clear();
 
-                // Ve lai tat ca cac hinh
+                //// Ve lai tat ca cac hinh
 
-                foreach (var layer in project.UserLayer)
-                {
-                    if (layer.isVisible)
-                    {
-                        foreach (var shape in layer.UserShapes)
-                        {
-                            var element = shape.Draw();
-                            canvas.Children.Add(element);
-                        }
-                    }
-                  
-                }
-                
+                //foreach (var layer in project.UserLayer)
+                //{
+                //    if (layer.isVisible)
+                //    {
+                //        foreach (var shape in layer.UserShapes)
+                //        {
+                //            var element = shape.Draw();
+                //            canvas.Children.Add(element);
+                //        }
+                //    }
+
+                //}
+
             }
             Undo_Btn.IsEnabled = true;
             Redo_Btn.IsEnabled = false;
