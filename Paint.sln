@@ -17,15 +17,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Square2D", "Square2D\Square
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Circle2D", "Circle2D\Circle2D.csproj", "{6927663B-53C7-4CA4-85E8-07679E2C4935}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsoscelesTriangle", "IsoscelesTriangle\IsoscelesTriangle.csproj", "{9A658300-87D2-4B26-8DD1-B2E1FD4C5B4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IsoscelesTriangle", "IsoscelesTriangle\IsoscelesTriangle.csproj", "{9A658300-87D2-4B26-8DD1-B2E1FD4C5B4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightTriangle", "RightTriangle\RightTriangle.csproj", "{1E59CFA1-2FCB-4DD0-A76E-11D66A85B22F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightTriangle", "RightTriangle\RightTriangle.csproj", "{1E59CFA1-2FCB-4DD0-A76E-11D66A85B22F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond2D", "Diamond2D\Diamond2D.csproj", "{AFF49FB9-8660-43CC-9C7C-C3CFD48A8250}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond2D", "Diamond2D\Diamond2D.csproj", "{AFF49FB9-8660-43CC-9C7C-C3CFD48A8250}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pentagon2D", "Pentagon2D\Pentagon2D.csproj", "{E4269F35-44B8-47E5-8B27-6D176867642C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pentagon2D", "Pentagon2D\Pentagon2D.csproj", "{E4269F35-44B8-47E5-8B27-6D176867642C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexagon2D", "Hexagon2D\Hexagon2D.csproj", "{F6FD6707-670F-4204-8687-D5D6DA024E80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hexagon2D", "Hexagon2D\Hexagon2D.csproj", "{F6FD6707-670F-4204-8687-D5D6DA024E80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

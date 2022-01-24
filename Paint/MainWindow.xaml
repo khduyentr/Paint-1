@@ -236,7 +236,7 @@
                 </Canvas>
                 <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
                 MouseMove="canvas_MouseMove" 
-                MouseUp="canvas_MouseUp">
+                MouseUp="canvas_MouseUp" AllowDrop="True" Drop="Canvas_Drop">
 
                 </Border>
             </Grid>
