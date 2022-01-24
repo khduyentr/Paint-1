@@ -948,5 +948,25 @@ namespace Paint
             selectedLayer=-1;
             reDraw();
         }
+
+        private void isVisibleUncheck(object sender, RoutedEventArgs e)
+        {
+            CheckBox b = sender as CheckBox;
+            layerView rule = b.CommandParameter as layerView;
+            int index = allLayers.IndexOf(rule);
+
+            project.UserLayer[allLayers.Count - 1 - index].isVisible = false;
+            reDraw();
+        }
+
+        private void isVisibleCheck(object sender, RoutedEventArgs e)
+        {
+            CheckBox b = sender as CheckBox;
+            layerView rule = b.CommandParameter as layerView;
+            int index = allLayers.IndexOf(rule);
+
+            project.UserLayer[allLayers.Count - 1 - index].isVisible = true;
+            reDraw();
+        }
     }
 }
