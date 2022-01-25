@@ -15,7 +15,9 @@
     <None Remove="images\copy.png" />
     <None Remove="images\crop.png" />
     <None Remove="images\cut.png" />
+    <None Remove="images\delete.png" />
     <None Remove="images\exit.png" />
+    <None Remove="images\group.png" />
     <None Remove="images\italic.png" />
     <None Remove="images\Mo.png" />
     <None Remove="images\new.png" />
@@ -35,6 +37,7 @@
     <None Remove="images\text.png" />
     <None Remove="images\underline.png" />
     <None Remove="images\undo.png" />
+    <None Remove="images\ungroup.png" />
     <None Remove="images\zoom100.png" />
     <None Remove="images\zoomin.png" />
     <None Remove="images\zoomout.png" />
@@ -62,7 +65,13 @@
     <Content Include="images\cut.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="images\delete.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="images\exit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\group.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\italic.png">
@@ -120,6 +129,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\undo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\ungroup.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\zoom100.png">

@@ -1106,11 +1106,18 @@ namespace Paint
 
         private void DeleteLayer_Click(object sender, RoutedEventArgs e)
         {
-            project.UserLayer.RemoveAt(allLayers.Count - 1 - LayerList.SelectedIndex);
-            allLayers.RemoveAt(LayerList.SelectedIndex);
-            
-            selectedLayer=-1;
-            reDraw();
+            while (LayerList.SelectedItems.Count > 0)
+            {
+
+                project.UserLayer.RemoveAt(allLayers.Count - 1 - LayerList.SelectedIndex);
+                allLayers.RemoveAt(LayerList.SelectedIndex);
+
+                selectedLayer = -1;
+                reDraw();
+
+            }
+
+           
         }
 
         private void isVisibleUncheck(object sender, RoutedEventArgs e)
@@ -1287,6 +1294,21 @@ namespace Paint
         private void RibbonWindow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             canfocus = false;
+        }
+
+        private void GroupLayer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void UngroupLayer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
 
         private void Strikethrough_Btn_Click(object sender, RoutedEventArgs e)
