@@ -64,6 +64,7 @@ namespace Paint
         IShape preview;
         BindingList<IShape> allShapes = new BindingList<IShape>();
         bool isPreview = false;
+
         // penwidth management
         int currentPenWidthIndex = -1;
         int currentStrokeDashIndex = -1;
@@ -102,7 +103,6 @@ namespace Paint
             project = new Project();
             canvas.Children.Clear();
             Title = "Paint - " + project.GetName();
-            
         }
 
        
@@ -123,8 +123,6 @@ namespace Paint
             {
                 Directory.CreateDirectory(folderPath);
             }
-            
-
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -136,12 +134,8 @@ namespace Paint
             {
                 allShapes.Add(ShapeFactory.GetInstance().Create(i));
             }
-
             ShapeList.ItemsSource = allShapes;
-
-
             LayerList.ItemsSource = allLayers;
-
 
             //Combobox for penwidth
             ComboboxPenWidth.Add(1);
@@ -275,56 +269,31 @@ namespace Paint
                 newText.HandleStart(lastTextPoint.X, lastTextPoint.Y);
 
                 //tương tự mousemove
+                //if (selectedLayer >= 0)
+                //{
+                //    // Vẽ lại các hình trước đó
+                //    for (int i = 0; i < project.UserLayer.Count; i++)
+                //    {
+                //        if (project.UserLayer[i].isVisible)
+                //        {
+                //            if (selectedLayer == i)
+                //            {
+                //                canvas.Children.Add(newText.Draw());
+                //            }
 
-                if (selectedLayer >= 0)
-                {
-
-                    // Vẽ lại các hình trước đó
-                    for (int i = 0; i < project.UserLayer.Count; i++)
-                    {
-                        if (project.UserLayer[i].isVisible)
-                        {
-
-                            //OLD
-                            //foreach (var shape in project.UserLayer[i].UserShapes)
-                            //{
-                            //    var element = shape.Draw();
-                            //    canvas.Children.Add(element);
-                            //}
-
-                            if (selectedLayer == i)
-                            {
-                                canvas.Children.Add(newText.Draw());
-                            }
-
-                        }
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < project.UserLayer.Count; i++)
-                    {
-                        if (project.UserLayer[i].isVisible)
-                        {
-
-                            //OLD
-                            //foreach (var shape in project.UserLayer[i].UserShapes)
-                            //{
-                            //    var element = shape.Draw(); 
-                            //    canvas.Children.Add(element);
-                            //}
-                        }
-                    }
-
-                    canvas.Children.Add(newText.Draw());
-                }
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                //    canvas.Children.Add(newText.Draw());
+                //}
 
                 // tương tự mouseup
                 if (selectedLayer >= 0)
                 {
                     // Thêm đối tượng cuối cùng vào mảng quản lí
                     project.UserLayer[selectedLayer].UserShapes.Add(newText.Clone());
-
                     project.IsSaved = false;
                     Title = "Paint - " + project.GetName() + "*";
                 }
@@ -332,14 +301,11 @@ namespace Paint
                 {
                     // Thêm đối tượng cuối cùng vào mảng quản lí
                     allLayers.Insert(0, new layerView(project.addNewLayer(), true));
-
                     project.UserLayer[project.UserLayer.Count() - 1].UserShapes.Add(newText.Clone());
-
-
                     project.IsSaved = false;
                     Title = "Paint - " + project.GetName() + "*";
                 }
-
+                canvas.Children.Add(newText.Draw());
                 Undo_Btn.IsEnabled = true;
                 Redo_Btn.IsEnabled = false;
                 undo.Clear();
@@ -389,13 +355,6 @@ namespace Paint
                         if (project.UserLayer[i].isVisible)
                         {
 
-                            //OLD
-                            //foreach (var shape in project.UserLayer[i].UserShapes)
-                            //{
-                            //    var element = shape.Draw();
-                            //    canvas.Children.Add(element);
-                            //}
-
                             if (selectedLayer == i)
                             {
                                 // Vẽ hình preview đè lên
@@ -408,20 +367,6 @@ namespace Paint
                 }
                 else
                 {
-                    for (int i = 0; i < project.UserLayer.Count; i++)
-                    {
-                        if (project.UserLayer[i].isVisible)
-                        {
-
-                            //OLD
-                            //foreach (var shape in project.UserLayer[i].UserShapes)
-                            //{
-                            //    var element = shape.Draw(); 
-                            //    canvas.Children.Add(element);
-                            //}
-                        }
-                    }
-
                     // Vẽ hình preview đè lên
                     isPreview = true;
                     canvas.Children.Add(preview.Draw());
@@ -430,7 +375,6 @@ namespace Paint
                 
             }
         }
-
 
         private void reDraw()
         {
@@ -466,8 +410,6 @@ namespace Paint
                     Point pos = e.GetPosition(canvas);
                     preview.HandleEnd(pos.X, pos.Y);
                     project.UserLayer[selectedLayer].UserShapes.Add(preview.Clone());
-                  
-
                     project.IsSaved = false;
                     Title = "Paint - " + project.GetName() + "*";
                 }
@@ -476,22 +418,15 @@ namespace Paint
                     // Thêm đối tượng cuối cùng vào mảng quản lí
                     Point pos = e.GetPosition(canvas);
                     preview.HandleEnd(pos.X, pos.Y);
-
                     allLayers.Insert(0, new layerView(project.addNewLayer(), true));
-
                     project.UserLayer[project.UserLayer.Count - 1 ].UserShapes.Add(preview.Clone());
-                    
-
                     project.IsSaved = false;
                     Title = "Paint - " + project.GetName() + "*";
                 }
 
                 // Sinh ra đối tượng mẫu kế
                 preview = preview.NextShape();
-
                 reDraw();
-
-
             }
             Undo_Btn.IsEnabled = true;
             Redo_Btn.IsEnabled = false;
@@ -511,7 +446,6 @@ namespace Paint
             {
                 preview = allShapes[selectedShape].Clone();
             }
-
         }
 
         private void Open_ColorPicker_Click(object sender, RoutedEventArgs e)
@@ -614,7 +548,6 @@ namespace Paint
                 Title = "Paint - " + project.GetName();
             }
             undo.Clear();
-
         }
 
         private void Open_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -674,8 +607,6 @@ namespace Paint
                     project = temProject.Clone();
                     Title = "Paint - " + project.GetName();
                     allLayers.Clear();
-
-                   
                     foreach (var layer in project.UserLayer)
                     {
                         var tempt = new layerView()
@@ -687,8 +618,6 @@ namespace Paint
 
 
                     };
-                  
-
                     reDraw();
                 }
             }
@@ -946,8 +875,6 @@ namespace Paint
                     var temp = project.UserLayer[removedLayerIdx];
                     project.UserLayer.RemoveAt(removedLayerIdx);
                     project.UserLayer.Insert(targetLayerIdx,temp);
-                    
-
                     allLayers.Insert(targetIdx + 1, droppedData);
                     allLayers.RemoveAt(removedIdx);
                 }
@@ -956,8 +883,6 @@ namespace Paint
                     int remIdx = removedIdx + 1;
                     if (allLayers.Count + 1 > remIdx)
                     {
-                       
-
                         project.UserLayer.Insert(targetLayerIdx + 1, project.UserLayer[removedLayerIdx]);
                         project.UserLayer.RemoveAt(removedLayerIdx);
 
@@ -1238,8 +1163,6 @@ namespace Paint
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
             {
-                
-                
                 string[] droppedFilePaths = e.Data.GetData(DataFormats.FileDrop, true) as string[];
                 foreach (var path in droppedFilePaths)
                 {
@@ -1271,8 +1194,6 @@ namespace Paint
                         }
 
                     }
-                    
-                   
                 }
             }
         }
@@ -1375,6 +1296,5 @@ namespace Paint
                 isUnderline = false;
             }
         }
-
     }
 }
