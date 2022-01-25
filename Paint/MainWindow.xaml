@@ -12,6 +12,7 @@
         Closing="RibbonWindow_Closing"
         WindowStartupLocation="CenterScreen"
         KeyDown="CutContractKeyDown"
+        ClipToBounds="True"
         PreviewMouseLeftButtonDown="RibbonWindow_PreviewMouseLeftButtonDown"
         Title="Paint" MinHeight="700" MinWidth="700" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
 
