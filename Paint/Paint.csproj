@@ -9,11 +9,14 @@
 
   <ItemGroup>
     <None Remove="images\about.png" />
+    <None Remove="images\bold.png" />
+    <None Remove="images\brush.png" />
     <None Remove="images\colorpicker.png" />
     <None Remove="images\copy.png" />
     <None Remove="images\crop.png" />
     <None Remove="images\cut.png" />
     <None Remove="images\exit.png" />
+    <None Remove="images\italic.png" />
     <None Remove="images\Mo.png" />
     <None Remove="images\new.png" />
     <None Remove="images\open.png" />
@@ -27,6 +30,9 @@
     <None Remove="images\save-as.png" />
     <None Remove="images\save.png" />
     <None Remove="images\select.png" />
+    <None Remove="images\strikethrough.png" />
+    <None Remove="images\text.png" />
+    <None Remove="images\underline.png" />
     <None Remove="images\undo.png" />
     <None Remove="images\zoom100.png" />
     <None Remove="images\zoomin.png" />
@@ -35,6 +41,12 @@
 
   <ItemGroup>
     <Content Include="images\about.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\bold.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\brush.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\colorpicker.png">
@@ -50,6 +62,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\exit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\italic.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\Mo.png">
@@ -89,6 +104,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\select.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\strikethrough.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\underline.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\undo.png">

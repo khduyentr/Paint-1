@@ -12,14 +12,16 @@
         Closing="RibbonWindow_Closing"
         WindowStartupLocation="CenterScreen"
         KeyDown="CutContractKeyDown"
+        PreviewMouseLeftButtonDown="RibbonWindow_PreviewMouseLeftButtonDown"
         Title="Paint" MinHeight="700" MinWidth="700" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
+
     <Fluent:RibbonWindow.Resources>
         <local:ZoomValuePercentageConverter x:Key="zoomValuePercentageConverter"></local:ZoomValuePercentageConverter>
     </Fluent:RibbonWindow.Resources>
     <DockPanel>
         <Fluent:Ribbon DockPanel.Dock="Top">
             <Fluent:Ribbon.Menu>
-                <Fluent:ApplicationMenu Header="File">
+                <Fluent:ApplicationMenu Header="File" Name="File_Tab">
                     <Fluent:MenuItem Header="New" Icon="images/new.png" Click="New_File_Btn_Click"/>
                     <Fluent:MenuItem Header="Open" Icon="images/open.png" Click="Open_File_Btn_Click"/>
                     <Fluent:MenuItem Header="Save" Icon="images/save.png" Click="Save_File_Btn_Click"/>
@@ -48,7 +50,7 @@
                     </Fluent:ApplicationMenu.FooterPaneContent>
                 </Fluent:ApplicationMenu>
             </Fluent:Ribbon.Menu>
-            <Fluent:RibbonTabItem Header="Home">
+            <Fluent:RibbonTabItem Header="Home" Name="Home_Tab">
                 <Fluent:RibbonGroupBox Header="Clipboard">
                     <Fluent:Button Header="Cut" Icon="images/cut.png" Click="Cut_Btn_Click">
                         <Fluent:Button.LargeIcon>
@@ -99,6 +101,20 @@
                             <Image Source="images/redo.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Text">
+                    <Fluent:ToggleButton Header="Text" Name="Add_Text_Btn" Click="Add_Text_Btn_Click">
+                        <Fluent:ToggleButton.Icon>
+                            <Image Source="images/text.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:ToggleButton.Icon>
+                    </Fluent:ToggleButton>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Brush">
+                    <Fluent:ToggleButton Header="Pen" Name="Brush_Stroke_Btn" Click="Brush_Stroke_Btn_Click">
+                        <Fluent:ToggleButton.Icon>
+                            <Image Source="images/brush.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Fluent:ToggleButton.Icon>
+                    </Fluent:ToggleButton>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Shape">
                     <ListView
@@ -170,7 +186,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Fluent:RibbonGroupBox>
-                <Fluent:RibbonGroupBox Header="Border">
+                <Fluent:RibbonGroupBox Header="Stroke">
                     <Button Cursor="Hand" Height="65" Width="65" Margin="5" Name="Open_ColorPicker" Click="Open_ColorPicker_Click">
                         <StackPanel>
                             <Rectangle Name="Color_Preview" Height="45" Width="45"  Fill="Black"/>
@@ -185,7 +201,7 @@
                     </Button>
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
-            <Fluent:RibbonTabItem Header="View">
+            <Fluent:RibbonTabItem Header="View" Name="View_Tab">
                 <Fluent:RibbonGroupBox Header="Zoom">
                     <Fluent:Button Header="Zoom in" Icon="images/zoomin.png" Click="Zoom_In_Btn_Click">
                         <Fluent:Button.LargeIcon>
@@ -213,6 +229,50 @@
                     </Grid>
                 </Fluent:RibbonGroupBox>
             </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Header="Text" Name="Edit_Text_Tab" Visibility="Hidden">
+                <Fluent:RibbonGroupBox Header="Font">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Font Family" Padding="5 0 5 0" VerticalAlignment="Center"></TextBlock>
+                            <ComboBox Width="210" Name="Font_Combo_Box" SelectionChanged="Font_Combo_Box_SelectionChanged" Margin="5">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock  Text="{Binding}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Font Size" Padding="5 0 17 0" VerticalAlignment="Center"></TextBlock>
+                            <ComboBox Width="62" Name="Font_Size_Combo_Box" SelectionChanged="Font_Size_Combo_Box_SelectionChanged" Margin="5">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock  Text="{Binding}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Fluent:ToggleButton Icon="images/bold.png" Click="Bold_Btn_Click" Size="Small" Margin="20 0 0 0"/>
+                            <Fluent:ToggleButton Icon="images/italic.png" Click="Italic_Btn_Click" Size="Small" Margin="10 0 0 0"/>
+                            <Fluent:ToggleButton Name="Underline_Btn" Icon="images/underline.png" Click="Underline_Btn_Click" Size="Small" Margin="10 0 0 0"/>
+                            <Fluent:ToggleButton Name="Strikethrough_Btn" Icon="images/strikethrough.png" Click="Strikethrough_Btn_Click" Size="Small" Margin="10 0 0 0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Foreground">
+                    <Button Cursor="Hand" Height="65" Width="65" Margin="5" Name="Open_Foreground_Picker" Click="Open_Foreground_Picker_Click">
+                        <StackPanel>
+                            <Rectangle Name="Foreground_Preview" Height="45" Width="45"  Fill="Black"/>
+                        </StackPanel>
+                    </Button>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="Background">
+                    <Button Cursor="Hand" Height="65" Width="65" Margin="5" Name="Open_Background_Picker" Click="Open_Background_Picker_Click">
+                        <StackPanel>
+                            <Rectangle Name="Background_Preview" Height="45" Width="45"  Fill="Transparent"/>
+                        </StackPanel>
+                    </Button>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
 
         <StackPanel Orientation="Horizontal">
@@ -228,7 +288,7 @@
                 </Canvas>
                 <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
                 MouseMove="canvas_MouseMove" 
-                MouseUp="canvas_MouseUp">
+                MouseUp="canvas_MouseUp" AllowDrop="True" Drop="Canvas_Drop" LostFocus="canvas_LostFocus">
 
                 </Border>
             </Grid>
