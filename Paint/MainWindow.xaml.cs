@@ -1168,13 +1168,13 @@ namespace Paint
 
         private void Add_Text_Btn_Click(object sender, RoutedEventArgs e)
         {
-            Edit_Text_Tab.Visibility = Visibility.Visible;
-            Edit_Text_Tab.IsSelected = true;
             ShapeList.SelectedIndex = -1;
             isBrushStroke = false;
             Brush_Stroke_Btn.IsChecked = false;
             isAddText = true;
             Add_Text_Btn.IsChecked = true;
+            Edit_Text_Tab.Visibility = Visibility.Visible;
+            Edit_Text_Tab.IsSelected = true;
         }
 
         private void Open_Foreground_Picker_Click(object sender, RoutedEventArgs e)
@@ -1246,6 +1246,11 @@ namespace Paint
         }
 
         private void canvas_LostFocus(object sender, RoutedEventArgs e)
+        {
+            canfocus = false;
+        }
+
+        private void RibbonWindow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             canfocus = false;
         }
