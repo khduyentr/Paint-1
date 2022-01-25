@@ -737,12 +737,59 @@ namespace Paint
 
         private void LayerList_Drop(object sender, DragEventArgs e)
         {
+            if (e.Data.GetDataPresent("LAYER"))
+            {
+                layerView droppedData = e.Data.GetData("LAYER") as layerView;
+                layerView target = ((ListViewItem)(sender)).DataContext as layerView;
+                if (droppedData.Equals(target)) return;
 
+                int removedIdx = allLayers.IndexOf(droppedData);
+                int targetIdx = allLayers.IndexOf(target);
+
+                int removedLayerIdx = allLayers.Count - 1 - (removedIdx);
+                int targetLayerIdx = allLayers.Count - 1 - (targetIdx);
+
+                if (removedIdx < 0 || targetIdx < 0 || removedIdx > allLayers.Count || targetIdx > allLayers.Count)
+                {
+                    return;
+                }
+                else if (removedIdx < targetIdx)
+                {
+                    var temp = project.UserLayer[removedLayerIdx];
+                    project.UserLayer.RemoveAt(removedLayerIdx);
+                    project.UserLayer.Insert(targetLayerIdx,temp);
+                    
+
+                    allLayers.Insert(targetIdx + 1, droppedData);
+                    allLayers.RemoveAt(removedIdx);
+                }
+                else
+                {
+                    int remIdx = removedIdx + 1;
+                    if (allLayers.Count + 1 > remIdx)
+                    {
+                       
+
+                        project.UserLayer.Insert(targetLayerIdx + 1, project.UserLayer[removedLayerIdx]);
+                        project.UserLayer.RemoveAt(removedLayerIdx);
+
+                        allLayers.Insert(targetIdx, droppedData);
+                        allLayers.RemoveAt(remIdx);
+                    }
+                }
+            }
+            reDraw();
         }
 
         private void LayerList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            if (sender is ListViewItem)
+            {
+                ListViewItem draggedItem = sender as ListViewItem;
+                DataObject data = new DataObject("LAYER", draggedItem.DataContext);
+                DragDrop.DoDragDrop(draggedItem, data, DragDropEffects.Move);
+                draggedItem.IsSelected = true;
+            }
         }
 
         private void LayerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -968,5 +1015,22 @@ namespace Paint
             project.UserLayer[allLayers.Count - 1 - index].isVisible = true;
             reDraw();
         }
+
+        private void LayerList_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                if (sender is ListViewItem)
+                {
+                    ListViewItem draggedItem = sender as ListViewItem;
+                    DataObject data = new DataObject("LAYER", draggedItem.DataContext);
+                    DragDrop.DoDragDrop(draggedItem, data, DragDropEffects.Move);
+                    draggedItem.IsSelected = true;
+                }
+            }
+        }
+
+       
     }
 }

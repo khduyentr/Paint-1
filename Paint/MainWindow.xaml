@@ -260,7 +260,7 @@
                     <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}" >
                             <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
-                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="LayerList_PreviewMouseLeftButtonDown"/>
+                            <EventSetter Event="MouseMove"  Handler="LayerList_PreviewMouseMove"/>
                         <EventSetter Event="Drop" Handler="LayerList_Drop"/>
                     </Style>
                 </ListView.ItemContainerStyle>
