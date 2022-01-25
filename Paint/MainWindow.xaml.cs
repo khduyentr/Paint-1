@@ -29,6 +29,9 @@ namespace Paint
     
     public class layerView: INotifyPropertyChanged
     {
+        public layerView()
+        {
+        }
 
         public layerView(string name, bool isVisible)
         {
@@ -135,8 +138,8 @@ namespace Paint
             }
 
             ShapeList.ItemsSource = allShapes;
-            
-            
+
+
             LayerList.ItemsSource = allLayers;
 
 
@@ -330,7 +333,7 @@ namespace Paint
                     // Thêm đối tượng cuối cùng vào mảng quản lí
                     allLayers.Insert(0, new layerView(project.addNewLayer(), true));
 
-                    project.UserLayer[project.currentCount - 1].UserShapes.Add(newText.Clone());
+                    project.UserLayer[project.UserLayer.Count() - 1].UserShapes.Add(newText.Clone());
 
 
                     project.IsSaved = false;
@@ -670,6 +673,21 @@ namespace Paint
                 {
                     project = temProject.Clone();
                     Title = "Paint - " + project.GetName();
+                    allLayers.Clear();
+
+                   
+                    foreach (var layer in project.UserLayer)
+                    {
+                        var tempt = new layerView()
+                        {
+                            isVisible = layer.isVisible,
+                            name = layer.name
+                        };
+                        allLayers.Add(tempt);
+
+
+                    };
+                  
 
                     reDraw();
                 }
@@ -1238,7 +1256,7 @@ namespace Paint
                         {
                             // Thêm đối tượng cuối cùng vào mảng quản lí
                             allLayers.Insert(0, new layerView(project.addNewLayer(), true));
-                            project.UserLayer[project.currentCount - 1].UserShapes.Add(img.Clone());
+                            project.UserLayer[project.UserLayer.Count - 1].UserShapes.Add(img.Clone());
                             project.IsSaved = false;
                             Title = "Paint - " + project.GetName() + "*";
                         }
