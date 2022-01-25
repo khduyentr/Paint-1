@@ -12,6 +12,7 @@
         Closing="RibbonWindow_Closing"
         WindowStartupLocation="CenterScreen"
         KeyDown="CutContractKeyDown"
+        PreviewMouseLeftButtonDown="RibbonWindow_PreviewMouseLeftButtonDown"
         Title="Paint" MinHeight="700" MinWidth="1000" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
     <Fluent:RibbonWindow.Resources>
         <local:ZoomValuePercentageConverter x:Key="zoomValuePercentageConverter"></local:ZoomValuePercentageConverter>
