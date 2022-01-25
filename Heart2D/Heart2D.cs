@@ -8,9 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Rectangle2D
+namespace Heart2D
 {
-    public class Rectangle2DData
+    public class Heart2DData
     {
         public string LeftTop { get; set; }
         public string RightBottom { get; set; }
@@ -19,24 +19,24 @@ namespace Rectangle2D
         public string Color { get; set; }
         public string FillColor { get; set; }
     }
-    public class Rectangle2D : IShape, INotifyPropertyChanged
+    public class Heart2D : IShape, INotifyPropertyChanged
     {
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
         private int _penWidth = 1;
         private List<double> _strokeDash = new List<double>() { 0 };
+        public SolidColorBrush Color { get; set; }
+        public string Name => "Heart";
+        public SolidColorBrush FillColor { get; set; }
+        public string Image { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SolidColorBrush Color { get; set; }
-        public SolidColorBrush FillColor { get; set; }
-        public string Name => "Rectangle";
-
-        public string Image { get; set; }
-        public Rectangle2D()
+        public Heart2D()
         {
             Color = new SolidColorBrush(Colors.Black);
             FillColor = new SolidColorBrush(Colors.Transparent);
-            Image = "/Rectangle2D;Component/images/rectangle.png";
+            Image = "/Heart2D;Component/images/heart.png";
         }
         public void HandleStart(double x, double y)
         {
@@ -52,28 +52,34 @@ namespace Rectangle2D
         {
             double left = (_rightBottom.X > _leftTop.X) ? _leftTop.X : _rightBottom.X;
             double top = (_rightBottom.Y > _leftTop.Y) ? _leftTop.Y : _rightBottom.Y;
-            Rectangle rect = new Rectangle()
+            double w = Math.Abs(_rightBottom.X - _leftTop.X);
+            double h = Math.Abs(_rightBottom.Y - _leftTop.Y);
+            var converter = TypeDescriptor.GetConverter(typeof(Geometry));
+            string pathData = "M 90,50 A 20,20 0 0 0 50,90 C 60,100 90,120 90,120 C 90,120 110,110 130,90A 20,20 0 0 0 90,50";
+            var path = new Path
             {
-                Width = Math.Abs(_rightBottom.X - _leftTop.X),
-                Height = Math.Abs(_rightBottom.Y - _leftTop.Y),
-                StrokeDashArray = new DoubleCollection(_strokeDash),
-                StrokeThickness = _penWidth,
-                Stroke = Color,
-                Fill = FillColor,
+                Stretch = Stretch.Fill,
+                Data = (Geometry)converter.ConvertFrom(pathData),
+                Width = w,
+                Height = h,
+                Fill = FillColor
             };
-            Canvas.SetLeft(rect, left);
-            Canvas.SetTop(rect, top);
-            return rect;
+            path.Stroke = Color;
+            path.StrokeThickness = _penWidth;
+            path.StrokeDashArray = new DoubleCollection(_strokeDash);
+            Canvas.SetLeft(path, left);
+            Canvas.SetTop(path, top);
+            return path;
         }
 
         public IShape NextShape()
         {
-            return new Rectangle2D();
+            return new Heart2D();
         }
 
         public IShape Clone()
         {
-            return new Rectangle2D()
+            return new Heart2D()
             {
                 _leftTop = (Point2D)this._leftTop.Clone(),
                 _rightBottom = (Point2D)this._rightBottom.Clone(),
@@ -96,7 +102,7 @@ namespace Rectangle2D
 
         public string ToJson()
         {
-            Rectangle2DData data = new Rectangle2DData()
+            Heart2DData data = new Heart2DData()
             {
                 LeftTop = _leftTop.ToJson(),
                 RightBottom = _rightBottom.ToJson(),
@@ -110,10 +116,10 @@ namespace Rectangle2D
 
         public IShape Parse(string json)
         {
-            Rectangle2DData data = (Rectangle2DData)JsonSerializer.Deserialize(json, typeof(Rectangle2DData));
+            Heart2DData data = (Heart2DData)JsonSerializer.Deserialize(json, typeof(Heart2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
             Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
-            Rectangle2D result = new Rectangle2D()
+            Heart2D result = new Heart2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
                 _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),

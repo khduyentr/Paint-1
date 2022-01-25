@@ -218,7 +218,7 @@
                             <Image Source="images/zoom100.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
-                    
+
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox Header="Zoom Slider" >
                     <Grid Height="68">
@@ -276,29 +276,29 @@
         </Fluent:Ribbon>
 
         <StackPanel Orientation="Horizontal">
-          
-           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid Margin="10" Name="Canvas_Container" Width="930px" Height="535px" HorizontalAlignment="Left" VerticalAlignment="Top" >
-                <Grid.Effect>
-                    <DropShadowEffect BlurRadius="0" Direction="-45"
+
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid Margin="10" Name="Canvas_Container" Width="930px" Height="535px" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                    <Grid.Effect>
+                        <DropShadowEffect BlurRadius="0" Direction="-45"
                               RenderingBias="Quality" ShadowDepth="8" Opacity="0.1" />
-                </Grid.Effect>
-                <Canvas x:Name="canvas" Background="White" ClipToBounds="True">
-                    
-                </Canvas>
-                <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
+                    </Grid.Effect>
+                    <Canvas x:Name="canvas" Background="White" ClipToBounds="True">
+                       
+                    </Canvas>
+                    <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
                 MouseMove="canvas_MouseMove" 
                 MouseUp="canvas_MouseUp" AllowDrop="True" Drop="Canvas_Drop" LostFocus="canvas_LostFocus">
 
-                </Border>
-            </Grid>
-        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </ScrollViewer>
 
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Background="White">
                     <Button Content="Add new layer" Click="AddNewLayer_Click" Margin="10px"/>
                 </StackPanel>
-               
+
 
 
                 <ListView x:Name="LayerList" Width="200px" Height="512px"  
@@ -306,7 +306,7 @@
                           AllowDrop="True" Focusable="False"
                           DragOver="DragOverLayerList" 
                           Drop="DropLayerList">
-                    
+
                     <ListView.Resources>
                         <ContextMenu x:Key="ItemContextMenu">
                             <MenuItem Header="Delete Layer" Click="DeleteLayer_Click">
@@ -316,17 +316,17 @@
                             </MenuItem>
                         </ContextMenu>
                     </ListView.Resources>
-                    
+
                     <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}" >
+                        <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}" >
                             <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
                             <EventSetter Event="MouseMove"  Handler="LayerList_PreviewMouseMove"/>
-                        <EventSetter Event="Drop" Handler="LayerList_Drop"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.View>
-                    
-                    <GridView x:Name="FileGrid" >
+                            <EventSetter Event="Drop" Handler="LayerList_Drop"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.View>
+
+                        <GridView x:Name="FileGrid" >
                             <GridViewColumn  Header="Visible">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -334,14 +334,14 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                        
+
                             <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </StackPanel>
         </StackPanel>
 
     </DockPanel>
-    
+
 </Fluent:RibbonWindow>
