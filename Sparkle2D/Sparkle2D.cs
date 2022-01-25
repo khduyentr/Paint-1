@@ -26,7 +26,7 @@ namespace Sparkle2D
         private int _penWidth = 1;
         private List<double> _strokeDash = new List<double>() { 0 };
         public SolidColorBrush Color { get; set; }
-        public string Name => "Star";
+        public string Name => "Sparkle";
         public SolidColorBrush FillColor { get; set; }
         public string Image { get; set; }
 
