@@ -12,7 +12,9 @@
         Closing="RibbonWindow_Closing"
         WindowStartupLocation="CenterScreen"
         KeyDown="CutContractKeyDown"
-        Title="Paint" MinHeight="700" MinWidth="1000" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
+        PreviewMouseLeftButtonDown="RibbonWindow_PreviewMouseLeftButtonDown"
+        Title="Paint" MinHeight="700" MinWidth="700" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
+
     <Fluent:RibbonWindow.Resources>
         <local:ZoomValuePercentageConverter x:Key="zoomValuePercentageConverter"></local:ZoomValuePercentageConverter>
     </Fluent:RibbonWindow.Resources>
@@ -276,7 +278,7 @@
         <StackPanel Orientation="Horizontal">
           
            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid Margin="10" Name="Canvas_Container" Width="900" Height="500" HorizontalAlignment="Left" VerticalAlignment="Top" >
+            <Grid Margin="10" Name="Canvas_Container" Width="930px" Height="535px" HorizontalAlignment="Left" VerticalAlignment="Top" >
                 <Grid.Effect>
                     <DropShadowEffect BlurRadius="0" Direction="-45"
                               RenderingBias="Quality" ShadowDepth="8" Opacity="0.1" />
@@ -293,20 +295,47 @@
         </ScrollViewer>
 
             <StackPanel Orientation="Vertical">
-                <Button Content="Add new layer" Click="AddNewLayer_Click">
-                    
-                </Button>
-                  <ListView x:Name="LayerList" Width="200" Height="500px" Margin="30px" SelectionChanged="LayerList_SelectionChanged"  AllowDrop="True" DragOver="DragOverLayerList" Drop="DropLayerList">
+                <StackPanel Orientation="Horizontal" Background="White">
+                    <Button Content="Add new layer" Click="AddNewLayer_Click" Margin="10px"/>
+                </StackPanel>
+               
 
-                <ListView.ItemContainerStyle>
+
+                <ListView x:Name="LayerList" Width="200px" Height="512px"  
+                          SelectionChanged="LayerList_SelectionChanged" 
+                          AllowDrop="True" Focusable="False"
+                          DragOver="DragOverLayerList" 
+                          Drop="DropLayerList">
+                    
+                    <ListView.Resources>
+                        <ContextMenu x:Key="ItemContextMenu">
+                            <MenuItem Header="Delete Layer" Click="DeleteLayer_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="images/delete.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </ListView.Resources>
+                    
+                    <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}" >
-                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="LayerList_PreviewMouseLeftButtonDown"/>
+                            <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                            <EventSetter Event="MouseMove"  Handler="LayerList_PreviewMouseMove"/>
                         <EventSetter Event="Drop" Handler="LayerList_Drop"/>
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.View>
+                    
                     <GridView x:Name="FileGrid" >
-                        <GridViewColumn Width="150" Header="Name"  DisplayMemberBinding="{Binding name}"/>
+                            <GridViewColumn  Header="Visible">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding isVisible}" Checked="isVisibleCheck" Unchecked="isVisibleUncheck" CommandParameter="{Binding}"></CheckBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        
+                            <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}"/>
                     </GridView>
                 </ListView.View>
             </ListView>

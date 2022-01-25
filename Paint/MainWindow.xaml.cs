@@ -428,6 +428,28 @@ namespace Paint
             }
         }
 
+
+        private void reDraw()
+        {
+            // Ve lai Xoa toan bo
+            canvas.Children.Clear();
+
+            // Ve lai tat ca cac hinh
+
+            foreach (var layer in project.UserLayer)
+            {
+                if (layer.isVisible)
+                {
+                    foreach (var shape in layer.UserShapes)
+                    {
+                        var element = shape.Draw();
+                        canvas.Children.Add(element);
+                    }
+                }
+
+            }
+        }
+
         private void canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             isDrawing = false;
@@ -454,7 +476,7 @@ namespace Paint
 
                     allLayers.Insert(0, new layerView(project.addNewLayer(), true));
 
-                    project.UserLayer[project.currentCount - 1].UserShapes.Add(preview.Clone());
+                    project.UserLayer[project.UserLayer.Count - 1 ].UserShapes.Add(preview.Clone());
                     
 
                     project.IsSaved = false;
@@ -464,23 +486,8 @@ namespace Paint
                 // Sinh ra đối tượng mẫu kế
                 preview = preview.NextShape();
 
-                // Ve lai Xoa toan bo - OLD
-                //canvas.Children.Clear();
+                reDraw();
 
-                //// Ve lai tat ca cac hinh
-
-                //foreach (var layer in project.UserLayer)
-                //{
-                //    if (layer.isVisible)
-                //    {
-                //        foreach (var shape in layer.UserShapes)
-                //        {
-                //            var element = shape.Draw();
-                //            canvas.Children.Add(element);
-                //        }
-                //    }
-
-                //}
 
             }
             Undo_Btn.IsEnabled = true;
@@ -664,15 +671,7 @@ namespace Paint
                     project = temProject.Clone();
                     Title = "Paint - " + project.GetName();
 
-                    // Ve lai Xoa toan bo
-                    canvas.Children.Clear();
-
-                    // Ve lai tat ca cac hinh
-                    foreach (var shape in project.UserShapes)
-                    {
-                        var element = shape.Draw();
-                        canvas.Children.Add(element);
-                    }
+                    reDraw();
                 }
             }
         }
@@ -772,55 +771,55 @@ namespace Paint
 
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
         {
-            int count = project.UserShapes.Count;
-            if(count > 0)
-            {
-                Redo_Btn.IsEnabled = true;
-                undo.Add(project.UserShapes[count - 1]);
-                project.UserShapes.RemoveAt(count - 1);
-                project.IsSaved = false;
+           // int count = project.UserShapes.Count;
+           // if(count > 0)
+            //{
+            //    Redo_Btn.IsEnabled = true;
+            //    undo.Add(project.UserShapes[count - 1]);
+            //    project.UserShapes.RemoveAt(count - 1);
+            //    project.IsSaved = false;
 
-                // Ve lai Xoa toan bo
-                canvas.Children.Clear();
-
+            //    // Ve lai Xoa toan bo
+            //    canvas.Children.Clear();
+            //
                 // Ve lai tat ca cac hinh
-                foreach (var shape in project.UserShapes)
-                {
-                    var element = shape.Draw();
-                    canvas.Children.Add(element);
-                }
-                if (project.UserShapes.Count == 0)
-                {
-                    Undo_Btn.IsEnabled = false;
-                }    
-            }    
+            //    foreach (var shape in project.UserShapes)
+            //    {
+            //        var element = shape.Draw();
+             //       canvas.Children.Add(element);
+            //    }
+            //    if (project.UserShapes.Count == 0)
+             //   {
+             //       Undo_Btn.IsEnabled = false;
+            //    }    
+           // }    
             
         }
 
         private void Redo_Btn_Click(object sender, RoutedEventArgs e)
         {
-            int count = undo.Count;
-            if(count > 0)
-            {
-                Undo_Btn.IsEnabled = true;
-                project.UserShapes.Add(undo[count - 1]);
-                undo.RemoveAt(count - 1);
-                project.IsSaved = false;
+            //int count = undo.Count;
+            //if(count > 0)
+           // {
+           //     Undo_Btn.IsEnabled = true;
+            //    project.UserShapes.Add(undo[count - 1]);
+            //    undo.RemoveAt(count - 1);
+            //    project.IsSaved = false;
 
                 // Ve lai Xoa toan bo
-                canvas.Children.Clear();
+            //    canvas.Children.Clear();
 
                 // Ve lai tat ca cac hinh
-                foreach (var shape in project.UserShapes)
-                {
-                    var element = shape.Draw();
-                    canvas.Children.Add(element);
-                }
-                if(undo.Count == 0)
-                {
-                    Redo_Btn.IsEnabled = false;
-                }    
-            }    
+           //     foreach (var shape in project.UserShapes)
+            //    {
+            //        var element = shape.Draw();
+            //        canvas.Children.Add(element);
+            //    }
+            //    if(undo.Count == 0)
+             //   {
+             //       Redo_Btn.IsEnabled = false;
+             //   }    
+          //  }    
             
         }
 
@@ -908,12 +907,59 @@ namespace Paint
 
         private void LayerList_Drop(object sender, DragEventArgs e)
         {
+            if (e.Data.GetDataPresent("LAYER"))
+            {
+                layerView droppedData = e.Data.GetData("LAYER") as layerView;
+                layerView target = ((ListViewItem)(sender)).DataContext as layerView;
+                if (droppedData.Equals(target)) return;
 
+                int removedIdx = allLayers.IndexOf(droppedData);
+                int targetIdx = allLayers.IndexOf(target);
+
+                int removedLayerIdx = allLayers.Count - 1 - (removedIdx);
+                int targetLayerIdx = allLayers.Count - 1 - (targetIdx);
+
+                if (removedIdx < 0 || targetIdx < 0 || removedIdx > allLayers.Count || targetIdx > allLayers.Count)
+                {
+                    return;
+                }
+                else if (removedIdx < targetIdx)
+                {
+                    var temp = project.UserLayer[removedLayerIdx];
+                    project.UserLayer.RemoveAt(removedLayerIdx);
+                    project.UserLayer.Insert(targetLayerIdx,temp);
+                    
+
+                    allLayers.Insert(targetIdx + 1, droppedData);
+                    allLayers.RemoveAt(removedIdx);
+                }
+                else
+                {
+                    int remIdx = removedIdx + 1;
+                    if (allLayers.Count + 1 > remIdx)
+                    {
+                       
+
+                        project.UserLayer.Insert(targetLayerIdx + 1, project.UserLayer[removedLayerIdx]);
+                        project.UserLayer.RemoveAt(removedLayerIdx);
+
+                        allLayers.Insert(targetIdx, droppedData);
+                        allLayers.RemoveAt(remIdx);
+                    }
+                }
+            }
+            reDraw();
         }
 
         private void LayerList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            if (sender is ListViewItem)
+            {
+                ListViewItem draggedItem = sender as ListViewItem;
+                DataObject data = new DataObject("LAYER", draggedItem.DataContext);
+                DragDrop.DoDragDrop(draggedItem, data, DragDropEffects.Move);
+                draggedItem.IsSelected = true;
+            }
         }
 
         private void LayerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1083,15 +1129,7 @@ namespace Paint
                         project = temProject.Clone();
                         Title = "Paint - " + project.GetName();
 
-                        // Ve lai Xoa toan bo
-                        canvas.Children.Clear();
-
-                        // Ve lai tat ca cac hinh
-                        foreach (var shape in project.UserShapes)
-                        {
-                            var element = shape.Draw();
-                            canvas.Children.Add(element);
-                        }
+                        reDraw();
                     }
                 }
             }
@@ -1111,6 +1149,52 @@ namespace Paint
 
         }
 
+
+        private void DeleteLayer_Click(object sender, RoutedEventArgs e)
+        {
+            project.UserLayer.RemoveAt(allLayers.Count - 1 - LayerList.SelectedIndex);
+            allLayers.RemoveAt(LayerList.SelectedIndex);
+            
+            selectedLayer=-1;
+            reDraw();
+        }
+
+        private void isVisibleUncheck(object sender, RoutedEventArgs e)
+        {
+            CheckBox b = sender as CheckBox;
+            layerView rule = b.CommandParameter as layerView;
+            int index = allLayers.IndexOf(rule);
+
+            project.UserLayer[allLayers.Count - 1 - index].isVisible = false;
+            reDraw();
+        }
+
+        private void isVisibleCheck(object sender, RoutedEventArgs e)
+        {
+            CheckBox b = sender as CheckBox;
+            layerView rule = b.CommandParameter as layerView;
+            int index = allLayers.IndexOf(rule);
+
+            project.UserLayer[allLayers.Count - 1 - index].isVisible = true;
+            reDraw();
+        }
+
+        private void LayerList_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                if (sender is ListViewItem)
+                {
+                    ListViewItem draggedItem = sender as ListViewItem;
+                    DataObject data = new DataObject("LAYER", draggedItem.DataContext);
+                    DragDrop.DoDragDrop(draggedItem, data, DragDropEffects.Move);
+                    draggedItem.IsSelected = true;
+                }
+            }
+        }
+
+       
         private void Brush_Stroke_Btn_Click(object sender, RoutedEventArgs e)
         {
             ShapeList.SelectedIndex = -1;
@@ -1168,13 +1252,13 @@ namespace Paint
 
         private void Add_Text_Btn_Click(object sender, RoutedEventArgs e)
         {
-            Edit_Text_Tab.Visibility = Visibility.Visible;
-            Edit_Text_Tab.IsSelected = true;
             ShapeList.SelectedIndex = -1;
             isBrushStroke = false;
             Brush_Stroke_Btn.IsChecked = false;
             isAddText = true;
             Add_Text_Btn.IsChecked = true;
+            Edit_Text_Tab.Visibility = Visibility.Visible;
+            Edit_Text_Tab.IsSelected = true;
         }
 
         private void Open_Foreground_Picker_Click(object sender, RoutedEventArgs e)
@@ -1250,6 +1334,11 @@ namespace Paint
             canfocus = false;
         }
 
+        private void RibbonWindow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            canfocus = false;
+        }
+
         private void Strikethrough_Btn_Click(object sender, RoutedEventArgs e)
         {
             isStrike = !isStrike;
@@ -1259,5 +1348,6 @@ namespace Paint
                 isUnderline = false;
             }
         }
+
     }
 }
