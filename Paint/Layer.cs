@@ -7,12 +7,7 @@ using System.Threading.Tasks;
 
 namespace Paint
 {
-    public class LayerData
-    {
-        public List<ShapeData> Data { get; set; }
-
-        
-    }
+  
 
     public class Layer 
     {
@@ -28,6 +23,28 @@ namespace Paint
             this.UserShapes = UserShapes;
             this.isVisible = isVisible;
         }
+
+        public Layer()
+        {
+        }
+
+        public Layer Clone()
+        {
+            var temptShapeList = new List<IShape>();
+
+            foreach (var shape in UserShapes)
+            {
+                temptShapeList.Add(shape.Clone());
+            }
+
+            return new Layer()
+            {
+                name = this.name,
+                isVisible = this.isVisible,
+                UserShapes = temptShapeList
+            };
+        }
+
 
     }
 }
