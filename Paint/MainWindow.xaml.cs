@@ -608,17 +608,17 @@ namespace Paint
                     project = temProject.Clone();
                     Title = "Paint - " + project.GetName();
                     allLayers.Clear();
-                    foreach (var layer in project.UserLayer)
+                    for (int i = project.UserLayer.Count - 1; i>=0; i--)
                     {
                         var tempt = new layerView()
                         {
-                            isVisible = layer.isVisible,
-                            name = layer.name
+                            isVisible = project.UserLayer[i].isVisible,
+                            name = project.UserLayer[i].name
                         };
                         allLayers.Add(tempt);
 
-
-                    };
+                    }
+                    
                     reDraw();
                 }
             }
