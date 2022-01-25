@@ -492,15 +492,7 @@ namespace Paint
                     project = temProject.Clone();
                     Title = "Paint - " + project.GetName();
 
-                    // Ve lai Xoa toan bo
-                    canvas.Children.Clear();
-
-                    // Ve lai tat ca cac hinh
-                    foreach (var shape in project.UserShapes)
-                    {
-                        var element = shape.Draw();
-                        canvas.Children.Add(element);
-                    }
+                    reDraw();
                 }
             }
         }
@@ -600,55 +592,55 @@ namespace Paint
 
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
         {
-            int count = project.UserShapes.Count;
-            if(count > 0)
-            {
-                Redo_Btn.IsEnabled = true;
-                undo.Add(project.UserShapes[count - 1]);
-                project.UserShapes.RemoveAt(count - 1);
-                project.IsSaved = false;
+           // int count = project.UserShapes.Count;
+           // if(count > 0)
+            //{
+            //    Redo_Btn.IsEnabled = true;
+            //    undo.Add(project.UserShapes[count - 1]);
+            //    project.UserShapes.RemoveAt(count - 1);
+            //    project.IsSaved = false;
 
-                // Ve lai Xoa toan bo
-                canvas.Children.Clear();
-
+            //    // Ve lai Xoa toan bo
+            //    canvas.Children.Clear();
+            //
                 // Ve lai tat ca cac hinh
-                foreach (var shape in project.UserShapes)
-                {
-                    var element = shape.Draw();
-                    canvas.Children.Add(element);
-                }
-                if (project.UserShapes.Count == 0)
-                {
-                    Undo_Btn.IsEnabled = false;
-                }    
-            }    
+            //    foreach (var shape in project.UserShapes)
+            //    {
+            //        var element = shape.Draw();
+             //       canvas.Children.Add(element);
+            //    }
+            //    if (project.UserShapes.Count == 0)
+             //   {
+             //       Undo_Btn.IsEnabled = false;
+            //    }    
+           // }    
             
         }
 
         private void Redo_Btn_Click(object sender, RoutedEventArgs e)
         {
-            int count = undo.Count;
-            if(count > 0)
-            {
-                Undo_Btn.IsEnabled = true;
-                project.UserShapes.Add(undo[count - 1]);
-                undo.RemoveAt(count - 1);
-                project.IsSaved = false;
+            //int count = undo.Count;
+            //if(count > 0)
+           // {
+           //     Undo_Btn.IsEnabled = true;
+            //    project.UserShapes.Add(undo[count - 1]);
+            //    undo.RemoveAt(count - 1);
+            //    project.IsSaved = false;
 
                 // Ve lai Xoa toan bo
-                canvas.Children.Clear();
+            //    canvas.Children.Clear();
 
                 // Ve lai tat ca cac hinh
-                foreach (var shape in project.UserShapes)
-                {
-                    var element = shape.Draw();
-                    canvas.Children.Add(element);
-                }
-                if(undo.Count == 0)
-                {
-                    Redo_Btn.IsEnabled = false;
-                }    
-            }    
+           //     foreach (var shape in project.UserShapes)
+            //    {
+            //        var element = shape.Draw();
+            //        canvas.Children.Add(element);
+            //    }
+            //    if(undo.Count == 0)
+             //   {
+             //       Redo_Btn.IsEnabled = false;
+             //   }    
+          //  }    
             
         }
 
@@ -959,15 +951,7 @@ namespace Paint
                         project = temProject.Clone();
                         Title = "Paint - " + project.GetName();
 
-                        // Ve lai Xoa toan bo
-                        canvas.Children.Clear();
-
-                        // Ve lai tat ca cac hinh
-                        foreach (var shape in project.UserShapes)
-                        {
-                            var element = shape.Draw();
-                            canvas.Children.Add(element);
-                        }
+                        reDraw();
                     }
                 }
             }
