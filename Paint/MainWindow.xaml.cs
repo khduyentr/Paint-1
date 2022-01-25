@@ -29,6 +29,9 @@ namespace Paint
     
     public class layerView: INotifyPropertyChanged
     {
+        public layerView()
+        {
+        }
 
         public layerView(string name, bool isVisible)
         {
@@ -122,8 +125,8 @@ namespace Paint
             }
 
             ShapeList.ItemsSource = allShapes;
-            
-            
+
+
             LayerList.ItemsSource = allLayers;
 
 
@@ -491,6 +494,21 @@ namespace Paint
                 {
                     project = temProject.Clone();
                     Title = "Paint - " + project.GetName();
+                    allLayers.Clear();
+
+                   
+                    foreach (var layer in project.UserLayer)
+                    {
+                        var tempt = new layerView()
+                        {
+                            isVisible = layer.isVisible,
+                            name = layer.name
+                        };
+                        allLayers.Add(tempt);
+
+
+                    };
+                  
 
                     reDraw();
                 }
