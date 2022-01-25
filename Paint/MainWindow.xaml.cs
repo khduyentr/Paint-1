@@ -197,7 +197,7 @@ namespace Paint
         }
 
         Point textPoint, lastTextPoint;
-        bool flagText = false;
+        bool canfocus = false;
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -241,7 +241,7 @@ namespace Paint
                 };
                 if (isUnderline) input.TextDecorations = TextDecorations.Underline;
                 if (isStrike) input.TextDecorations = TextDecorations.Strikethrough;
-                flagText = true;
+                canfocus = true;
                 lastTextPoint = textPoint;
                 textPoint = e.GetPosition(canvas);
                 Canvas.SetLeft(input, textPoint.X - 10);
@@ -268,7 +268,7 @@ namespace Paint
                 newText.setItalic(isItalic);
                 newText.setUnderline(isUnderline);
                 newText.setStrike(isStrike);
-                if (!flagText) lastTextPoint = textPoint; 
+                if (!canfocus) lastTextPoint = textPoint; 
                 newText.HandleStart(lastTextPoint.X, lastTextPoint.Y);
 
                 //tương tự mousemove
@@ -317,13 +317,25 @@ namespace Paint
                 }
 
                 // tương tự mouseup
-                // Thêm đối tượng cuối cùng vào mảng quản lí
-                allLayers.Insert(0, new layerView(project.addNewLayer(), true));
+                if (selectedLayer >= 0)
+                {
+                    // Thêm đối tượng cuối cùng vào mảng quản lí
+                    project.UserLayer[selectedLayer].UserShapes.Add(newText.Clone());
 
-                project.UserLayer[project.currentCount - 1].UserShapes.Add(newText.Clone());
+                    project.IsSaved = false;
+                    Title = "Paint - " + project.GetName() + "*";
+                }
+                else
+                {
+                    // Thêm đối tượng cuối cùng vào mảng quản lí
+                    allLayers.Insert(0, new layerView(project.addNewLayer(), true));
 
-                project.IsSaved = false;
-                Title = "Paint - " + project.GetName() + "*";
+                    project.UserLayer[project.currentCount - 1].UserShapes.Add(newText.Clone());
+
+
+                    project.IsSaved = false;
+                    Title = "Paint - " + project.GetName() + "*";
+                }
 
                 Undo_Btn.IsEnabled = true;
                 Redo_Btn.IsEnabled = false;
@@ -331,7 +343,6 @@ namespace Paint
             }
 
             canvas.Children.Remove(input);
-            flagText = false;
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
@@ -347,6 +358,10 @@ namespace Paint
             if (isBrushStroke)
             {
                 Canvas_Border.Cursor = Cursors.Pen;
+            }
+            if (isAddText)
+            {
+                Canvas_Border.Cursor = Cursors.IBeam;
             }
             if (isDrawing)
             {
@@ -477,7 +492,10 @@ namespace Paint
         private void ShapeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             isBrushStroke = false;
+            Brush_Stroke_Btn.IsChecked = false;
             isAddText = false;
+            Add_Text_Btn.IsChecked = false;
+            Edit_Text_Tab.Visibility = Visibility.Hidden;
             selectedShape = ShapeList.SelectedIndex;
             if (selectedShape >= 0)
             {
@@ -1097,7 +1115,10 @@ namespace Paint
         {
             ShapeList.SelectedIndex = -1;
             isBrushStroke = true;
+            Brush_Stroke_Btn.IsChecked = true;
             isAddText = false;
+            Add_Text_Btn.IsChecked = false;
+            Edit_Text_Tab.Visibility = Visibility.Hidden;
             preview = new BrushStroke();
         }
 
@@ -1151,7 +1172,9 @@ namespace Paint
             Edit_Text_Tab.IsSelected = true;
             ShapeList.SelectedIndex = -1;
             isBrushStroke = false;
+            Brush_Stroke_Btn.IsChecked = false;
             isAddText = true;
+            Add_Text_Btn.IsChecked = true;
         }
 
         private void Open_Foreground_Picker_Click(object sender, RoutedEventArgs e)
@@ -1222,6 +1245,11 @@ namespace Paint
             }
         }
 
+        private void canvas_LostFocus(object sender, RoutedEventArgs e)
+        {
+            canfocus = false;
+        }
+
         private void Strikethrough_Btn_Click(object sender, RoutedEventArgs e)
         {
             isStrike = !isStrike;
@@ -1231,21 +1259,5 @@ namespace Paint
                 isUnderline = false;
             }
         }
-
-        private void View_Tab_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Edit_Text_Tab.Visibility = Visibility.Hidden;
-        }
-
-        private void Home_Tab_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Edit_Text_Tab.Visibility = Visibility.Hidden;
-        }
-
-        private void File_Tab_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Edit_Text_Tab.Visibility = Visibility.Hidden;
-        }
-
     }
 }
