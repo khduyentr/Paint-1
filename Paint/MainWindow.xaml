@@ -12,7 +12,6 @@
         Closing="RibbonWindow_Closing"
         WindowStartupLocation="CenterScreen"
         KeyDown="CutContractKeyDown"
-        ClipToBounds="True"
         PreviewMouseLeftButtonDown="RibbonWindow_PreviewMouseLeftButtonDown"
         Title="Paint" MinHeight="700" MinWidth="700" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
 
@@ -284,7 +283,7 @@
                     <DropShadowEffect BlurRadius="0" Direction="-45"
                               RenderingBias="Quality" ShadowDepth="8" Opacity="0.1" />
                 </Grid.Effect>
-                <Canvas x:Name="canvas" Background="White">
+                <Canvas x:Name="canvas" Background="White" ClipToBounds="True">
                     
                 </Canvas>
                 <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
