@@ -13,6 +13,7 @@ namespace Contract
     public class Point2DData {
         public double X { get; set; }
         public double Y { get; set; }
+        public int PenWidth { get; set; }
         public string FillColor { get; set; }
         public string Color { get; set; }
     }
@@ -20,6 +21,7 @@ namespace Contract
     {
         public double X { get; set; }
         public double Y { get; set; }
+        private int _penWidth = 1;
         public SolidColorBrush FillColor { get; set; }
         public SolidColorBrush Color { get; set; }
         public string Image { get; set; }
@@ -54,7 +56,7 @@ namespace Contract
                 Y1 = Y,
                 X2 = X,
                 Y2 = Y,
-                StrokeThickness = 1,
+                StrokeThickness = _penWidth,
                 Stroke = Color,
                 Fill = FillColor,
             };
@@ -72,6 +74,7 @@ namespace Contract
             return new Point2D() { 
                 X = this.X,
                 Y = this.Y,
+                _penWidth = this._penWidth,
                 Color = this.Color,
                 FillColor = this.FillColor
             };
@@ -79,7 +82,7 @@ namespace Contract
 
         public void ChangePenWidth(int witdh)
         {
-            throw new NotImplementedException();
+            _penWidth = witdh;
         }
 
         public void ChangeStrokeDash(List<double> strokeDash)
@@ -92,6 +95,7 @@ namespace Contract
             Point2DData data = new Point2DData();
             data.X = this.X;
             data.Y = this.Y;
+            data.PenWidth = _penWidth;
             data.Color = this.Color.ToString();
             data.FillColor = this.FillColor.ToString();
             string json = JsonSerializer.Serialize(data);
@@ -107,6 +111,7 @@ namespace Contract
             {
                 X = pointData.X,
                 Y = pointData.Y,
+                _penWidth = pointData.PenWidth,
                 Color = new SolidColorBrush(c),
                 FillColor = new SolidColorBrush(fc)
             };
