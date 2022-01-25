@@ -534,6 +534,7 @@ namespace Paint
             if(project.Address.Length > 0)
             {
                 project.SaveToFile();
+                Title = "Paint - " + project.GetName();
                 return;
             }
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -969,6 +970,7 @@ namespace Paint
                 if (project.Address.Length > 0)
                 {
                     project.SaveToFile();
+                    Title = "Paint - " + project.GetName();
                     return;
                 }
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
