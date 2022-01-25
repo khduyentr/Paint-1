@@ -11,18 +11,16 @@ namespace Paint
 {
     public class ProjectData
     {
-        public List<ShapeData> Data { get; set; }
+        public List<LayerData> Data { get; set; }
         
         public string Address { get; set; }
     }
     
     public class Project
     {
-        public List<IShape> UserShapes { get; set; }
 
         public List<Layer> UserLayer { get; set; }
        
-
         public string Address { get; set; }
 
         public bool IsSaved { get; set; }
@@ -30,7 +28,7 @@ namespace Paint
     
         public Project()
         {
-            UserShapes = new List<IShape>();
+           
             UserLayer = new List<Layer>();
             Address = "";
             IsSaved = true;
@@ -49,19 +47,35 @@ namespace Paint
 
         public void SaveToFile()
         {
-            ProjectData data = new ProjectData() { 
+            ProjectData projectData = new ProjectData() { 
                 Address = this.Address,
-                Data = new List<ShapeData>()
+                Data = new List<LayerData>()
             };
-            foreach(var shape in UserShapes)
+            foreach (var layer in UserLayer)
             {
-                data.Data.Add(new ShapeData()
+                var tempLayerData = new LayerData()
                 {
-                    Name = shape.Name,
-                    Data = shape.ToJson()
-                });
+                    Name = layer.name,
+                    isVivible = layer.isVisible,
+                    Data = new List<ShapeData>()
+                };
+
+                foreach (var shape in layer.UserShapes)
+                {
+
+                    tempLayerData.Data.Add(new ShapeData()
+                    {
+                        Name = shape.Name,
+                        Data = shape.ToJson()
+                    });
+
+
+                }
+                projectData.Data.Add(tempLayerData);
             }
-            string json = JsonSerializer.Serialize(data);
+
+                
+            string json = JsonSerializer.Serialize(projectData);
             var plaintext = Encoding.UTF8.GetBytes(json);
             var encodedtext = Convert.ToBase64String(plaintext);
             using (var stream = File.Open(Address, FileMode.Create))
@@ -107,9 +121,8 @@ namespace Paint
                     result = new Project();
                     result.IsSaved = true;
                     result.Address = data.Address;
-                    foreach (var shape in data.Data)
-                    {
-                        result.UserShapes.Add(ShapeFactory.GetInstance().Create(shape));
+                    foreach (var layer in data.Data)  {
+                        result.UserLayer.Add(LayerFactory.Create(layer));
                     }
                 }
                 catch (Exception)
@@ -143,9 +156,9 @@ namespace Paint
         public Project Clone()
         {
             Project result = new Project();
-            foreach (var shape in this.UserShapes)
+            foreach (var layer in this.UserLayer)
             {
-                result.UserShapes.Add(shape.Clone());
+                result.UserLayer.Add(layer.Clone());             
             }
             result.Address = this.Address;
             return result;
