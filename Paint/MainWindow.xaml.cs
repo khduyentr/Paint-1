@@ -967,6 +967,7 @@ namespace Paint
                 }
             }
             reDraw();
+           
         }
 
         private void LayerList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -982,7 +983,15 @@ namespace Paint
 
         private void LayerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            selectedLayer = allLayers.Count - 1 - LayerList.SelectedIndex; 
+            if (LayerList.SelectedIndex >= 0)
+            {
+                selectedLayer = allLayers.Count - 1 - LayerList.SelectedIndex;
+            }
+            else
+            {
+                selectedLayer = -1;
+            }
+            
         }
 
         private void AddNewLayer_Click(object sender, RoutedEventArgs e)
