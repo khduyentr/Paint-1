@@ -333,7 +333,7 @@ namespace Paint
                     // Thêm đối tượng cuối cùng vào mảng quản lí
                     allLayers.Insert(0, new layerView(project.addNewLayer(), true));
 
-                    project.UserLayer[project.currentCount - 1].UserShapes.Add(newText.Clone());
+                    project.UserLayer[project.UserLayer.Count() - 1].UserShapes.Add(newText.Clone());
 
 
                     project.IsSaved = false;
@@ -1256,7 +1256,7 @@ namespace Paint
                         {
                             // Thêm đối tượng cuối cùng vào mảng quản lí
                             allLayers.Insert(0, new layerView(project.addNewLayer(), true));
-                            project.UserLayer[project.currentCount - 1].UserShapes.Add(img.Clone());
+                            project.UserLayer[project.UserLayer.Count - 1].UserShapes.Add(img.Clone());
                             project.IsSaved = false;
                             Title = "Paint - " + project.GetName() + "*";
                         }
