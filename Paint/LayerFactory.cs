@@ -49,5 +49,27 @@ namespace Paint
             return temptLayer;
         }
 
+        static public List<Layer> UngroupLayer(Layer data)
+        {
+            List<Layer> result = new List<Layer>();
+         
+
+            foreach (var shape in data.UserShapes)
+            {
+                Layer temptLayer = new Layer()
+                {
+                    isVisible = true,
+                    name = "tempt layer",
+                    UserShapes = new List<IShape>()
+                };
+                temptLayer.isVisible = data.isVisible;
+                temptLayer.name = shape.Name;
+                temptLayer.UserShapes.Add(shape);
+                result.Add(temptLayer);
+            }
+
+            return result;
+        }
+
     }
 }
