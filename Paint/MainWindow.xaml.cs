@@ -608,17 +608,17 @@ namespace Paint
                     project = temProject.Clone();
                     Title = "Paint - " + project.GetName();
                     allLayers.Clear();
-                    foreach (var layer in project.UserLayer)
+                    for (int i = project.UserLayer.Count - 1; i>=0; i--)
                     {
                         var tempt = new layerView()
                         {
-                            isVisible = layer.isVisible,
-                            name = layer.name
+                            isVisible = project.UserLayer[i].isVisible,
+                            name = project.UserLayer[i].name
                         };
                         allLayers.Add(tempt);
 
-
-                    };
+                    }
+                    
                     reDraw();
                 }
             }
@@ -1106,11 +1106,18 @@ namespace Paint
 
         private void DeleteLayer_Click(object sender, RoutedEventArgs e)
         {
-            project.UserLayer.RemoveAt(allLayers.Count - 1 - LayerList.SelectedIndex);
-            allLayers.RemoveAt(LayerList.SelectedIndex);
-            
-            selectedLayer=-1;
-            reDraw();
+            while (LayerList.SelectedItems.Count > 0)
+            {
+
+                project.UserLayer.RemoveAt(allLayers.Count - 1 - LayerList.SelectedIndex);
+                allLayers.RemoveAt(LayerList.SelectedIndex);
+
+                selectedLayer = -1;
+                reDraw();
+
+            }
+
+           
         }
 
         private void isVisibleUncheck(object sender, RoutedEventArgs e)
@@ -1287,6 +1294,21 @@ namespace Paint
         private void RibbonWindow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             canfocus = false;
+        }
+
+        private void GroupLayer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void UngroupLayer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
 
         private void Strikethrough_Btn_Click(object sender, RoutedEventArgs e)

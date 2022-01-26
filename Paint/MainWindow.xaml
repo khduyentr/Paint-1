@@ -305,13 +305,23 @@
                           SelectionChanged="LayerList_SelectionChanged" 
                           AllowDrop="True" Focusable="False"
                           DragOver="DragOverLayerList" 
-                          Drop="DropLayerList">
+                          Drop="DropLayerList" SelectionMode="Extended" >
 
                     <ListView.Resources>
                         <ContextMenu x:Key="ItemContextMenu">
                             <MenuItem Header="Delete Layer" Click="DeleteLayer_Click">
                                 <MenuItem.Icon>
                                     <Image Source="images/delete.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Group Layer" Click="GroupLayer_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="images/group.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Ungroup Layer" Click="UngroupLayer_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="images/ungroup.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                         </ContextMenu>
@@ -321,12 +331,14 @@
                         <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}" >
                             <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
                             <EventSetter Event="MouseMove"  Handler="LayerList_PreviewMouseMove"/>
+                            <EventSetter Event="PreviewMouseRightButtonDown"  Handler="OnPreviewMouseDown"/>
                             <EventSetter Event="Drop" Handler="LayerList_Drop"/>
                         </Style>
                     </ListView.ItemContainerStyle>
                     <ListView.View>
-
+               
                         <GridView x:Name="FileGrid" >
+
                             <GridViewColumn  Header="Visible">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
