@@ -346,11 +346,12 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
+                        
+                            <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}" Width="200px"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
-                            <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
             </StackPanel>
         </StackPanel>
 

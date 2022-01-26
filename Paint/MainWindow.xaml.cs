@@ -53,7 +53,8 @@ namespace Paint
         //layer management
         int totalLayer = 0;
         int selectedLayer = -1;
-
+        const int maxLayerAmount = 10000 ;
+        
         BindingList<layerView> allLayers = new BindingList<layerView>();
 
         // shape management
@@ -1298,12 +1299,113 @@ namespace Paint
 
         private void GroupLayer_Click(object sender, RoutedEventArgs e)
         {
+            bool[] layerCheck = new bool[maxLayerAmount];
+            int insertIndex = LayerList.SelectedIndex;
+            int allLayer = allLayers.Count;
+            int UserLayerCount = project.UserLayer.Count;
+            List<Layer> tempLayer = new List<Layer>();
 
+            while (LayerList.SelectedItems.Count > 0)
+            {
+                layerCheck[LayerList.SelectedIndex ] = true;
+                LayerList.SelectedItems.RemoveAt(0);
+                selectedLayer = -1;
+
+            }
+
+           
+
+            for (int i = UserLayerCount - 1; i >= 0; i--)
+            {
+                if (layerCheck[i] == true)
+                {
+                    tempLayer.Add(project.UserLayer[UserLayerCount - 1 - i]);
+                    allLayers.RemoveAt(i);
+                }
+            }
+
+            for (int i = 0; i < UserLayerCount; i++)
+            {
+                if (layerCheck[i] == true)
+                {
+                    project.UserLayer.RemoveAt(UserLayerCount - 1 - i);
+                    
+                }
+            }
+
+
+         
+
+            Layer groupLayer = LayerFactory.GroupLayer(tempLayer);
+            layerView tempView = new layerView()
+            {
+                isVisible = groupLayer.isVisible,
+                name = groupLayer.name
+
+            };
+
+
+            int insertTo = insertIndex;
+            for (int i = 0; i < insertTo; i++)
+            {
+                if (layerCheck[i] == true)
+                {
+                    insertIndex--;
+
+                }
+            }
+            allLayers.Insert(insertIndex, tempView);
+
+            int insertLayerIndex = allLayers.Count - 1 - insertIndex;
+            
+
+            project.UserLayer.Insert(insertLayerIndex, groupLayer);
+            
+
+           
+            
+            reDraw();
         }
 
         private void UngroupLayer_Click(object sender, RoutedEventArgs e)
         {
 
+            while (LayerList.SelectedItems.Count > 0)
+            {
+                int UserLayerIndex = allLayers.Count - 1 - LayerList.SelectedIndex;
+                int AlllayerIndex = LayerList.SelectedIndex;
+                List<Layer> ungroupLayer = LayerFactory.UngroupLayer(project.UserLayer[UserLayerIndex]);
+                project.UserLayer.RemoveAt(UserLayerIndex);
+                allLayers.RemoveAt(AlllayerIndex);
+                UserLayerIndex--;
+                AlllayerIndex--;
+
+                if (UserLayerIndex < 0) { UserLayerIndex = 0; }
+                if (AlllayerIndex < 0) { AlllayerIndex = 0; }
+
+                foreach (var layer in ungroupLayer)
+                {
+                    
+
+                    layerView tempView = new layerView()
+                    {
+                        isVisible = layer.isVisible,
+                        name = layer.name
+                    };
+
+                    allLayers.Insert(AlllayerIndex, tempView);
+
+                    project.UserLayer.Insert(allLayers.Count - 1 - AlllayerIndex, layer);
+                    UserLayerIndex++;
+                    AlllayerIndex++;
+                }
+
+
+
+                selectedLayer = -1;
+                reDraw();
+
+            }
         }
 
         private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
