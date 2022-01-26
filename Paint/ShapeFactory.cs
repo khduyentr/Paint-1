@@ -58,16 +58,18 @@ namespace Paint
                     result = _prototypes[i].Parse(data.Data);
                     break;
                 }
-                else if(data.Name == "Text")
-                {
-                    result = new Text2D().Parse(data.Data);
-                    break;
-                }
-                else if (data.Name == "Brush Stroke")
-                {
-                    result = new BrushStroke().Parse(data.Data);
-                    break;
-                }
+            }
+            if (data.Name == "Text")
+            {
+                result = new Text2D().Parse(data.Data);
+            }
+            else if (data.Name == "Brush Stroke")
+            {
+                result = new BrushStroke().Parse(data.Data);
+            }
+            else if (data.Name == "Image")
+            {
+                result = new Image2D().Parse(data.Data);
             }
             return result;
         }
