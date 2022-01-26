@@ -1,8 +1,12 @@
 ﻿using Contract;
+using HandyControl.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Text;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,10 +18,8 @@ namespace Paint
     {
         public string LeftTop { get; set; }
         public string RightBottom { get; set; }
-        public int PenWidth { get; set; }
-        public List<double> StrokeDash { get; set; }
-        public string Color { get; set; }
-        public string FillColor { get; set; }
+        public string Source { get; set; }
+
 
     }
     public class Image2D : IShape, INotifyPropertyChanged
@@ -96,37 +98,77 @@ namespace Paint
             _strokeDash = new List<double>(strokeDash);
         }
 
-        public string ToJson()
+        public byte[] getJPGFromImageControl(BitmapImage imageC)
         {
-            //Ellipse2DData data = new Ellipse2DData()
-            //{
-            //    LeftTop = _leftTop.ToJson(),
-            //    RightBottom = _rightBottom.ToJson(),
-            //    PenWidth = _penWidth,
-            //    StrokeDash = new List<double>(_strokeDash),
-            //    Color = this.Color.ToString(),
-            //    FillColor = this.FillColor.ToString()
-            //};
-            //return JsonSerializer.Serialize(data);
-            return null;
+            MemoryStream memStream = new MemoryStream();
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(imageC));
+            encoder.Save(memStream);
+            return memStream.ToArray();
         }
 
+
+        //public byte[] ImageSourceToBytes(ImageSource imageSource)
+        //{
+        //    byte[] bytes = null;
+        //    var bitmapSource = imageSource as BitmapSource;
+
+        //    if (bitmapSource != null)
+        //    {
+        //        var encoder = new JpegBitmapEncoder();
+        //        encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+        //        using (var stream = new MemoryStream())
+        //        {
+        //            encoder.Save(stream);
+        //            bytes = stream.ToArray();
+        //        }
+        //    }
+
+        //    return bytes;
+        //}
+        //public static ImageSource ByteToImage(byte[] imageData)
+        //{
+        //    BitmapImage biImg = new BitmapImage();
+        //    MemoryStream ms = new MemoryStream(imageData);
+        //    biImg.BeginInit();
+        //    biImg.StreamSource = ms;
+        //    biImg.EndInit();
+
+        //    ImageSource imgSrc = biImg;
+
+        //    return imgSrc;
+        //}
+        public string ToJson()
+        {
+            //var imageArray = ImageSourceToBytes(_source);
+
+            //string imageString = Encoding.UTF8.GetString(imageArray);
+
+            Image2DData data = new Image2DData()
+            {
+                LeftTop = _leftTop.ToJson(),
+                RightBottom = _rightBottom.ToJson(),
+
+                Source = _source.ToString(),
+            };
+            return JsonSerializer.Serialize(data);
+        }
+        
         public IShape Parse(string json)
         {
-            //Ellipse2DData data = (Ellipse2DData)JsonSerializer.Deserialize(json, typeof(Ellipse2DData));
-            //Color c = (Color)ColorConverter.ConvertFromString(data.Color);
-            //Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
-            //Ellipse2D result = new Ellipse2D()
-            //{
-            //    _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
-            //    _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),
-            //    _penWidth = data.PenWidth,
-            //    _strokeDash = new List<double>(data.StrokeDash),
-            //    Color = new SolidColorBrush(c),
-            //    FillColor = new SolidColorBrush(fc)
-            //};
-            //return result;
-            return null;
+            Image2DData data = (Image2DData)JsonSerializer.Deserialize(json, typeof(Image2DData));
+           
+            var converter = new ImageSourceConverter();
+            ImageSource imageBitmap = (ImageSource)converter.ConvertFromString(data.Source);
+            Image2D result = new Image2D()
+            {
+                _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
+                _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),
+                _source = imageBitmap,
+            };
+            return result;
+
         }
     }
 }
