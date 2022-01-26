@@ -346,7 +346,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                         
-                            <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}"/>
+                            <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}" Width="200px"/>
                     </GridView>
                 </ListView.View>
             </ListView>

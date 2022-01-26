@@ -26,5 +26,25 @@ namespace Paint
             return temptLayer;
         }
 
+        static public Layer GroupLayer(List<Layer> data)
+        {
+            Layer temptLayer = new Layer()
+            {
+                isVisible = true,
+                name = "group layer",
+                UserShapes = new List<IShape>()
+            };
+
+            foreach (var layer in data)
+            {
+                foreach (var shape in layer.UserShapes)
+                {
+                    temptLayer.UserShapes.Add(shape);
+                }
+            }
+
+            return temptLayer;
+        }
+
     }
 }
