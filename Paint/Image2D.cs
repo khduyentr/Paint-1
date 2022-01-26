@@ -18,7 +18,7 @@ namespace Paint
     {
         public string LeftTop { get; set; }
         public string RightBottom { get; set; }
-        public string Source { get; set; }
+        public byte[] Source { get; set; }
 
 
     }
@@ -98,50 +98,51 @@ namespace Paint
             _strokeDash = new List<double>(strokeDash);
         }
 
-        public byte[] getJPGFromImageControl(BitmapImage imageC)
+        //public byte[] getJPGFromImageControl(BitmapImage imageC)
+        //{
+        //    MemoryStream memStream = new MemoryStream();
+        //    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+        //    encoder.Frames.Add(BitmapFrame.Create(imageC));
+        //    encoder.Save(memStream);
+        //    return memStream.ToArray();
+        //}
+
+
+        public byte[] ImageSourceToBytes(ImageSource imageSource)
         {
-            MemoryStream memStream = new MemoryStream();
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(imageC));
-            encoder.Save(memStream);
-            return memStream.ToArray();
+          
+            byte[] bytes = null;
+            var bitmapSource = imageSource as BitmapSource;
+
+            if (bitmapSource != null)
+            {
+                var encoder = new JpegBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+                using (var stream = new MemoryStream())
+                {
+                    encoder.Save(stream);
+                    bytes = stream.ToArray();
+                }
+            }
+
+            return bytes;
         }
+        public static ImageSource ByteToImage(byte[] imageData)
+        {
+            BitmapImage biImg = new BitmapImage();
+            MemoryStream ms = new MemoryStream(imageData);
+            biImg.BeginInit();
+            biImg.StreamSource = ms;
+            biImg.EndInit();
 
+            ImageSource imgSrc = biImg;
 
-        //public byte[] ImageSourceToBytes(ImageSource imageSource)
-        //{
-        //    byte[] bytes = null;
-        //    var bitmapSource = imageSource as BitmapSource;
-
-        //    if (bitmapSource != null)
-        //    {
-        //        var encoder = new JpegBitmapEncoder();
-        //        encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-
-        //        using (var stream = new MemoryStream())
-        //        {
-        //            encoder.Save(stream);
-        //            bytes = stream.ToArray();
-        //        }
-        //    }
-
-        //    return bytes;
-        //}
-        //public static ImageSource ByteToImage(byte[] imageData)
-        //{
-        //    BitmapImage biImg = new BitmapImage();
-        //    MemoryStream ms = new MemoryStream(imageData);
-        //    biImg.BeginInit();
-        //    biImg.StreamSource = ms;
-        //    biImg.EndInit();
-
-        //    ImageSource imgSrc = biImg;
-
-        //    return imgSrc;
-        //}
+            return imgSrc;
+        }
         public string ToJson()
         {
-            //var imageArray = ImageSourceToBytes(_source);
+            var imageArray = ImageSourceToBytes(_source);
 
             //string imageString = Encoding.UTF8.GetString(imageArray);
 
@@ -150,17 +151,36 @@ namespace Paint
                 LeftTop = _leftTop.ToJson(),
                 RightBottom = _rightBottom.ToJson(),
 
-                Source = _source.ToString(),
+                Source = imageArray,
             };
             return JsonSerializer.Serialize(data);
         }
-        
+
+        //private static BitmapImage LoadImage(byte[] imageData)
+        //{
+        //    if (imageData == null || imageData.Length == 0) return null;
+        //    var image = new BitmapImage();
+        //    using (var mem = new MemoryStream(imageData))
+        //    {
+        //        mem.Position = 0;
+        //        image.BeginInit();
+        //        image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+        //        image.CacheOption = BitmapCacheOption.OnLoad;
+        //        image.UriSource = null;
+        //        image.StreamSource = mem;
+        //        image.EndInit();
+        //    }
+        //    image.Freeze();
+        //    return image;
+        //}
+
         public IShape Parse(string json)
         {
             Image2DData data = (Image2DData)JsonSerializer.Deserialize(json, typeof(Image2DData));
            
-            var converter = new ImageSourceConverter();
-            ImageSource imageBitmap = (ImageSource)converter.ConvertFromString(data.Source);
+            //var converter = new ImageSourceConverter();
+            //ImageSource imageBitmap = (ImageSource)converter.ConvertFromString("");
+            ImageSource imageBitmap = ByteToImage(data.Source);
             Image2D result = new Image2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
