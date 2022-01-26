@@ -37,10 +37,13 @@ namespace Paint
 
             foreach (var layer in data)
             {
-                foreach (var shape in layer.UserShapes)
+                if (layer.isVisible)
                 {
-                    temptLayer.UserShapes.Add(shape);
-                }
+                    foreach (var shape in layer.UserShapes)
+                    {
+                        temptLayer.UserShapes.Add(shape);
+                    }
+                } 
             }
 
             return temptLayer;
