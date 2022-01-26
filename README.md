@@ -51,33 +51,32 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 
 ## **Chức năng chưa thực hiện**<a name="notdone"></a>
 * * *
-1. Giảm hiện tượng Flickering bằng cách sử dụng Buffer. Chỉ redraw ở khu vực bị ảnh hưởng, không redraw toàn canvas.
+1. Giảm hiện tượng Flickering bằng cách sử dụng Buffer.
+    - Lý do không thực hiện chức năng này: WPF C# đã tự động hỗ trợ Double Buffering
+2. Cut copy paste
+3. Chọn một phần tử để chỉnh sửa:
+    1. Xoay
+    2. Lật
+    3. Kéo thả để di chuyển
 ## **Chức năng cộng thêm**<a name="other"></a>
 * * *
-### **Các improvement mà thầy gợi ý đã được thực hiện:** 
+### **Một số improvement trong các improvement mà thầy gợi ý đã được nhóm thực hiện:** 
 1. Cho phép người dùng thay đổi màu, kích thước và style (dash, dot, dash dot dot...) của nét vẽ
 
 2. Chèn Chữ
-3. Thêm Hình ảnh vào canvas
-
+3. Thêm Hình ảnh vào canvas bằng cách kéo thả hình ảnh vào Canvas
+4. Chỉ xóa và vẽ lại ở các khu vực cần thiết, không xóa và vẽ lại toàn bộ canvas
 5. Hỗ trợ Layer
-6. Có thể chọn một phần tử để chỉnh sửa:
-    1. Biến đổi theo chiều ngang và dọc.
-
-    2. Xoay.
-    3. Drag & Drop.
 7. Zooming
-8. Cut, Copy, Paste
 9. Undo, Redo
-10. Tô màu theo ranh giới
 ### **Các improvement khác:**
 1. Sử dụng thư viện HandyControl (https://hosseini.ninja/handycontrol/) để giao diện của ứng dụng trở nên đẹp và thân thiện với người dùng hơn
 
 2. Giao diện ứng dụng được thiết kế responsive, thích hợp với nhiều kích thước cửa sổ khác nhau.
 3. Có các chức năng như new, save, save as, open để tạo mới, lưu, tạo bản sao và mở các project. 
 4. Ngoài việc ấn các nút tương ứng để thực hiện các chức năng vừa kể, người dùng cỏ thể ấn ***Crtl + N***, ***Ctrl + S***, ***Ctrl + O***, để thực hiện các chức năng new, save, open.
-5. Ngoài việc ấn các nút Undo, Redo trên giao diện thì người dùng có thể ấn các tổ hợp phím ***Crtl + N*** (Undo), ***Ctrl + Y***(Redo)
-5.  Có thêm một số Hình vẽ:
+5. Ngoài việc ấn các nút Undo, Redo trên giao diện thì người dùng có thể ấn các tổ hợp phím ***Crtl + Z*** (Undo), ***Ctrl + Y***(Redo)
+6.  Có thêm một số Hình vẽ:
     1. **Square**: Hình vuông
     
     2. **Circle**: Hình tròn
@@ -86,8 +85,22 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
     5. **Diamond**: Hình Diamond
     6. **Pentagon**: Ngủ giác
     7. **Hexagon**: Lục giác
-6. Có chức năng Pen để người dùng vẽ tùy ý.
+    8. **Heart**: Hình trái tim
+    9. **Star**: Ngôi sao năm cánh
+    10. **Sparkle**: Ngôi sao bốn cánh
+    11. **Rounded Rectangle**: Hình chữ nhật với 4 góc được bo tròn
+7. Có chức năng Pen để người dùng vẽ tùy ý.
+8. Đối với Text, người dùng có thể điều chỉnh style của Text:
+    1. Chọn font chữ
 
+    2. Chọn cỡ chữ
+    3. Chọn màu chữ
+    4. In đậm, in nghiêng, gạch chân, gạch ngang.
+9. Đối với Layer, người dùng có thể:
+    1. Ẩn hiện layer
+
+    2. Kéo thả để thay đổi vị trí layer
+    3. Group hoặc Ungroup các layer
 ## **Điểm số mong muốn** <a name="score"></a>
 * * *
 Điểm số mong muốn của từng thành viên:
