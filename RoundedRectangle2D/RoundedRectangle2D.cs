@@ -8,9 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Rectangle2D
+namespace RoundedRectangle2D
 {
-    public class Rectangle2DData
+    public class RoundedRectangle2DData
     {
         public string LeftTop { get; set; }
         public string RightBottom { get; set; }
@@ -19,7 +19,7 @@ namespace Rectangle2D
         public string Color { get; set; }
         public string FillColor { get; set; }
     }
-    public class Rectangle2D : IShape, INotifyPropertyChanged
+    public class RoundedRectangle2D: IShape, INotifyPropertyChanged
     {
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
@@ -29,14 +29,14 @@ namespace Rectangle2D
 
         public SolidColorBrush Color { get; set; }
         public SolidColorBrush FillColor { get; set; }
-        public string Name => "Rectangle";
+        public string Name => "Rounded Rectangle";
 
         public string Image { get; set; }
-        public Rectangle2D()
+        public RoundedRectangle2D()
         {
             Color = new SolidColorBrush(Colors.Black);
             FillColor = new SolidColorBrush(Colors.Transparent);
-            Image = "/Rectangle2D;Component/images/rectangle.png";
+            Image = "/RoundedRectangle2D;Component/images/rounded-rectangle.png";
         }
         public void HandleStart(double x, double y)
         {
@@ -60,6 +60,8 @@ namespace Rectangle2D
                 StrokeThickness = _penWidth,
                 Stroke = Color,
                 Fill = FillColor,
+                RadiusX = 20,
+                RadiusY = 20,
             };
             Canvas.SetLeft(rect, left);
             Canvas.SetTop(rect, top);
@@ -68,12 +70,12 @@ namespace Rectangle2D
 
         public IShape NextShape()
         {
-            return new Rectangle2D();
+            return new RoundedRectangle2D();
         }
 
         public IShape Clone()
         {
-            return new Rectangle2D()
+            return new RoundedRectangle2D()
             {
                 _leftTop = (Point2D)this._leftTop.Clone(),
                 _rightBottom = (Point2D)this._rightBottom.Clone(),
@@ -96,7 +98,7 @@ namespace Rectangle2D
 
         public string ToJson()
         {
-            Rectangle2DData data = new Rectangle2DData()
+            RoundedRectangle2DData data = new RoundedRectangle2DData()
             {
                 LeftTop = _leftTop.ToJson(),
                 RightBottom = _rightBottom.ToJson(),
@@ -110,10 +112,10 @@ namespace Rectangle2D
 
         public IShape Parse(string json)
         {
-            Rectangle2DData data = (Rectangle2DData)JsonSerializer.Deserialize(json, typeof(Rectangle2DData));
+            RoundedRectangle2DData data = (RoundedRectangle2DData)JsonSerializer.Deserialize(json, typeof(RoundedRectangle2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
             Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
-            Rectangle2D result = new Rectangle2D()
+            RoundedRectangle2D result = new RoundedRectangle2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
                 _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),

@@ -8,9 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Rectangle2D
+namespace Star2D
 {
-    public class Rectangle2DData
+    public class Star2DData
     {
         public string LeftTop { get; set; }
         public string RightBottom { get; set; }
@@ -19,24 +19,24 @@ namespace Rectangle2D
         public string Color { get; set; }
         public string FillColor { get; set; }
     }
-    public class Rectangle2D : IShape, INotifyPropertyChanged
+    public class Star2D : IShape, INotifyPropertyChanged
     {
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
         private int _penWidth = 1;
         private List<double> _strokeDash = new List<double>() { 0 };
+        public SolidColorBrush Color { get; set; }
+        public string Name => "Star";
+        public SolidColorBrush FillColor { get; set; }
+        public string Image { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SolidColorBrush Color { get; set; }
-        public SolidColorBrush FillColor { get; set; }
-        public string Name => "Rectangle";
-
-        public string Image { get; set; }
-        public Rectangle2D()
+        public Star2D()
         {
             Color = new SolidColorBrush(Colors.Black);
             FillColor = new SolidColorBrush(Colors.Transparent);
-            Image = "/Rectangle2D;Component/images/rectangle.png";
+            Image = "/Star2D;Component/images/star.png";
         }
         public void HandleStart(double x, double y)
         {
@@ -52,28 +52,51 @@ namespace Rectangle2D
         {
             double left = (_rightBottom.X > _leftTop.X) ? _leftTop.X : _rightBottom.X;
             double top = (_rightBottom.Y > _leftTop.Y) ? _leftTop.Y : _rightBottom.Y;
-            Rectangle rect = new Rectangle()
+            double w = Math.Abs(_rightBottom.X - _leftTop.X);
+            double h = Math.Abs(_rightBottom.Y - _leftTop.Y);
+
+            Point p1 = new Point(0, 2 * h / 5);
+            Point p2 = new Point(19 * w / 50, 19 * h / 50);
+            Point p3 = new Point(w / 2, 0);
+            Point p4 = new Point(31 * w / 50, 19 * h / 50);
+            Point p5 = new Point(w, 2 * h / 5);
+            Point p6 = new Point(7 * w / 10, 3 * h / 5);
+            Point p7 = new Point(4 * w / 5, h);
+            Point p8 = new Point(w / 2, 3 * h / 4);
+            Point p9 = new Point(w / 5, h);
+            Point p10 = new Point(w * 3 / 10, 3 * h / 5);
+            Polygon poly = new Polygon()
             {
-                Width = Math.Abs(_rightBottom.X - _leftTop.X),
-                Height = Math.Abs(_rightBottom.Y - _leftTop.Y),
                 StrokeDashArray = new DoubleCollection(_strokeDash),
                 StrokeThickness = _penWidth,
                 Stroke = Color,
                 Fill = FillColor,
             };
-            Canvas.SetLeft(rect, left);
-            Canvas.SetTop(rect, top);
-            return rect;
+            PointCollection polygonPoints = new PointCollection();
+            polygonPoints.Add(p1);
+            polygonPoints.Add(p2);
+            polygonPoints.Add(p3);
+            polygonPoints.Add(p4);
+            polygonPoints.Add(p5);
+            polygonPoints.Add(p6);
+            polygonPoints.Add(p7);
+            polygonPoints.Add(p8);
+            polygonPoints.Add(p9);
+            polygonPoints.Add(p10);
+            poly.Points = polygonPoints;
+            Canvas.SetLeft(poly, left);
+            Canvas.SetTop(poly, top);
+            return poly;
         }
 
         public IShape NextShape()
         {
-            return new Rectangle2D();
+            return new Star2D();
         }
 
         public IShape Clone()
         {
-            return new Rectangle2D()
+            return new Star2D()
             {
                 _leftTop = (Point2D)this._leftTop.Clone(),
                 _rightBottom = (Point2D)this._rightBottom.Clone(),
@@ -96,7 +119,7 @@ namespace Rectangle2D
 
         public string ToJson()
         {
-            Rectangle2DData data = new Rectangle2DData()
+            Star2DData data = new Star2DData()
             {
                 LeftTop = _leftTop.ToJson(),
                 RightBottom = _rightBottom.ToJson(),
@@ -110,10 +133,10 @@ namespace Rectangle2D
 
         public IShape Parse(string json)
         {
-            Rectangle2DData data = (Rectangle2DData)JsonSerializer.Deserialize(json, typeof(Rectangle2DData));
+            Star2DData data = (Star2DData)JsonSerializer.Deserialize(json, typeof(Star2DData));
             Color c = (Color)ColorConverter.ConvertFromString(data.Color);
             Color fc = (Color)ColorConverter.ConvertFromString(data.FillColor);
-            Rectangle2D result = new Rectangle2D()
+            Star2D result = new Star2D()
             {
                 _leftTop = (Point2D)_leftTop.Parse(data.LeftTop),
                 _rightBottom = (Point2D)_rightBottom.Parse(data.RightBottom),
