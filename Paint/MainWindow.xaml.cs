@@ -1192,75 +1192,6 @@ namespace Paint
 
         }
 
-        private void Open_Recent_File_Btn_Click(object sender, RoutedEventArgs e)
-        {
-            if (!project.IsSaved)
-            {
-                MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
-                {
-                    Message = "Do you want to save changes to " + project.GetName(),
-                    Caption = "Paint",
-                    Button = MessageBoxButton.YesNoCancel,
-                    IconBrushKey = ResourceToken.AccentBrush,
-                    IconKey = ResourceToken.ErrorGeometry,
-                    StyleKey = "MessageBoxCustom"
-                });
-                if (msgResult == MessageBoxResult.Yes)
-                {
-                    if (project.Address.Length == 0)
-                    {
-                        SaveFileDialog saveFileDialog = new SaveFileDialog();
-                        saveFileDialog.FileName = project.GetName();
-                        saveFileDialog.DefaultExt = ".dat";
-                        saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
-                        if (saveFileDialog.ShowDialog() == true)
-                        {
-                            string path = saveFileDialog.FileName;
-                            project.Address = path;
-                        }
-                    }
-                    project.SaveToFile();
-                }
-                else if (msgResult == MessageBoxResult.Cancel)
-                {
-                    return;
-                }
-            }
-            
-            string recentPath = (string)((RibbonButton)sender).Tag;
-            Project temProject = Project.Parse(recentPath);
-            if (temProject == null)
-            {
-                HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
-                {
-                    Message = "Invalid file",
-                    Caption = "Open File Error",
-                    Button = MessageBoxButton.OK,
-                    IconBrushKey = ResourceToken.AccentBrush,
-                    IconKey = ResourceToken.ErrorGeometry,
-                    StyleKey = "MessageBoxCustom"
-                });
-            }
-            else
-            {
-                project = temProject.Clone();
-                Title = "Paint - " + project.GetName();
-                allLayers.Clear();
-                for (int i = project.UserLayer.Count - 1; i >= 0; i--)
-                {
-                    var tempt = new layerView()
-                    {
-                        isVisible = project.UserLayer[i].isVisible,
-                        name = project.UserLayer[i].name
-                    };
-                    allLayers.Add(tempt);
-
-                }
-
-                reDraw();
-            }
-        }
-
         private void DeleteLayer_Click(object sender, RoutedEventArgs e)
         {
             while (LayerList.SelectedItems.Count > 0)
@@ -1582,6 +1513,81 @@ namespace Paint
         private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void Recent_File_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Recent_File.SelectedIndex < 0)
+            {
+                return;
+            }
+            if (!project.IsSaved)
+            {
+                MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Do you want to save changes to " + project.GetName(),
+                    Caption = "Paint",
+                    Button = MessageBoxButton.YesNoCancel,
+                    IconBrushKey = ResourceToken.AccentBrush,
+                    IconKey = ResourceToken.ErrorGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+                if (msgResult == MessageBoxResult.Yes)
+                {
+                    if (project.Address.Length == 0)
+                    {
+                        SaveFileDialog saveFileDialog = new SaveFileDialog();
+                        saveFileDialog.FileName = project.GetName();
+                        saveFileDialog.DefaultExt = ".dat";
+                        saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                        if (saveFileDialog.ShowDialog() == true)
+                        {
+                            string path = saveFileDialog.FileName;
+                            project.Address = path;
+                        }
+                    }
+                    project.SaveToFile();
+                }
+                else if (msgResult == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+
+            string recentPath = recentList[Recent_File.SelectedIndex].Path;
+            Project temProject = Project.Parse(recentPath);
+            if (temProject == null)
+            {
+                HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Invalid file",
+                    Caption = "Open File Error",
+                    Button = MessageBoxButton.OK,
+                    IconBrushKey = ResourceToken.AccentBrush,
+                    IconKey = ResourceToken.ErrorGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+            }
+            else
+            {
+                project = temProject.Clone();
+                Title = "Paint - " + project.GetName();
+                allLayers.Clear();
+                for (int i = project.UserLayer.Count - 1; i >= 0; i--)
+                {
+                    var tempt = new layerView()
+                    {
+                        isVisible = project.UserLayer[i].isVisible,
+                        name = project.UserLayer[i].name
+                    };
+                    allLayers.Add(tempt);
+
+                }
+                list_project.Clear();
+                list_project.Add(project.Clone());
+                Undo_Btn.IsEnabled = false;
+                reDraw();
+            }
         }
 
         private void Strikethrough_Btn_Click(object sender, RoutedEventArgs e)

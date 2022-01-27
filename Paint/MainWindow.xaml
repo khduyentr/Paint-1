@@ -33,14 +33,28 @@
                     </Fluent:MenuItem>
                     <Fluent:MenuItem Header="About us" Icon="images/about.png">
                         <StackPanel>
-                            <TextBlock Text="Hi, I'm Mo Junior." Foreground="Black"></TextBlock>
-                            <Image Source="images/Mo.png" Width="190" Height="190"></Image>
+                            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                                <TextBlock Text="C" FontFamily="Comic Sans MS" FontWeight="Bold" FontSize="22" Foreground="Red" Margin="68 0 0 0"></TextBlock>
+                                <TextBlock Text="A" FontFamily="Comic Sans MS" FontWeight="Bold" FontSize="22" Foreground="Orange"></TextBlock>
+                                <TextBlock Text="T" FontFamily="Comic Sans MS" FontWeight="Bold" FontSize="22" Foreground="Gold"></TextBlock>
+                                <TextBlock Text="T" FontFamily="Comic Sans MS" FontWeight="Bold" FontSize="22" Foreground="LightGreen"></TextBlock>
+                                <TextBlock Text="O" FontFamily="Comic Sans MS" FontWeight="Bold" FontSize="22" Foreground="LimeGreen"></TextBlock>
+                                <TextBlock Text="T" FontFamily="Comic Sans MS" FontWeight="Bold" FontSize="22" Foreground="SkyBlue" Margin="10 0 0 0"></TextBlock>
+                                <TextBlock Text="E" FontFamily="Comic Sans MS" FontWeight="Bold" FontSize="22" Foreground="CornflowerBlue"></TextBlock>
+                                <TextBlock Text="A" FontFamily="Comic Sans MS" FontWeight="Bold" FontSize="22" Foreground="Violet"></TextBlock>
+                                <TextBlock Text="M" FontFamily="Comic Sans MS" FontWeight="Bold" FontSize="22" Foreground="Pink"></TextBlock>
+                                
+                            </StackPanel>
+                            <Grid>
+                                <Image Source="images/catto_team.jpg" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="160" HorizontalAlignment="Center"></Image>
+                            </Grid>
                         </StackPanel>
                     </Fluent:MenuItem>
                     <Fluent:ApplicationMenu.RightPaneContent>
                         <StackPanel>
-                            <TextBlock Text="Recent Project" FontWeight="Bold" Foreground="Black"></TextBlock>
+                            <TextBlock Text="Recent Project" FontWeight="Bold" Foreground="Black" FontSize="15"></TextBlock>
                             <ListView
+                                SelectionChanged="Recent_File_SelectionChanged"
                                 Width="298"
                                 Height="200"
                                 Background="White"
@@ -52,9 +66,7 @@
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </Style>
                                     <DataTemplate x:Key="DefaultItemTemplate">
-                                        <!--<TextBlock Text="{Binding}"></TextBlock>-->
-                                        <RibbonButton Label="{Binding Name}" Foreground="Black" Click="Open_Recent_File_Btn_Click" HorizontalAlignment="Left"
-                                                      Tag="{Binding Path}"></RibbonButton>
+                                        <TextBlock Text="{Binding Name}" Foreground="Black" Margin="5 0 0 0" FontSize="14"></TextBlock>
                                     </DataTemplate>
                                 </ListView.Resources>
                                 <ListView.ItemContainerStyle>
