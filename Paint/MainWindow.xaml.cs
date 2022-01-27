@@ -743,24 +743,6 @@ namespace Paint
             }
         }
 
-        private void Paste_Btn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void copyLayer(Project prj1, Project prj2)
-        {
-            foreach (var layer in prj1.UserLayer)
-            {
-                prj2.UserLayer.Add(layer);
-                int count = prj2.UserLayer.Count;
-                for(int i = 0; i < count; i++)
-                {
-                    prj2.UserLayer[i].UserShapes = prj1.UserLayer[i].UserShapes;
-                }    
-            }
-        }
-
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
         {
             int count = list_project.Count;
@@ -823,17 +805,6 @@ namespace Paint
                     Redo_Btn.IsEnabled = false;
                 }
             }
-
-        }
-
-        private void Select_Area_Btn_Click(object sender, RoutedEventArgs e)
-        {
-            isSelectRegion = !isSelectRegion;
-            ShapeList.SelectedIndex = -1;
-        }
-
-        private void Crop_Area_Btn_Click(object sender, RoutedEventArgs e)
-        {
 
         }
 
