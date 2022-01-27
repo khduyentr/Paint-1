@@ -15,7 +15,7 @@
 
     - Copy các File DLL đặt vào folder DLL của folder chứa file exe.
     - Thầy có thể dùng các DLL nhóm em đã chuẩn bị sẵn trong folder Release
-2. **Chạy chương trình Batch Rename**
+2. **Chạy chương trình Paint**
     - Run project ở chế độ release hay debug đều được
 3. **Release**:
 
