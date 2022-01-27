@@ -120,6 +120,6 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 - Phạm Sơn Nam (MSSV: 19120596): **10**
 ## **Video demo** <a name="video"></a>
 * * *
-<https://youtube.com>
+<https://youtu.be/zKbEl8T7rUk>
 
-**Ghi chú**: 
+**Ghi chú**: Bật phụ đề của video để được giải thích rõ hơn về video
