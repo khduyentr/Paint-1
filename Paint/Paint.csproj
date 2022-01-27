@@ -9,8 +9,13 @@
 
   <ItemGroup>
     <None Remove="images\about.png" />
+    <None Remove="images\ava_19120524.jpg" />
+    <None Remove="images\ava_19120546.jpg" />
+    <None Remove="images\ava_19120576.jpg" />
+    <None Remove="images\ava_19120596.jpg" />
     <None Remove="images\bold.png" />
     <None Remove="images\brush.png" />
+    <None Remove="images\catto_team.jpg" />
     <None Remove="images\colorpicker.png" />
     <None Remove="images\copy.png" />
     <None Remove="images\crop.png" />
@@ -53,6 +58,9 @@
     <Content Include="images\brush.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="images\catto_team.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="images\colorpicker.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -75,9 +83,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\italic.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="images\Mo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\new.png">

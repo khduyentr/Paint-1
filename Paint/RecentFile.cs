@@ -72,7 +72,7 @@ namespace Paint
                     }
                 }
             }
-            for (int i = 0; i < recentList.Count; i++)
+            for (int i = recentList.Count - 1; i >= 0; i--)
             {
                 if (!File.Exists(recentList[i].Path))
                 {
