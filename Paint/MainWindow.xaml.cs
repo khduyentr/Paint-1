@@ -850,9 +850,9 @@ namespace Paint
                         {
                             string path = saveFileDialog.FileName;
                             project.Address = path;
-                            project.SaveToFile();
                         }
                     }
+                    project.SaveToFile();
                 }
                 else if (msgResult == MessageBoxResult.Cancel)
                 {
@@ -1018,7 +1018,6 @@ namespace Paint
                     Recent_File.ItemsSource = recentList;
                     RecentFile.WriteRecentFile(recentListPath, recentList);
                 }
-                undo.Clear();
             }
             else if (e.Key == Key.N && Keyboard.Modifiers == ModifierKeys.Control)
             {
@@ -1117,6 +1116,17 @@ namespace Paint
                     {
                         project = temProject.Clone();
                         Title = "Paint - " + project.GetName();
+                        allLayers.Clear();
+                        for (int i = project.UserLayer.Count - 1; i>=0; i--)
+                        {
+                            var tempt = new layerView()
+                            {
+                                isVisible = project.UserLayer[i].isVisible,
+                                name = project.UserLayer[i].name
+                            };
+                            allLayers.Add(tempt);
+
+                        }
                         list_project.Clear();
                         list_project.Add(project.Clone());
                         Undo_Btn.IsEnabled = false;
