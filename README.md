@@ -54,10 +54,12 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 1. Giảm hiện tượng Flickering bằng cách sử dụng Buffer.
     - Lý do không thực hiện chức năng này: WPF C# đã tự động hỗ trợ Double Buffering
 2. Cut copy paste
+
 3. Chọn một phần tử để chỉnh sửa:
     1. Xoay
-    2. Lật
-    3. Kéo thả để di chuyển
+
+    3. Lật
+    4. Kéo thả để di chuyển
 ## **Chức năng cộng thêm**<a name="other"></a>
 * * *
 ### **Một số improvement trong các improvement mà thầy gợi ý đã được nhóm thực hiện:** 
@@ -83,7 +85,7 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
     3. **Isosceles Triangle**: Tam giác cân
     4. **Right Triangle**: Tam giác vuông
     5. **Diamond**: Hình Diamond
-    6. **Pentagon**: Ngủ giác
+    6. **Pentagon**: Ngũ giác
     7. **Hexagon**: Lục giác
     8. **Heart**: Hình trái tim
     9. **Star**: Ngôi sao năm cánh
