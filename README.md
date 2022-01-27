@@ -12,18 +12,23 @@
 ## **Cách chạy chương trình**<a name="run"></a>
 1. **Chuẩn bị file DLL của các Hình vẽ**
     - Build toàn bộ solution để có được file dll của các Hình vẽ
+
     - Copy các File DLL đặt vào folder DLL của folder chứa file exe.
     - Thầy có thể dùng các DLL nhóm em đã chuẩn bị sẵn trong folder Release
 2. **Chạy chương trình Batch Rename**
     - Run project ở chế độ release hay debug đều được
 3. **Release**:
-    File exe của chương trình đi kèm với 2 folder:
+
+    File exe của chương trình đi kèm với 2 folder và một file dat:
     - DLL: Chức file dll của các Hình vẽ.
+    
+    - Recent.dat: Chứ thông tin về các project được sử dụng gần đây.
     - images: folder chứa các ảnh mà chương trình sử dụng.
 ## **Thông tin nhóm**<a name="team"></a>
 * * *
 Nhóm gồm bốn thành viên
 - **Nguyễn Hồ Diệu Hương, MSSV: 19120524**
+
 - **Lê Trần Đăng Khoa, MSSV: 19120546**
 - **Lê Nguyễn Thảo Mi, MSSV: 19120576**
 - **Phạm Sơn Nam, MSSV: 19120596**
@@ -58,8 +63,8 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 3. Chọn một phần tử để chỉnh sửa:
     1. Xoay
 
-    3. Lật
-    4. Kéo thả để di chuyển
+    2. Lật
+    3. Kéo thả để di chuyển
 ## **Chức năng cộng thêm**<a name="other"></a>
 * * *
 ### **Một số improvement trong các improvement mà thầy gợi ý đã được nhóm thực hiện:** 
@@ -69,16 +74,17 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 3. Thêm Hình ảnh vào canvas bằng cách kéo thả hình ảnh vào Canvas
 4. Chỉ xóa và vẽ lại ở các khu vực cần thiết, không xóa và vẽ lại toàn bộ canvas
 5. Hỗ trợ Layer
-7. Zooming
-9. Undo, Redo
+6. Zooming
+7. Undo, Redo
 ### **Các improvement khác:**
 1. Sử dụng thư viện HandyControl (https://hosseini.ninja/handycontrol/) để giao diện của ứng dụng trở nên đẹp và thân thiện với người dùng hơn
 
 2. Giao diện ứng dụng được thiết kế responsive, thích hợp với nhiều kích thước cửa sổ khác nhau.
-3. Có các chức năng như new, save, save as, open để tạo mới, lưu, tạo bản sao và mở các project. 
-4. Ngoài việc ấn các nút tương ứng để thực hiện các chức năng vừa kể, người dùng cỏ thể ấn ***Crtl + N***, ***Ctrl + S***, ***Ctrl + O***, để thực hiện các chức năng new, save, open.
-5. Ngoài việc ấn các nút Undo, Redo trên giao diện thì người dùng có thể ấn các tổ hợp phím ***Crtl + Z*** (Undo), ***Ctrl + Y***(Redo)
-6.  Có thêm một số Hình vẽ:
+3. Sử dụng Fluent Ribbon để tạo cửa sổ có Ribbon
+4. Có các chức năng như new, save, save as, open để tạo mới, lưu, tạo bản sao và mở các project. 
+5. Ngoài việc ấn các nút tương ứng để thực hiện các chức năng vừa kể, người dùng cỏ thể ấn ***Crtl + N***, ***Ctrl + S***, ***Ctrl + O***, để thực hiện các chức năng new, save, open.
+6. Ngoài việc ấn các nút Undo, Redo trên giao diện thì người dùng có thể ấn các tổ hợp phím ***Crtl + Z*** (Undo), ***Ctrl + Y***(Redo)
+7.  Có thêm một số Hình vẽ:
     1. **Square**: Hình vuông
     
     2. **Circle**: Hình tròn
@@ -91,18 +97,20 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
     9. **Star**: Ngôi sao năm cánh
     10. **Sparkle**: Ngôi sao bốn cánh
     11. **Rounded Rectangle**: Hình chữ nhật với 4 góc được bo tròn
-7. Có chức năng Pen để người dùng vẽ tùy ý.
-8. Đối với Text, người dùng có thể điều chỉnh style của Text:
+8. Có chức năng Pen để người dùng vẽ tùy ý.
+9. Đối với Text, người dùng có thể điều chỉnh style của Text:
     1. Chọn font chữ
 
     2. Chọn cỡ chữ
     3. Chọn màu chữ
     4. In đậm, in nghiêng, gạch chân, gạch ngang.
-9. Đối với Layer, người dùng có thể:
+10. Đối với Layer, người dùng có thể:
     1. Ẩn hiện layer
 
     2. Kéo thả để thay đổi vị trí layer
     3. Group hoặc Ungroup các layer
+11. Có mục Recent Project để hiển thị các project được mở gần đây.
+12. Có mục About để hiển thị thông tin nhà phát triển.
 ## **Điểm số mong muốn** <a name="score"></a>
 * * *
 Điểm số mong muốn của từng thành viên:
