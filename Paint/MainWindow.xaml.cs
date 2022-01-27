@@ -946,10 +946,10 @@ namespace Paint
 
         private void Zoom_In_Btn_Click(object sender, RoutedEventArgs e)
         {
-            if(st.ScaleX <= 5 && st.ScaleY <= 5)
+            if(st.ScaleX < 5 && st.ScaleY < 5)
             {
-                st.ScaleX *= 1.25;
-                st.ScaleY *= 1.25;
+                st.ScaleX += 0.25;
+                st.ScaleY += 0.25;
                 Zoom_Slider.Value = st.ScaleX * 100;
                 ZoomValue = Zoom_Slider.Value;
             }
@@ -965,10 +965,10 @@ namespace Paint
 
         private void Zoom_Out_Btn_Click(object sender, RoutedEventArgs e)
         {
-            if(st.ScaleX >= 0.25 && st.ScaleY >= 0.25)
+            if(st.ScaleX > 0.25 && st.ScaleY > 0.25)
             {
-                st.ScaleX *= 0.8;
-                st.ScaleY *= 0.8;
+                st.ScaleX -= 0.25;
+                st.ScaleY -= 0.25;
                 Zoom_Slider.Value = st.ScaleX * 100;
                 ZoomValue = Zoom_Slider.Value;
             }

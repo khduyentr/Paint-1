@@ -13,11 +13,16 @@
         WindowStartupLocation="CenterScreen"
         KeyDown="CutContractKeyDown"
         PreviewMouseLeftButtonDown="RibbonWindow_PreviewMouseLeftButtonDown"
-        Title="Paint" MinHeight="700" MinWidth="1150" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
+        Title="Paint" MinHeight="780" MinWidth="1150" ResizeMode="CanResizeWithGrip" SizeChanged="RibbonWindow_SizeChanged">
 
     <Fluent:RibbonWindow.Resources>
         <local:ZoomValuePercentageConverter x:Key="zoomValuePercentageConverter"></local:ZoomValuePercentageConverter>
+        <local:SizePercentageConverter x:Key="PercentageConverter"></local:SizePercentageConverter>
+        
     </Fluent:RibbonWindow.Resources>
+
+ 
+    
     <DockPanel>
         <Fluent:Ribbon DockPanel.Dock="Top">
             <Fluent:Ribbon.Menu>
@@ -277,7 +282,10 @@
 
         <hc:Row>
             <hc:Col Span="20" >
-                <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+                <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Width="950px" Height="555px">
+                    
+                        
+                    
                     <Grid Margin="10" Name="Canvas_Container" Width="930px" Height="535px" HorizontalAlignment="Left" VerticalAlignment="Top" >
                         <Grid.Effect>
                             <DropShadowEffect BlurRadius="0" Direction="-45"
@@ -286,22 +294,26 @@
                         <Canvas x:Name="canvas" Background="White" ClipToBounds="True">
 
                         </Canvas>
-                        <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
-                MouseMove="canvas_MouseMove" 
-                MouseUp="canvas_MouseUp" AllowDrop="True" Drop="Canvas_Drop" LostFocus="canvas_LostFocus">
+                        <Border Background="Transparent" 
+                                Name="Canvas_Border" 
+                                MouseDown="canvas_MouseDown" 
+                                MouseMove="canvas_MouseMove"
+                                MouseUp="canvas_MouseUp" 
+                                AllowDrop="True" Drop="Canvas_Drop" LostFocus="canvas_LostFocus">
 
                         </Border>
                     </Grid>
+                   
                 </ScrollViewer>
             </hc:Col>
             <hc:Col Span="4" >
                 <StackPanel Orientation="Vertical" >
-                    <StackPanel Orientation="Horizontal"  Background="White">
+                    <StackPanel Orientation="Horizontal"  Background="White" >
                         <Button Content="Add new layer" Click="AddNewLayer_Click" Margin="10px"/>
 
                     </StackPanel>
 
-                    <ListView  x:Name="LayerList"   Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type hc:Col}},Path=ActualHeight}"
+                    <ListView  x:Name="LayerList"   Height="{Binding Converter={StaticResource PercentageConverter}, ConverterParameter=0.747, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Fluent:RibbonWindow}},Path=ActualHeight}"
                           SelectionChanged="LayerList_SelectionChanged" 
                           AllowDrop="True" Focusable="False"
                           DragOver="DragOverLayerList"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
@@ -347,7 +359,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}" />
+                                <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}" Width="200px" />
                             </GridView>
                         </ListView.View>
                     </ListView>
