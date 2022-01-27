@@ -48,11 +48,11 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 5. Các Hình vẽ của người dùng được lưu vào file nhị phân và có thể load lại khi muốn tiếp tục làm việc.
 
 6. Các Hình vẽ có thể được lưu lại dưới cả 3 dạng: PNG, BPM và JPG.
-### Các Hình vẽ cơ bản
-1. Rectangle - Hình Chữ nhật.
+7. Các hình vẽ cơ bản:
+    1. Rectangle - Hình Chữ nhật.
 
-2. Ellipse - Hình Elip.
-3. Line - Đường Thẳng.
+    2. Ellipse - Hình Elip.
+    3. Line - Đường Thẳng.
 
 ## **Chức năng chưa thực hiện**<a name="notdone"></a>
 * * *
