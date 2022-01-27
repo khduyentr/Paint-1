@@ -114,10 +114,10 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 ## **Điểm số mong muốn** <a name="score"></a>
 * * *
 Điểm số mong muốn của từng thành viên:
-- Nguyễn Hồ Diệu Hương (MSSV: 19120224): **10**
+- Nguyễn Hồ Diệu Hương (MSSV: 19120524): **10**
 
 - Lê Trần Đăng Khoa (MSSV: 19120546): **10**
-- Lê Nguyễn Thảo Mi (MSSV: 1912076): **10**
+- Lê Nguyễn Thảo Mi (MSSV: 19120576): **10**
 - Phạm Sơn Nam (MSSV: 19120596): **10**
 ## **Video demo** <a name="video"></a>
 * * *
