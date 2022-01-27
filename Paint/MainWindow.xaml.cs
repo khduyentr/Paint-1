@@ -59,6 +59,7 @@ namespace Paint
         int totalLayer = 0;
         int selectedLayer = -1;
         const int maxLayerAmount = 10000 ;
+        bool notOpenLayer;
         
         BindingList<layerView> allLayers = new BindingList<layerView>();
 
@@ -431,7 +432,11 @@ namespace Paint
         {
             isDrawing = false;
             isPreview = false;
-
+            if (notOpenLayer)
+            {
+                notOpenLayer = false;
+                return;
+            }
             if (selectedShape >= 0 || isBrushStroke)
             {
                 if (selectedLayer >= 0)
@@ -626,6 +631,7 @@ namespace Paint
             }
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "DAT files only (*.dat)|*.dat";
+            notOpenLayer = true;
             if (openFileDialog.ShowDialog() == true)
             {
                 string path = openFileDialog.FileName;
@@ -663,6 +669,7 @@ namespace Paint
                     reDraw();
                 }
             }
+            
         }
 
         private void Save_As_Btn_Click(object sender, RoutedEventArgs e)
