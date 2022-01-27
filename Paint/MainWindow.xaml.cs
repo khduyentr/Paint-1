@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Ribbon;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -51,6 +52,8 @@ namespace Paint
         Project project = new Project();
         List<Project> list_project = new List<Project>();
         List<Project> undo_project = new List<Project>();
+        BindingList<RecentFile> recentList = null;
+        string recentListPath = "recent.dat";
 
         //layer management
         int totalLayer = 0;
@@ -133,6 +136,8 @@ namespace Paint
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CreateDLLFolder();
+            recentList = RecentFile.GetRecentFileList(recentListPath);
+            Recent_File.ItemsSource = recentList;
             ZoomValue = 100;
             totalShape = ShapeFactory.GetInstance().ShapeAmount();
             for(int i = 0; i < totalShape; i++)
@@ -574,6 +579,14 @@ namespace Paint
                 project.Address = path;
                 project.SaveToFile();
                 Title = "Paint - " + project.GetName();
+                RecentFile newRecent = new RecentFile(path);
+                if (recentList == null)
+                {
+                    recentList = new BindingList<RecentFile>();
+                }
+                recentList.Insert(0, newRecent);
+                Recent_File.ItemsSource = recentList;
+                RecentFile.WriteRecentFile(recentListPath, recentList);
             }
         }
 
@@ -732,34 +745,6 @@ namespace Paint
             }
         }
 
-        private void Cut_Btn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Copy_Btn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Paste_Btn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void copyLayer(Project prj1, Project prj2)
-        {
-            foreach (var layer in prj1.UserLayer)
-            {
-                prj2.UserLayer.Add(layer);
-                int count = prj2.UserLayer.Count;
-                for(int i = 0; i < count; i++)
-                {
-                    prj2.UserLayer[i].UserShapes = prj1.UserLayer[i].UserShapes;
-                }    
-            }
-        }
-
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
         {
             int count = list_project.Count;
@@ -822,27 +807,6 @@ namespace Paint
                     Redo_Btn.IsEnabled = false;
                 }
             }
-
-        }
-
-        private void Select_Area_Btn_Click(object sender, RoutedEventArgs e)
-        {
-            isSelectRegion = !isSelectRegion;
-            ShapeList.SelectedIndex = -1;
-        }
-
-        private void Crop_Area_Btn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Resize_Area_Btn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Rotate_Area_Btn_Click(object sender, RoutedEventArgs e)
-        {
 
         }
 
@@ -1045,7 +1009,16 @@ namespace Paint
                     project.Address = path;
                     project.SaveToFile();
                     Title = "Paint - " + project.GetName();
+                    RecentFile newRecent = new RecentFile(path);
+                    if (recentList == null)
+                    {
+                        recentList = new BindingList<RecentFile>();
+                    }
+                    recentList.Insert(0, newRecent);
+                    Recent_File.ItemsSource = recentList;
+                    RecentFile.WriteRecentFile(recentListPath, recentList);
                 }
+                undo.Clear();
             }
             else if (e.Key == Key.N && Keyboard.Modifiers == ModifierKeys.Control)
             {
@@ -1221,18 +1194,72 @@ namespace Paint
 
         private void Open_Recent_File_Btn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+            if (!project.IsSaved)
             {
-                Message = "Open recent file...",
-                Caption = "Code open recent file here",
-                Button = MessageBoxButton.OK,
-                IconBrushKey = ResourceToken.SuccessBrush,
-                IconKey = ResourceToken.SuccessGeometry,
-                StyleKey = "MessageBoxCustom"
-            });
+                MessageBoxResult msgResult = HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Do you want to save changes to " + project.GetName(),
+                    Caption = "Paint",
+                    Button = MessageBoxButton.YesNoCancel,
+                    IconBrushKey = ResourceToken.AccentBrush,
+                    IconKey = ResourceToken.ErrorGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+                if (msgResult == MessageBoxResult.Yes)
+                {
+                    if (project.Address.Length == 0)
+                    {
+                        SaveFileDialog saveFileDialog = new SaveFileDialog();
+                        saveFileDialog.FileName = project.GetName();
+                        saveFileDialog.DefaultExt = ".dat";
+                        saveFileDialog.Filter = "DAT files(*.dat)|*.dat";
+                        if (saveFileDialog.ShowDialog() == true)
+                        {
+                            string path = saveFileDialog.FileName;
+                            project.Address = path;
+                        }
+                    }
+                    project.SaveToFile();
+                }
+                else if (msgResult == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+            
+            string recentPath = (string)((RibbonButton)sender).Tag;
+            Project temProject = Project.Parse(recentPath);
+            if (temProject == null)
+            {
+                HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
+                {
+                    Message = "Invalid file",
+                    Caption = "Open File Error",
+                    Button = MessageBoxButton.OK,
+                    IconBrushKey = ResourceToken.AccentBrush,
+                    IconKey = ResourceToken.ErrorGeometry,
+                    StyleKey = "MessageBoxCustom"
+                });
+            }
+            else
+            {
+                project = temProject.Clone();
+                Title = "Paint - " + project.GetName();
+                allLayers.Clear();
+                for (int i = project.UserLayer.Count - 1; i >= 0; i--)
+                {
+                    var tempt = new layerView()
+                    {
+                        isVisible = project.UserLayer[i].isVisible,
+                        name = project.UserLayer[i].name
+                    };
+                    allLayers.Add(tempt);
 
+                }
+
+                reDraw();
+            }
         }
-
 
         private void DeleteLayer_Click(object sender, RoutedEventArgs e)
         {
@@ -1287,7 +1314,6 @@ namespace Paint
                 }
             }
         }
-
        
         private void Brush_Stroke_Btn_Click(object sender, RoutedEventArgs e)
         {
@@ -1299,7 +1325,6 @@ namespace Paint
             Edit_Text_Tab.Visibility = Visibility.Hidden;
             preview = new BrushStroke();
         }
-
 
         private void Canvas_Drop(object sender, DragEventArgs e)
         {

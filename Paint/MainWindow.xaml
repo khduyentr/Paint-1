@@ -39,8 +39,35 @@
                     </Fluent:MenuItem>
                     <Fluent:ApplicationMenu.RightPaneContent>
                         <StackPanel>
-                            <TextBlock Text="Recent File" FontWeight="Bold" Foreground="Black"></TextBlock>
-                            <RibbonButton Label="Mo.png" Foreground="Black" Click="Open_Recent_File_Btn_Click" HorizontalAlignment="Left"></RibbonButton>
+                            <TextBlock Text="Recent Project" FontWeight="Bold" Foreground="Black"></TextBlock>
+                            <ListView
+                                Width="298"
+                                Height="200"
+                                Background="White"
+                                Margin="0"
+                                Padding="0"
+                                Name="Recent_File">
+                                <ListView.Resources>
+                                    <Style TargetType="GridViewColumnHeader">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Style>
+                                    <DataTemplate x:Key="DefaultItemTemplate">
+                                        <!--<TextBlock Text="{Binding}"></TextBlock>-->
+                                        <RibbonButton Label="{Binding Name}" Foreground="Black" Click="Open_Recent_File_Btn_Click" HorizontalAlignment="Left"
+                                                      Tag="{Binding Path}"></RibbonButton>
+                                    </DataTemplate>
+                                </ListView.Resources>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="Padding" Value="0,0,0,0"/>
+                                        <Setter Property="Margin" Value="0,0,0,0"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Top"/>
+                                        <Setter Property="ContentTemplate" Value="{StaticResource DefaultItemTemplate}" />
+                                        <Setter Property="Background" Value="White"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
                         </StackPanel>
                     </Fluent:ApplicationMenu.RightPaneContent>
                     <Fluent:ApplicationMenu.FooterPaneContent>
@@ -51,7 +78,7 @@
                 </Fluent:ApplicationMenu>
             </Fluent:Ribbon.Menu>
             <Fluent:RibbonTabItem Header="Home" Name="Home_Tab">
-                <Fluent:RibbonGroupBox Header="Clipboard">
+                <!--<Fluent:RibbonGroupBox Header="Clipboard">
                     <Fluent:Button Header="Cut" Icon="images/cut.png" Click="Cut_Btn_Click">
                         <Fluent:Button.LargeIcon>
                             <Image Source="images/cut.png" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -89,7 +116,7 @@
                             <Image Source="images/rotate.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Fluent:Button.LargeIcon>
                     </Fluent:Button>
-                </Fluent:RibbonGroupBox>
+                </Fluent:RibbonGroupBox>-->
                 <Fluent:RibbonGroupBox Header="Actions">
                     <Fluent:Button Header="Undo" Name="Undo_Btn" Icon="images/Undo.png" Click="Undo_Btn_Click">
                         <Fluent:Button.LargeIcon>
@@ -120,7 +147,7 @@
                     <ListView
                     SelectionChanged="ShapeList_SelectionChanged" 
                     Name="ShapeList"
-                    Width="200"
+                    Width="220"
                     Height="64"
                     Background="White"
                     Margin="5"
