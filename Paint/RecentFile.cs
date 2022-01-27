@@ -71,14 +71,15 @@ namespace Paint
                         }
                     }
                 }
-            }
-            for (int i = recentList.Count - 1; i >= 0; i--)
-            {
-                if (!File.Exists(recentList[i].Path))
+                for (int i = recentList.Count - 1; i >= 0; i--)
                 {
-                    recentList.RemoveAt(i);
+                    if (!File.Exists(recentList[i].Path))
+                    {
+                        recentList.RemoveAt(i);
+                    }
                 }
             }
+           
             return recentList;
         }
 
