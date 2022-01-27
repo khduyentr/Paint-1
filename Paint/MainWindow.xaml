@@ -275,85 +275,91 @@
             </Fluent:RibbonTabItem>
         </Fluent:Ribbon>
 
-        <StackPanel Orientation="Horizontal">
-
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid Margin="10" Name="Canvas_Container" Width="930px" Height="535px" HorizontalAlignment="Left" VerticalAlignment="Top" >
-                    <Grid.Effect>
-                        <DropShadowEffect BlurRadius="0" Direction="-45"
+        <hc:Row>
+            <hc:Col Span="20" >
+                <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+                    <Grid Margin="10" Name="Canvas_Container" Width="930px" Height="535px" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                        <Grid.Effect>
+                            <DropShadowEffect BlurRadius="0" Direction="-45"
                               RenderingBias="Quality" ShadowDepth="8" Opacity="0.1" />
-                    </Grid.Effect>
-                    <Canvas x:Name="canvas" Background="White" ClipToBounds="True">
-                       
-                    </Canvas>
-                    <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
+                        </Grid.Effect>
+                        <Canvas x:Name="canvas" Background="White" ClipToBounds="True">
+
+                        </Canvas>
+                        <Border Background="Transparent" Name="Canvas_Border" MouseDown="canvas_MouseDown" 
                 MouseMove="canvas_MouseMove" 
                 MouseUp="canvas_MouseUp" AllowDrop="True" Drop="Canvas_Drop" LostFocus="canvas_LostFocus">
 
-                    </Border>
-                </Grid>
-            </ScrollViewer>
+                        </Border>
+                    </Grid>
+                </ScrollViewer>
+            </hc:Col>
+            <hc:Col Span="4" >
+                <StackPanel Orientation="Vertical" >
+                    <StackPanel Orientation="Horizontal"  Background="White">
+                        <Button Content="Add new layer" Click="AddNewLayer_Click" Margin="10px"/>
 
-            <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" Background="White">
-                    <Button Content="Add new layer" Click="AddNewLayer_Click" Margin="10px"/>
-                </StackPanel>
+                    </StackPanel>
 
-
-
-                <ListView x:Name="LayerList" Width="200px" Height="512px"  
+                    <ListView  x:Name="LayerList"   Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type hc:Col}},Path=ActualHeight}"
                           SelectionChanged="LayerList_SelectionChanged" 
                           AllowDrop="True" Focusable="False"
-                          DragOver="DragOverLayerList" 
+                          DragOver="DragOverLayerList"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                           Drop="DropLayerList" SelectionMode="Extended" >
 
-                    <ListView.Resources>
-                        <ContextMenu x:Key="ItemContextMenu">
-                            <MenuItem Header="Delete Layer" Click="DeleteLayer_Click">
-                                <MenuItem.Icon>
-                                    <Image Source="images/delete.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Header="Group Layer" Click="GroupLayer_Click">
-                                <MenuItem.Icon>
-                                    <Image Source="images/group.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Header="Ungroup Layer" Click="UngroupLayer_Click">
-                                <MenuItem.Icon>
-                                    <Image Source="images/ungroup.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                        </ContextMenu>
-                    </ListView.Resources>
+                        <ListView.Resources>
+                            <ContextMenu x:Key="ItemContextMenu">
+                                <MenuItem Header="Delete Layer" Click="DeleteLayer_Click">
+                                    <MenuItem.Icon>
+                                        <Image Source="images/delete.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Group Layer" Click="GroupLayer_Click">
+                                    <MenuItem.Icon>
+                                        <Image Source="images/group.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Ungroup Layer" Click="UngroupLayer_Click">
+                                    <MenuItem.Icon>
+                                        <Image Source="images/ungroup.png"  RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </ListView.Resources>
 
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}" >
-                            <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
-                            <EventSetter Event="MouseMove"  Handler="LayerList_PreviewMouseMove"/>
-                            <EventSetter Event="PreviewMouseRightButtonDown"  Handler="OnPreviewMouseDown"/>
-                            <EventSetter Event="Drop" Handler="LayerList_Drop"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.View>
-               
-                        <GridView x:Name="FileGrid" >
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}" >
+                                <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                                <EventSetter Event="MouseMove"  Handler="LayerList_PreviewMouseMove"/>
+                                <EventSetter Event="PreviewMouseRightButtonDown"  Handler="OnPreviewMouseDown"/>
+                                <EventSetter Event="Drop" Handler="LayerList_Drop"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
 
-                            <GridViewColumn  Header="Visible">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <CheckBox IsChecked="{Binding isVisible}" Checked="isVisibleCheck" Unchecked="isVisibleUncheck" CommandParameter="{Binding}"></CheckBox>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        
-                            <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}" Width="200px"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                            <GridView x:Name="FileGrid" >
 
-            </StackPanel>
-        </StackPanel>
+                                <GridViewColumn  Header="Visible">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding isVisible}" Checked="isVisibleCheck" Unchecked="isVisibleUncheck" CommandParameter="{Binding}"></CheckBox>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding name}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </StackPanel>
+              
+
+            </hc:Col>
+            
+        </hc:Row>
+        
+       
 
     </DockPanel>
 
