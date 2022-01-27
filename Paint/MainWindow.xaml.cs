@@ -103,6 +103,7 @@ namespace Paint
             undo.Clear();
             project = new Project();
             canvas.Children.Clear();
+            allLayers.Clear();
             Title = "Paint - " + project.GetName();
         }
 
@@ -317,6 +318,15 @@ namespace Paint
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
+            if (LayerList.SelectedIndex >= 0)
+            {
+                selectedLayer = allLayers.Count - 1 - LayerList.SelectedIndex;
+            }
+            else
+            {
+                selectedLayer = -1;
+            }
+
             if (selectedShape >= 0)
             {
                 Canvas_Border.Cursor = Cursors.Cross;
