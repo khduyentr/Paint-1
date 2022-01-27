@@ -4,7 +4,7 @@
 ### [Cách chạy chương trình](#run)  
 ### [Thông tin nhóm](#team)  
 ### [Chức năng đã thực hiện](#done)  
-### [Chức năng chưa thực hiện](#notdone)  
+### [Chức năng nâng cao chưa thực hiện](#notdone)  
 ### [Chức năng cộng thêm](#other)
 ### [Điểm số mong muốn](#score)
 ### [Video demo](#video)
@@ -54,7 +54,7 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
     2. Ellipse - Hình Elip.
     3. Line - Đường Thẳng.
 
-## **Chức năng chưa thực hiện**<a name="notdone"></a>
+## **Chức năng nâng cao chưa thực hiện**<a name="notdone"></a>
 * * *
 1. Giảm hiện tượng Flickering bằng cách sử dụng Buffer.
     - Lý do không thực hiện chức năng này: WPF C# đã tự động hỗ trợ Double Buffering
