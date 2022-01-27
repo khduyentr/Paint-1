@@ -103,6 +103,7 @@ namespace Paint
             undo.Clear();
             project = new Project();
             canvas.Children.Clear();
+            allLayers.Clear();
             Title = "Paint - " + project.GetName();
         }
 
