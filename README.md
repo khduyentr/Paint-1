@@ -122,4 +122,4 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 * * *
 <https://youtu.be/zKbEl8T7rUk>
 
-**Ghi chú**: Bật phụ đề của video để được giải thích rõ hơn về video
+**Ghi chú**: Bật phụ đề của video để được giải thích rõ hơn.
