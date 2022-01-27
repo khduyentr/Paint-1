@@ -644,7 +644,9 @@ namespace Paint
                         allLayers.Add(tempt);
 
                     }
-                    
+                    list_project.Clear();
+                    list_project.Add(project.Clone());
+                    Undo_Btn.IsEnabled = false;
                     reDraw();
                 }
             }
@@ -761,7 +763,7 @@ namespace Paint
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
         {
             int count = list_project.Count;
-            if (count > 1 )
+            if (count > 1)
             {
                 Redo_Btn.IsEnabled = true;
                 undo_project.Add(list_project[count - 1].Clone());
@@ -1142,7 +1144,9 @@ namespace Paint
                     {
                         project = temProject.Clone();
                         Title = "Paint - " + project.GetName();
-
+                        list_project.Clear();
+                        list_project.Add(project.Clone());
+                        Undo_Btn.IsEnabled = false;
                         reDraw();
                     }
                 }
