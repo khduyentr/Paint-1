@@ -954,7 +954,7 @@ namespace Paint
 
         private void Zoom_In_Btn_Click(object sender, RoutedEventArgs e)
         {
-            if(st.ScaleX <= 5 && st.ScaleY <= 5)
+            if(st.ScaleX < 5 && st.ScaleY < 5)
             {
                 st.ScaleX += 0.25;
                 st.ScaleY += 0.25;
@@ -973,7 +973,7 @@ namespace Paint
 
         private void Zoom_Out_Btn_Click(object sender, RoutedEventArgs e)
         {
-            if(st.ScaleX >= 0.25 && st.ScaleY >= 0.25)
+            if(st.ScaleX > 0.25 && st.ScaleY > 0.25)
             {
                 st.ScaleX -= 0.25;
                 st.ScaleY -= 0.25;
