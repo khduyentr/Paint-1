@@ -121,3 +121,5 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 ## **Video demo** <a name="video"></a>
 * * *
 <https://youtube.com>
+
+**Ghi chú**: 
