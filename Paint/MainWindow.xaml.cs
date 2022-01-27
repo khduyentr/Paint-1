@@ -1273,49 +1273,78 @@ namespace Paint
             Edit_Text_Tab.Visibility = Visibility.Hidden;
             preview = new BrushStroke();
         }
+        public static bool IsValidImageFormat(String path)
+        {
+            using (FileStream fs = File.OpenRead(path))
+            {
+                byte[] header = new byte[10];
+                fs.Read(header, 0, 10);
 
+                foreach (var pattern in new byte[][] {
+                    Encoding.ASCII.GetBytes("BM"),
+                    Encoding.ASCII.GetBytes("GIF"),
+                    new byte[] { 137, 80, 78, 71 },     // PNG
+                    new byte[] { 73, 73, 42 },          // TIFF
+                    new byte[] { 77, 77, 42 },          // TIFF
+                    new byte[] { 255, 216, 255, 224 },  // jpeg
+                    new byte[] { 255, 216, 255, 225 }   // jpeg canon
+            })
+                {
+                    if (pattern.SequenceEqual(header.Take(pattern.Length)))
+                        return true;
+                }
+            }
+
+            return false;
+        } //IsValidImageFormat
         private void Canvas_Drop(object sender, DragEventArgs e)
         {
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
             {
                 string[] droppedFilePaths = e.Data.GetData(DataFormats.FileDrop, true) as string[];
                 foreach (var path in droppedFilePaths)
                 {
-                    var converter = new ImageSourceConverter();
-                    ImageSource imageSource = (ImageSource)converter.ConvertFromString(path);
-                    if (imageSource != null)
+                    FileAttributes attr = File.GetAttributes(path);
+                    if ( (attr & FileAttributes.Directory) != FileAttributes.Directory && IsValidImageFormat(path))
                     {
-                        Image2D img = new Image2D();
-                        Point s = e.GetPosition(canvas);
-                        img.HandleStart(s.X, s.Y);
-                        img.HandleEnd(s.X + imageSource.Width, s.Y + imageSource.Height);
-                        img._source = imageSource;
-                        canvas.Children.Add(img.Draw());
-
-                        if (selectedLayer >= 0)
+                        var converter = new ImageSourceConverter();
+                        ImageSource imageSource = (ImageSource)converter.ConvertFromString(path);
+                        if (imageSource != null)
                         {
-                            // Thêm đối tượng cuối cùng vào mảng quản lí
-                            project.UserLayer[selectedLayer].UserShapes.Add(img.Clone());
-                            project.IsSaved = false;
-                            Title = "Paint - " + project.GetName() + "*";
-                            list_project.Add(project.Clone());
-                            undo_project.Clear();
-                            Undo_Btn.IsEnabled = true;
-                        }
-                        else
-                        {
-                            // Thêm đối tượng cuối cùng vào mảng quản lí
-                            allLayers.Insert(0, new layerView(project.addNewLayer(), true));
-                            project.UserLayer[project.UserLayer.Count - 1].UserShapes.Add(img.Clone());
-                            project.IsSaved = false;
-                            Title = "Paint - " + project.GetName() + "*";
-                            list_project.Add(project.Clone());
-                            undo_project.Clear();
-                            Undo_Btn.IsEnabled = true;
+                            Image2D img = new Image2D();
+                            Point s = e.GetPosition(canvas);
+                            img.HandleStart(s.X, s.Y);
+                            img.HandleEnd(s.X + imageSource.Width, s.Y + imageSource.Height);
+                            img._source = imageSource;
+                            canvas.Children.Add(img.Draw());
+
+                            if (selectedLayer >= 0)
+                            {
+                                // Thêm đối tượng cuối cùng vào mảng quản lí
+                                project.UserLayer[selectedLayer].UserShapes.Add(img.Clone());
+                                project.IsSaved = false;
+                                Title = "Paint - " + project.GetName() + "*";
+                                list_project.Add(project.Clone());
+                                undo_project.Clear();
+                                Undo_Btn.IsEnabled = true;
+                            }
+                            else
+                            {
+                                // Thêm đối tượng cuối cùng vào mảng quản lí
+                                allLayers.Insert(0, new layerView(project.addNewLayer(), true));
+                                project.UserLayer[project.UserLayer.Count - 1].UserShapes.Add(img.Clone());
+                                project.IsSaved = false;
+                                Title = "Paint - " + project.GetName() + "*";
+                                list_project.Add(project.Clone());
+                                undo_project.Clear();
+                                Undo_Btn.IsEnabled = true;
+
+                            }
 
                         }
-
-                    }
+                    }    
+                    
                 }
                 
                 
