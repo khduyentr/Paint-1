@@ -62,14 +62,11 @@ namespace Paint
 
                 foreach (var shape in layer.UserShapes)
                 {
-
                     tempLayerData.Data.Add(new ShapeData()
                     {
                         Name = shape.Name,
                         Data = shape.ToJson()
                     });
-
-
                 }
                 projectData.Data.Add(tempLayerData);
             }
