@@ -50,6 +50,8 @@ namespace Paint
     {
         // project management
         Project project = new Project();
+        List<Project> list_project = new List<Project>();
+        List<Project> undo_project = new List<Project>();
         BindingList<RecentFile> recentList = null;
         string recentListPath = "recent.dat";
 
@@ -103,9 +105,11 @@ namespace Paint
         {
             Undo_Btn.IsEnabled = false;
             Redo_Btn.IsEnabled = false;
-            undo.Clear();
+            undo_project.Clear();
             project = new Project();
+            list_project.Add(project.Clone());
             canvas.Children.Clear();
+            allLayers.Clear();
             Title = "Paint - " + project.GetName();
         }
 
@@ -301,6 +305,8 @@ namespace Paint
                     // Thêm đối tượng cuối cùng vào mảng quản lí
                     project.UserLayer[selectedLayer].UserShapes.Add(newText.Clone());
                     project.IsSaved = false;
+                    list_project.Add(project.Clone());
+
                     Title = "Paint - " + project.GetName() + "*";
                 }
                 else
@@ -309,12 +315,14 @@ namespace Paint
                     allLayers.Insert(0, new layerView(project.addNewLayer(), true));
                     project.UserLayer[project.UserLayer.Count() - 1].UserShapes.Add(newText.Clone());
                     project.IsSaved = false;
+                    list_project.Add(project.Clone());
+
                     Title = "Paint - " + project.GetName() + "*";
                 }
                 canvas.Children.Add(newText.Draw());
                 Undo_Btn.IsEnabled = true;
                 Redo_Btn.IsEnabled = false;
-                undo.Clear();
+                undo_project.Clear();
             }
 
             canvas.Children.Remove(input);
@@ -322,6 +330,15 @@ namespace Paint
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
+            if (LayerList.SelectedIndex >= 0)
+            {
+                selectedLayer = allLayers.Count - 1 - LayerList.SelectedIndex;
+            }
+            else
+            {
+                selectedLayer = -1;
+            }
+
             if (selectedShape >= 0)
             {
                 Canvas_Border.Cursor = Cursors.Cross;
@@ -344,35 +361,42 @@ namespace Paint
                 preview.HandleEnd(pos.X, pos.Y);
 
 
-                // Xoá hết các hình vẽ cũ - OLD
-                //canvas.Children.Clear();
-                if(isPreview)
-                {
-                    canvas.Children.RemoveAt(canvas.Children.Count - 1);
-                }
-                
 
                 if (selectedLayer >= 0)
                 {
 
-                    // Vẽ lại các hình trước đó
+                    int previewPos = 0;
                     for (int i = 0; i < project.UserLayer.Count; i++)
                     {
+
                         if (project.UserLayer[i].isVisible)
                         {
-
+                            previewPos += project.UserLayer[i].UserShapes.Count;
                             if (selectedLayer == i)
                             {
-                                // Vẽ hình preview đè lên
+                                if (isPreview)
+                                {
+                                    canvas.Children.RemoveAt(previewPos);
+                                }
                                 isPreview = true;
-                                canvas.Children.Add(preview.Draw());
+                                canvas.Children.Insert(previewPos, preview.Draw());
+                               
+                                break;
                             }
-
+                            
+                           
                         }
                     }
+ 
                 }
                 else
                 {
+                    // Xoá hết các hình vẽ cũ - OLD
+                    if (isPreview)
+                    {
+                        canvas.Children.RemoveAt(canvas.Children.Count - 1);
+                    }
+
                     // Vẽ hình preview đè lên
                     isPreview = true;
                     canvas.Children.Add(preview.Draw());
@@ -433,10 +457,12 @@ namespace Paint
                 // Sinh ra đối tượng mẫu kế
                 preview = preview.NextShape();
                 reDraw();
+                Undo_Btn.IsEnabled = true;
+                Redo_Btn.IsEnabled = false;
+                list_project.Add(project.Clone());
+                undo_project.Clear();
             }
-            Undo_Btn.IsEnabled = true;
-            Redo_Btn.IsEnabled = false;
-            undo.Clear();
+           
 
         }
 
@@ -562,7 +588,6 @@ namespace Paint
                 Recent_File.ItemsSource = recentList;
                 RecentFile.WriteRecentFile(recentListPath, recentList);
             }
-            undo.Clear();
         }
 
         private void Open_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -651,6 +676,8 @@ namespace Paint
                 project.SaveToFile();
                 Title = "Paint - " + project.GetName();
             }
+            undo_project.Clear();
+
         }
 
         private void Save_As_Bmp_Btn_Click(object sender, RoutedEventArgs e)
@@ -716,58 +743,98 @@ namespace Paint
             }
         }
 
+        private void Paste_Btn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void copyLayer(Project prj1, Project prj2)
+        {
+            foreach (var layer in prj1.UserLayer)
+            {
+                prj2.UserLayer.Add(layer);
+                int count = prj2.UserLayer.Count;
+                for(int i = 0; i < count; i++)
+                {
+                    prj2.UserLayer[i].UserShapes = prj1.UserLayer[i].UserShapes;
+                }    
+            }
+        }
+
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
         {
-           // int count = project.UserShapes.Count;
-           // if(count > 0)
-            //{
-            //    Redo_Btn.IsEnabled = true;
-            //    undo.Add(project.UserShapes[count - 1]);
-            //    project.UserShapes.RemoveAt(count - 1);
-            //    project.IsSaved = false;
+            int count = list_project.Count;
+            if (count > 1 )
+            {
+                Redo_Btn.IsEnabled = true;
+                undo_project.Add(list_project[count - 1].Clone());
+                project = list_project[count - 2].Clone();
 
-            //    // Ve lai Xoa toan bo
-            //    canvas.Children.Clear();
-            //
-                // Ve lai tat ca cac hinh
-            //    foreach (var shape in project.UserShapes)
-            //    {
-            //        var element = shape.Draw();
-             //       canvas.Children.Add(element);
-            //    }
-            //    if (project.UserShapes.Count == 0)
-             //   {
-             //       Undo_Btn.IsEnabled = false;
-            //    }    
-           // }    
-            
+                allLayers.Clear();
+                for (int i = project.UserLayer.Count - 1; i >= 0; i--)
+                {
+                    var tempt = new layerView()
+                    {
+                        isVisible = project.UserLayer[i].isVisible,
+                        name = project.UserLayer[i].name
+                    };
+                    allLayers.Add(tempt);
+
+                }
+                reDraw();
+
+                list_project.RemoveAt(count - 1);
+
+                if (list_project.Count == 1)
+                {
+                    Undo_Btn.IsEnabled = false;
+                }
+            }
+
         }
 
         private void Redo_Btn_Click(object sender, RoutedEventArgs e)
         {
-            //int count = undo.Count;
-            //if(count > 0)
-           // {
-           //     Undo_Btn.IsEnabled = true;
-            //    project.UserShapes.Add(undo[count - 1]);
-            //    undo.RemoveAt(count - 1);
-            //    project.IsSaved = false;
+            int count = undo_project.Count;
+            if (count > 0)
+            {
+                Undo_Btn.IsEnabled = true;
+                list_project.Add(undo_project[count - 1].Clone());
+                project = undo_project[count - 1].Clone();
 
-                // Ve lai Xoa toan bo
-            //    canvas.Children.Clear();
+                allLayers.Clear();
+                for (int i = project.UserLayer.Count - 1; i >= 0; i--)
+                {
+                    var tempt = new layerView()
+                    {
+                        isVisible = project.UserLayer[i].isVisible,
+                        name = project.UserLayer[i].name
+                    };
+                    allLayers.Add(tempt);
 
-                // Ve lai tat ca cac hinh
-           //     foreach (var shape in project.UserShapes)
-            //    {
-            //        var element = shape.Draw();
-            //        canvas.Children.Add(element);
-            //    }
-            //    if(undo.Count == 0)
-             //   {
-             //       Redo_Btn.IsEnabled = false;
-             //   }    
-          //  }    
-            
+                }
+
+                reDraw();
+
+                undo_project.RemoveAt(count - 1);
+
+                if (undo_project.Count == 0)
+                {
+                    Redo_Btn.IsEnabled = false;
+                }
+            }
+
+        }
+
+        private void Select_Area_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            isSelectRegion = !isSelectRegion;
+            ShapeList.SelectedIndex = -1;
+        }
+
+        private void Crop_Area_Btn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void RibbonWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -856,6 +923,10 @@ namespace Paint
                     project.UserLayer.Insert(targetLayerIdx,temp);
                     allLayers.Insert(targetIdx + 1, droppedData);
                     allLayers.RemoveAt(removedIdx);
+
+                    project.IsSaved = false;
+                    list_project.Add(project.Clone());
+                    undo_project.Clear();
                 }
                 else
                 {
@@ -868,10 +939,12 @@ namespace Paint
                         allLayers.Insert(targetIdx, droppedData);
                         allLayers.RemoveAt(remIdx);
                     }
+                    project.IsSaved = false;
+                    list_project.Add(project.Clone());
+                    undo_project.Clear();
                 }
             }
             reDraw();
-           
         }
 
         private void LayerList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -901,7 +974,9 @@ namespace Paint
         private void AddNewLayer_Click(object sender, RoutedEventArgs e)
         {
             allLayers.Insert(0,new layerView(project.addNewLayer(), true));
- 
+            project.IsSaved = false;
+            list_project.Add(project.Clone());
+            undo_project.Clear();
         }
 
         private void Zoom_In_Btn_Click(object sender, RoutedEventArgs e)
@@ -1085,6 +1160,72 @@ namespace Paint
                     }
                 }
             }
+            else if (e.Key == Key.Tab)
+            {
+                canfocus = false;
+            }
+            else if (e.Key == Key.Z && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                int count = list_project.Count;
+                if (count > 1)
+                {
+                    Redo_Btn.IsEnabled = true;
+                    undo_project.Add(list_project[count - 1].Clone());
+                    project = list_project[count - 2].Clone();
+
+                    allLayers.Clear();
+                    for (int i = project.UserLayer.Count - 1; i >= 0; i--)
+                    {
+                        var tempt = new layerView()
+                        {
+                            isVisible = project.UserLayer[i].isVisible,
+                            name = project.UserLayer[i].name
+                        };
+                        allLayers.Add(tempt);
+
+                    }
+                    reDraw();
+
+                    list_project.RemoveAt(count - 1);
+
+                    if (list_project.Count == 1)
+                    {
+                        Undo_Btn.IsEnabled = false;
+                    }
+                }
+            }
+            else if (e.Key == Key.Y && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                int count = undo_project.Count;
+                if (count > 0)
+                {
+                    Undo_Btn.IsEnabled = true;
+                    list_project.Add(undo_project[count - 1].Clone());
+                    project = undo_project[count - 1].Clone();
+
+                    allLayers.Clear();
+                    for (int i = project.UserLayer.Count - 1; i >= 0; i--)
+                    {
+                        var tempt = new layerView()
+                        {
+                            isVisible = project.UserLayer[i].isVisible,
+                            name = project.UserLayer[i].name
+                        };
+                        allLayers.Add(tempt);
+
+                    }
+
+                    reDraw();
+
+                    undo_project.RemoveAt(count - 1);
+
+                    if (undo_project.Count == 0)
+                    {
+                        Redo_Btn.IsEnabled = false;
+                    }
+                }
+            }
+
         }
 
         private void Open_Recent_File_Btn_Click(object sender, RoutedEventArgs e)
@@ -1165,6 +1306,9 @@ namespace Paint
                 allLayers.RemoveAt(LayerList.SelectedIndex);
 
                 selectedLayer = -1;
+                project.IsSaved = false;
+                list_project.Add(project.Clone());
+                undo_project.Clear();
                 reDraw();
 
             }
@@ -1242,6 +1386,9 @@ namespace Paint
                             project.UserLayer[selectedLayer].UserShapes.Add(img.Clone());
                             project.IsSaved = false;
                             Title = "Paint - " + project.GetName() + "*";
+                            list_project.Add(project.Clone());
+                            undo_project.Clear();
+                            Undo_Btn.IsEnabled = true;
                         }
                         else
                         {
@@ -1250,10 +1397,16 @@ namespace Paint
                             project.UserLayer[project.UserLayer.Count - 1].UserShapes.Add(img.Clone());
                             project.IsSaved = false;
                             Title = "Paint - " + project.GetName() + "*";
+                            list_project.Add(project.Clone());
+                            undo_project.Clear();
+                            Undo_Btn.IsEnabled = true;
+
                         }
 
                     }
                 }
+                
+                
             }
         }
 
@@ -1409,10 +1562,12 @@ namespace Paint
             
 
             project.UserLayer.Insert(insertLayerIndex, groupLayer);
-            
 
-           
-            
+            project.IsSaved = false;
+            list_project.Add(project.Clone());
+            undo_project.Clear();
+
+
             reDraw();
         }
 
@@ -1452,6 +1607,9 @@ namespace Paint
 
 
                 selectedLayer = -1;
+                project.IsSaved = false;
+                list_project.Add(project.Clone());
+                undo_project.Clear();
                 reDraw();
 
             }
