@@ -349,35 +349,42 @@ namespace Paint
                 preview.HandleEnd(pos.X, pos.Y);
 
 
-                // Xoá hết các hình vẽ cũ - OLD
-                //canvas.Children.Clear();
-                if(isPreview)
-                {
-                    canvas.Children.RemoveAt(canvas.Children.Count - 1);
-                }
-                
 
                 if (selectedLayer >= 0)
                 {
 
-                    // Vẽ lại các hình trước đó
+                    int previewPos = 0;
                     for (int i = 0; i < project.UserLayer.Count; i++)
                     {
+
                         if (project.UserLayer[i].isVisible)
                         {
-
+                            previewPos += project.UserLayer[i].UserShapes.Count;
                             if (selectedLayer == i)
                             {
-                                // Vẽ hình preview đè lên
+                                if (isPreview)
+                                {
+                                    canvas.Children.RemoveAt(previewPos);
+                                }
                                 isPreview = true;
-                                canvas.Children.Add(preview.Draw());
+                                canvas.Children.Insert(previewPos, preview.Draw());
+                               
+                                break;
                             }
-
+                            
+                           
                         }
                     }
+ 
                 }
                 else
                 {
+                    // Xoá hết các hình vẽ cũ - OLD
+                    if (isPreview)
+                    {
+                        canvas.Children.RemoveAt(canvas.Children.Count - 1);
+                    }
+
                     // Vẽ hình preview đè lên
                     isPreview = true;
                     canvas.Children.Add(preview.Draw());
