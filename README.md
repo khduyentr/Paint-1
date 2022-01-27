@@ -56,11 +56,9 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 
 ## **Chức năng nâng cao chưa thực hiện**<a name="notdone"></a>
 * * *
-1. Giảm hiện tượng Flickering bằng cách sử dụng Buffer.
-    - Lý do không thực hiện chức năng này: WPF C# đã tự động hỗ trợ Double Buffering
-2. Cut copy paste
+1. Cut copy paste
 
-3. Chọn một phần tử để chỉnh sửa:
+2. Chọn một phần tử để chỉnh sửa:
     1. Xoay
 
     2. Lật
@@ -68,14 +66,15 @@ Khi có vấn đề về project, thầy có thể liên lạc với nhóm em th
 ## **Chức năng cộng thêm**<a name="other"></a>
 * * *
 ### **Một số improvement trong các improvement mà thầy gợi ý đã được nhóm thực hiện:** 
-1. Cho phép người dùng thay đổi màu, kích thước và style (dash, dot, dash dot dot...) của nét vẽ
+1. Giảm hiện tượng Flickering bằng cách sử dụng Buffer: không thực hiện chức năng này vì WPF C# đã tự động hỗ trợ Double Buffering
+2. Cho phép người dùng thay đổi màu, kích thước và style (dash, dot, dash dot dot...) của nét vẽ
 
-2. Chèn Chữ
-3. Thêm Hình ảnh vào canvas bằng cách kéo thả hình ảnh vào Canvas
-4. Chỉ xóa và vẽ lại ở các khu vực cần thiết, không xóa và vẽ lại toàn bộ canvas
-5. Hỗ trợ Layer
-6. Zooming
-7. Undo, Redo
+3. Chèn Chữ
+4. Thêm Hình ảnh vào canvas bằng cách kéo thả hình ảnh vào Canvas
+5. Chỉ xóa và vẽ lại ở các khu vực cần thiết, không xóa và vẽ lại toàn bộ canvas
+6. Hỗ trợ Layer
+7. Zooming
+8. Undo, Redo
 ### **Các improvement khác:**
 1. Sử dụng thư viện HandyControl (https://hosseini.ninja/handycontrol/) để giao diện của ứng dụng trở nên đẹp và thân thiện với người dùng hơn
 
