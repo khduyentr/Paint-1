@@ -903,7 +903,7 @@ namespace Paint
                     project.UserLayer.Insert(targetLayerIdx,temp);
                     allLayers.Insert(targetIdx + 1, droppedData);
                     allLayers.RemoveAt(removedIdx);
-
+                    Title = "Paint - " + project.GetName() + "*";
                     project.IsSaved = false;
                     list_project.Add(project.Clone());
                     undo_project.Clear();
@@ -919,6 +919,7 @@ namespace Paint
                         allLayers.Insert(targetIdx, droppedData);
                         allLayers.RemoveAt(remIdx);
                     }
+                    Title = "Paint - " + project.GetName() + "*";
                     project.IsSaved = false;
                     list_project.Add(project.Clone());
                     undo_project.Clear();
