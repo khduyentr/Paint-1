@@ -652,6 +652,14 @@ namespace Paint
                 {
                     project = temProject.Clone();
                     Title = "Paint - " + project.GetName();
+                    RecentFile newRecent = new RecentFile(path);
+                    if (recentList == null)
+                    {
+                        recentList = new BindingList<RecentFile>();
+                    }
+                    recentList.Insert(0, newRecent);
+                    Recent_File.ItemsSource = recentList;
+                    RecentFile.WriteRecentFile(recentListPath, recentList);
                     allLayers.Clear();
                     for (int i = project.UserLayer.Count - 1; i>=0; i--)
                     {
@@ -1124,6 +1132,14 @@ namespace Paint
                     {
                         project = temProject.Clone();
                         Title = "Paint - " + project.GetName();
+                        RecentFile newRecent = new RecentFile(path);
+                        if (recentList == null)
+                        {
+                            recentList = new BindingList<RecentFile>();
+                        }
+                        recentList.Insert(0, newRecent);
+                        Recent_File.ItemsSource = recentList;
+                        RecentFile.WriteRecentFile(recentListPath, recentList);
                         allLayers.Clear();
                         for (int i = project.UserLayer.Count - 1; i>=0; i--)
                         {
