@@ -18,6 +18,7 @@ namespace Paint
             string exePath = Assembly.GetExecutingAssembly().Location;
             string folder = Path.GetDirectoryName(exePath);
             var fis = new DirectoryInfo(folder + "\\DLL").GetFiles("*.dll");
+            Console.WriteLine(folder);
             foreach (var f in fis)
             {
                 var assembly = Assembly.Load(File.ReadAllBytes(f.FullName));

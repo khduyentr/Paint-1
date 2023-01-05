@@ -100,6 +100,7 @@ namespace Paint
         bool isSelectRegion = false;
 
         List<IShape> undo = new List<IShape>();
+        SaveFactory saveFactory = SaveFactory.GetInstance();
         public double ZoomValue { get; set; }
 
         public void StartNewProject()
@@ -700,64 +701,23 @@ namespace Paint
         private void Save_As_Bmp_Btn_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = project.GetName();
-            saveFileDialog.DefaultExt = ".bmp";
-            saveFileDialog.Filter = "BMP files(*.bmp)|*.bmp";
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                Helper.SaveCanvasToFile((int)Canvas_Border.ActualWidth, (int)Canvas_Border.ActualHeight, canvas, saveFileDialog.FileName);
-                HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
-                {
-                    Message = "Export as BMP file successfully!",
-                    Caption = "Paint",
-                    Button = MessageBoxButton.OK,
-                    IconBrushKey = ResourceToken.SuccessBrush,
-                    IconKey = ResourceToken.SuccessGeometry,
-                    StyleKey = "MessageBoxCustom"
-                });
-            }
+            //ISaveStrategy bpmStrategy = new SaveAsBPM();
+            ISaveStrategy bpmStrategy = saveFactory.GetSaveStrategy("BMP");
+            bpmStrategy.Execute(saveFileDialog, project, canvas, this);
         }
 
         private void Save_As_Jpg_Btn_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = project.GetName();
-            saveFileDialog.DefaultExt = ".jpg";
-            saveFileDialog.Filter = "JPG files(*.jpg)|*.jpg";
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                Helper.SaveCanvasToFile((int)Canvas_Border.ActualWidth, (int)Canvas_Border.ActualHeight, canvas, saveFileDialog.FileName);
-                HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
-                {
-                    Message = "Export as JPG file successfully!",
-                    Caption = "Paint",
-                    Button = MessageBoxButton.OK,
-                    IconBrushKey = ResourceToken.SuccessBrush,
-                    IconKey = ResourceToken.SuccessGeometry,
-                    StyleKey = "MessageBoxCustom"
-                });
-            }
+            ISaveStrategy jpgStrategy = saveFactory.GetSaveStrategy("JPG");
+            jpgStrategy.Execute(saveFileDialog, project, canvas, this);
         }
 
         private void Save_As_Png_Btn_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = project.GetName();
-            saveFileDialog.DefaultExt = ".png";
-            saveFileDialog.Filter = "PNG files(*.png)|*.png";
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                Helper.SaveCanvasToFile((int)Canvas_Border.ActualWidth, (int)Canvas_Border.ActualHeight, canvas, saveFileDialog.FileName);
-                HandyControl.Controls.MessageBox.Show(new MessageBoxInfo
-                {
-                    Message = "Export as PNG file successfully!",
-                    Caption = "Paint",
-                    Button = MessageBoxButton.OK,
-                    IconBrushKey = ResourceToken.SuccessBrush,
-                    IconKey = ResourceToken.SuccessGeometry,
-                    StyleKey = "MessageBoxCustom"
-                });
-            }
+            ISaveStrategy pngStrategy = saveFactory.GetSaveStrategy("PNG");
+            pngStrategy.Execute(saveFileDialog, project, canvas, this);
         }
 
         private void Undo_Btn_Click(object sender, RoutedEventArgs e)
